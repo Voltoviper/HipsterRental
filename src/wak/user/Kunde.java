@@ -7,7 +7,9 @@ public class Kunde extends Person {
     String email, telefon, organame, handy;
     Adresse addr;
 
-    public Kunde(String email, String telefon, String organame, String handy, String strasse, int hausnummer, String plz, String ort) {
+    public Kunde(String vorname, String nachname,String email, String telefon, String organame, String handy, String strasse, int hausnummer, String plz, String ort) {
+        this.vorname = vorname;
+        this.nachname = nachname;
         this.email = email;
         this.telefon = telefon;
         this.organame = organame;

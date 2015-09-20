@@ -8,7 +8,7 @@ import wak.user.Kunde;
 public class Home {
 
     public static void main(String args[]){
-       Kunde k = new Kunde("christoph@mail-nebendahl","04307-5198","WAK","01573-1655616","Eckernfoerder Str.",61,"24116","Kiel");
+       Kunde k = new Kunde("Christoph", "Nebendahl", "christoph@mail-nebendahl","04307-5198","WAK","01573-1655616","Eckernfoerder Str.",61,"24116","Kiel");
         System.out.print(k.getAddr());
     }
 }
