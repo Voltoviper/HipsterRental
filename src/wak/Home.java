@@ -3,6 +3,7 @@ package wak;
 import wak.system.db.DB_Connector;
 import wak.user.Kunde;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -17,8 +18,14 @@ public class Home {
         System.out.println(k.getAddr());
        System.out.println(Timestamp.valueOf(LocalDateTime.now()));
         DB_Connector conn = new DB_Connector();
+        //conn.updateDatabase("INSERT INTO 'kategorie' ('name', 'bild_pfad') VALUES ('Test','C:Christoph')");
+       conn.updateDatabase("INSERT INTO kategorie (name, bild_pfad)" + "VALUES ('Test','C:')");
+       ResultSet rs = conn.QueryDatabase("SELECT * FROM kategorie WHERE 1");
         try {
-            conn.connectToAndQueryDatabase();
+            while(rs.next()){
+                String em = rs.getString("id");
+                System.out.println(em);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
