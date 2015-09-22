@@ -6,10 +6,10 @@ import java.sql.*;
  * Created by Christoph Nebendahl on 20.09.2015.
  */
 public class DB_Connector {
-final static String user = "test";
-    final static String passwd = "qwertz123!";
-    Connection con;
-    private void connecttoDatabase(){
+final static String user = "hipster2";
+    final static String passwd = "YozvCCcxbfE7Fddz";
+    public static Connection con;
+    public static void connecttoDatabase(){
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -17,14 +17,15 @@ final static String user = "test";
         }
         try {
                con = DriverManager.getConnection(
-                       "jdbc:mysql://localhost/softwareengineering", user, passwd);
+                       "jdbc:mysql://87.106.17.78/softwareengineering2", user, passwd);
            }catch(SQLException e){
                System.out.println("Fehler bei der Kommunikation mit der Datenbank");
+                e.printStackTrace();
                        System.out.println(e.getErrorCode());
            }
     }
 
-    public void updateDatabase(String query){
+    public static void updateDatabase(String query){
         try{
             connecttoDatabase();
             Statement stmt = con.createStatement();
@@ -42,7 +43,7 @@ final static String user = "test";
         }
 
     }
-    public ResultSet QueryDatabase(String query){
+    public static ResultSet QueryDatabase(String query){
         ResultSet rs = null;
         try {
             if(con==null|con.isClosed()){

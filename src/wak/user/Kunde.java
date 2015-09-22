@@ -7,7 +7,7 @@ public class Kunde extends Person {
     String email, telefon, organame, handy;
     Adresse addr;
 
-    public Kunde(String vorname, String nachname,String email, String telefon, String organame, String handy, String strasse, int hausnummer, String plz, String ort) {
+    public Kunde(String id, String vorname, String nachname,String email, String telefon, String organame, String handy, String strasse, int hausnummer, String plz, String ort) {
         this.vorname = vorname;
         this.nachname = nachname;
         this.email = email;
@@ -15,6 +15,7 @@ public class Kunde extends Person {
         this.organame = organame;
         this.handy = handy;
         this.addr = new Adresse(strasse, ort, plz, hausnummer);
+        this.id = id;
     }
 
     public String getEmail() {

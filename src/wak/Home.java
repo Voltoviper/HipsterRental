@@ -1,8 +1,10 @@
 package wak;
 
+import wak.objects.Bestellung;
 import wak.system.db.DB_Connector;
 import wak.user.Kunde;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -14,20 +16,28 @@ import java.time.LocalDateTime;
 public class Home {
 
     public static void main(String args[]){
-       Kunde k = new Kunde("Christoph", "Nebendahl", "christoph@mail-nebendahl","04307-5198","WAK","01573-1655616","Eckernfoerder Str.",61,"24116","Kiel");
+        DB_Connector.connecttoDatabase();
+       Kunde k = new Kunde("1","Christoph", "Nebendahl", "christoph@mail-nebendahl","04307-5198","WAK","01573-1655616","Eckernfoerder Str.",61,"24116","Kiel");
         System.out.println(k.getAddr());
        System.out.println(Timestamp.valueOf(LocalDateTime.now()));
-        DB_Connector conn = new DB_Connector();
+        Bestellung b = new Bestellung(k, null, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now()));
         //conn.updateDatabase("INSERT INTO 'kategorie' ('name', 'bild_pfad') VALUES ('Test','C:Christoph')");
-       conn.updateDatabase("INSERT INTO kategorie (name, bild_pfad)" + "VALUES ('Test','C:')");
-       ResultSet rs = conn.QueryDatabase("SELECT * FROM kategorie WHERE 1");
-        try {
+
+        // insert into "order" (customer_id, price) values ((select customer_id from customer where name = 'John'), 12.34);
+
+
+        //conn.updateDatabase("INSERT INTO bestellung (Kundeid, von,bis)" + "VALUES ('1', ?, ?)");
+       //ResultSet rs = conn.QueryDatabase("SELECT * FROM kategorie WHERE 1");
+        /*try {
             while(rs.next()){
-                String em = rs.getString("id");
+                String em = rs.getint("id").toString();
+                String em1 = rs.getTimestamp("von").toString();
                 System.out.println(em);
+                System.out.
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        */
     }
 }

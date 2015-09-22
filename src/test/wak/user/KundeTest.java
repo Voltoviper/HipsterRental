@@ -19,7 +19,7 @@ public class KundeTest {
         new KundeTest();
     }
     public KundeTest(){
-        testing = new Kunde("Christoph", "Nebendahl", "christoph@mail-nebendahl","04307-5198","WAK","01573-1655616","Eckernfoerder Str.",61,"24116","Kiel");
+        testing = new Kunde("1","Christoph", "Nebendahl", "christoph@mail-nebendahl","04307-5198","WAK","01573-1655616","Eckernfoerder Str.",61,"24116","Kiel");
         testing();
     }
 
