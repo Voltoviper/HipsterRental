@@ -25,25 +25,7 @@ public class Bestellung {
         this.von = von;
         this.bis = bis;
         this.bestellungdatum = Timestamp.valueOf(LocalDateTime.now());
-
-        if(true){
-           String einfuegen = "INSERT INTO bestellung (id,Kundeid, von, bis)" + "VALUES (?,(select id from kunde WHERE kunde.id='1'),?,?)";
-            try {
-                String bestellung_id_String = "SELECT id FROM softwareengineering2.bestellung order by id DESC;";
-                PreparedStatement bestellung_id = DB_Connector.con.prepareStatement(bestellung_id_String);
-                PreparedStatement bestellung = DB_Connector.con.prepareStatement(einfuegen);
-                ResultSet bestellung_id_set = bestellung_id.executeQuery();
-                bestellung_id_set.next();
-                bestellung.setInt(1, bestellung_id_set.getInt("id")+1);
-                bestellung.setTimestamp(2,von);
-                bestellung.setTimestamp(3, bis);
-                System.out.println(bestellung.toString());
-                bestellung.executeUpdate();
-            }catch(SQLException e){
-                System.out.println("fehler beim Eintragen der Bestellung");
-                e.printStackTrace();
-            }
-        }
+        Bestellung_eintragen(this);
     }
 
     private boolean ueberschneidet(Bestellung b){
@@ -72,5 +54,83 @@ public class Bestellung {
         }finally{
             return true;
         }
+    }
+    private void Bestellung_eintragen(Bestellung b){
+        int bestell_id;
+        String einfuegen = "INSERT INTO bestellung (id,Kundeid, von, bis)" + "VALUES (?,(select id from kunde WHERE kunde.id='1'),?,?)";
+        String position = "Insert INTO bestellposition (Bestellungid,Produktid,position,ProduktKategorieid) "+"VALUES(?,(select id from produkt WHERE id=?),?,(select id from kategorie WHERE id=?))";
+        try {
+
+            //Generieren einer BestellID
+            String bestellung_id_String = "SELECT id FROM softwareengineering2.bestellung order by id DESC;";
+            PreparedStatement bestellung_id = DB_Connector.con.prepareStatement(bestellung_id_String);
+            ResultSet bestellung_id_set = bestellung_id.executeQuery();
+            bestellung_id_set.next();
+            bestell_id=bestellung_id_set.getInt("id")+1;
+
+            //Vorbereiten der Bestellung für die Datenbank
+            PreparedStatement bestellung = DB_Connector.con.prepareStatement(einfuegen);
+            bestellung.setInt(1, bestell_id);
+            bestellung.setTimestamp(2, b.von);
+            bestellung.setTimestamp(3, b.bis);
+            System.out.println(bestellung.toString());
+            bestellung.executeUpdate();
+
+            //Einfügen der Bestellpositionen
+            int i = 1;
+            for(Produkt p:b.getPosition()) {
+                PreparedStatement bestellposition = DB_Connector.con.prepareStatement(position);
+                bestellposition.setInt(1, bestell_id);
+                bestellposition.setInt(2, p.getId());
+                bestellposition.setInt(3, i);
+                bestellposition.setInt(4, p.getKategorie().getId());
+                bestellposition.executeUpdate();
+                i++;
+        }
+        }catch(SQLException e){
+            System.out.println("fehler beim Eintragen der Bestellung");
+            e.printStackTrace();
+
+        }
+    }
+
+    public Kunde getKunde() {
+        return kunde;
+    }
+
+    public void setKunde(Kunde kunde) {
+        this.kunde = kunde;
+    }
+
+    public ArrayList<Produkt> getPosition() {
+        return Position;
+    }
+
+    public void setPosition(ArrayList<Produkt> position) {
+        Position = position;
+    }
+
+    public Timestamp getVon() {
+        return von;
+    }
+
+    public void setVon(Timestamp von) {
+        this.von = von;
+    }
+
+    public Timestamp getBis() {
+        return bis;
+    }
+
+    public void setBis(Timestamp bis) {
+        this.bis = bis;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
