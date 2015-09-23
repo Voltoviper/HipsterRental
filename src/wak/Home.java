@@ -21,6 +21,7 @@ public class Home {
         System.out.println(k.getAddr());
        System.out.println(Timestamp.valueOf(LocalDateTime.now()));
         Bestellung b = new Bestellung(k, null, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now()));
-
+        //conn.updateDatabase("INSERT INTO 'kategorie' ('name', 'bild_pfad') VALUES ('Test','C:Christoph')");
+        
     }
 }
