@@ -21,23 +21,6 @@ public class Home {
         System.out.println(k.getAddr());
        System.out.println(Timestamp.valueOf(LocalDateTime.now()));
         Bestellung b = new Bestellung(k, null, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now()));
-        //conn.updateDatabase("INSERT INTO 'kategorie' ('name', 'bild_pfad') VALUES ('Test','C:Christoph')");
 
-        // insert into "order" (customer_id, price) values ((select customer_id from customer where name = 'John'), 12.34);
-
-
-        //conn.updateDatabase("INSERT INTO bestellung (Kundeid, von,bis)" + "VALUES ('1', ?, ?)");
-       //ResultSet rs = conn.QueryDatabase("SELECT * FROM kategorie WHERE 1");
-        /*try {
-            while(rs.next()){
-                String em = rs.getint("id").toString();
-                String em1 = rs.getTimestamp("von").toString();
-                System.out.println(em);
-                System.out.
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        */
     }
 }
