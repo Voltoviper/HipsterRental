@@ -1,11 +1,9 @@
 ﻿h1 { color: green; }
 body{
-	
 	background-color:#FCFD5A;
 }
 .menu {
-	background-color:#6565FC
-	;
+	background-color:#6565FC;
 }
 .menu_item{	
 	min-width:70pt;
@@ -14,15 +12,25 @@ body{
 	min-width:70pt;
 }
 .menu_platzhalter{
-	
+	background-color:#6565FC;
 	width:100%;
 }
 .titel{
-	
 	width:100%;
 	font-weight:bold;
 }
 .login{
-	
-	width:50%;
+	vertical-align: top;
+	background-color:#6565FC;
+	max-width:100pt;
+	min-width: 80pt;
+}
+.main{
+	min-width:200pt;
+}
+.kat_nav{
+	max-width:100pt;
+	min-width:80pt;
+	background-color:#6565FC;
+	vertical-align: top;
 }

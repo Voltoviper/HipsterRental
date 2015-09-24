@@ -4,9 +4,6 @@ import wak.objects.Bestellung;
 import wak.system.db.DB_Connector;
 import wak.user.Kunde;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 

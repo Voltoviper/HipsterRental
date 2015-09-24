@@ -1,7 +1,12 @@
 package wak.system.server;
 
+import wak.user.Person;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
@@ -15,7 +20,9 @@ import java.util.UUID;
  */
 public class Login extends HttpServlet {
 
-    protected void doPost(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws javax.servlet.ServletException, IOException {
+    Person p;
+   static  String test;
+    protected void doPost(HttpServletRequest request,HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         String nutzer= request.getParameter("user");
         String passwd=request.getParameter("passwd");
         Enumeration<String> names= request.getParameterNames();
@@ -32,22 +39,68 @@ public class Login extends HttpServlet {
         PrintWriter writer = response.getWriter();
 
         if(passwd.matches("test")){
+            test=nutzer;
+            request.setAttribute("user", nutzer);
             UUID uuid = UUID.randomUUID();
             Cookie id =
                     new Cookie("id", uuid.toString());
+            id.setDomain("localhost");
+            id.setPath("./");
             response.addCookie(id);
-            response.sendRedirect("./jsp/home.jsp");
+            request.getRequestDispatcher("index.jsp").forward(request, response);
         }else{
-            writer.println("<html>");
-            writer.println("<head><title>Hello World Servlet</title></head>");
-            writer.println("<body>");
-            writer.println("	<h1>Zugang verweigert </h1>");
-            writer.println("<body>");
-            writer.println("</html>");
+            response.sendRedirect("./jsp/nologin.jsp");
         }
-
-
-
         writer.close();
+    }
+    public static void getLogin(JspWriter writer, Cookie[] cookies){
+       try {
+        boolean cookie_vorhanden=false;
+           if(cookies!=null){
+                for(int i=0;i<cookies.length;i++){
+                    Cookie c = cookies[i];
+                    if(c.getName().compareTo("id")==0){
+                        cookie_vorhanden=true;
+                        break;
+                    }else{
+                    }
+                }
+           }else{
+
+           }
+            if(cookie_vorhanden){
+                writer.print("<td class=\"login\">\n" +
+                        "        <table style=\"width:100%\">\n" +
+                        "          <tr>\n" +
+                        "            <td align=\"center\">Hallo</td>\n" +
+                        "          </tr>\n" +
+                        "          <tr>\n" +
+                        "            <td align=\"center\">"+test+"</td>\n" +
+                        "        </table>\n" +
+                        "    </td>");
+            }else{
+                writer.print(" <td class=\"login\">\n" +
+                        "      <form action=\"/home\" method=\"post\">\n" +
+                        "        <table>\n" +
+                        "          <tr>\n" +
+                        "            <td align=\"center\">Benutzername:</td>\n" +
+                        "          </tr>\n" +
+                        "          <tr>\n" +
+                        "            <td align=\"center\"><input type=\"text\" name=\"user\"/></td>\n" +
+                        "          </tr>\n" +
+                        "          <tr>\n" +
+                        "            <td align=\"center\">Kennwort:</td>\n" +
+                        "          </tr>\n" +
+                        "          <tr>\n" +
+                        "            <td align=\"center\"><input type=\"password\" name=\"passwd\"/></td>\n" +
+                        "          </tr>\n" +
+                        "          <tr><td align=\"center\"><input type=\"submit\" value=\"Login\" name=\"Login\"/><input type=\"submit\" value=\"Registrieren\" name=\"registrieren\"/></td></tr>\n" +
+                        "        </table>\n" +
+                        "      </form></td>");
+            }
+       }catch(IOException e){
+
+       }
+
     }
 }

@@ -1,31 +1,28 @@
 <%@ include file="./html/header/header.html"%>
+<%@page import="wak.system.server.*" %>
 
-<table style="width:100%">
-  <tr>
-    <td colspan="3">&nbsp;
+<table style="width:100%; valign:top; border-spacing: 0pt" border="0">
+  <tr class="menu">
+    <td colspan="3" class="menu"><% Seitenaufbau.getMenu(out);%>
     </td>
   </tr>
   <tr>
-    <td class="login">&nbsp;</td>
-    <td class="login_center">
-      <form action="/home" method="post">
-        <table>
-          <tr>
-            <td align="center">Benutzername:</td>
-          </tr>
-          <tr>
-            <td align="center"><input type="text" name="user"/></td>
-          </tr>
-          <tr>
-            <td align="center">Kennwort:</td>
-          </tr>
-          <tr>
-            <td align="center"><input type="password" name="passwd"/></td>
-          </tr>
-          <tr><td align="center"><input type="submit" value="Login" name="Login"/><input type="submit" value="Registrieren" name="registrieren"/></td></tr>
-        </table>
-      </form></td>
-    <td class="login">&nbsp;</td>
+    <td class="kat_nav">
+      Kategorien<br>
+      <table width="100%">
+        <%Seitenaufbau.getKategorie(out);%>
+      </table>
+    </td>
+    <td class="main" valign="top">
+      <table style="width: 100%; valign:top" border="0">
+        <th style="text-align: center" colspan="3">Unsere Highlights</th>
+        <tr>
+        <%Seitenaufbau.getEmpfehlungen(out);%>
+        </tr>
+      </table>
+    </td>
+<%Login.getLogin(out, request.getCookies());%>
+
     </tr>
     </table>
 

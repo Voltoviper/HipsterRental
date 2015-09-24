@@ -25,6 +25,7 @@ final static String user = "hipster2";
            }
     }
 
+
     public static void updateDatabase(String query){
         try{
             connecttoDatabase();
@@ -41,7 +42,6 @@ final static String user = "hipster2";
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
     public static ResultSet QueryDatabase(String query){
         ResultSet rs = null;
