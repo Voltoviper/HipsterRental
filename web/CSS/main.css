@@ -22,14 +22,14 @@ body{
 .login{
 	vertical-align: top;
 	background-color:#6565FC;
-	max-width:100pt;
-	min-width: 80pt;
+	max-width:80pt;
+	min-width: 110pt;
 }
 .main{
-	min-width:200pt;
+	min-width:80%;
 }
 .kat_nav{
-	max-width:100pt;
+	max-width:80pt;
 	min-width:80pt;
 	background-color:#6565FC;
 	vertical-align: top;

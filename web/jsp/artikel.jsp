@@ -1,6 +1,5 @@
-<%@ include file="./html/header/header.html"%>
+<%@ include file="../html/header/header_sub.html"%>
 <%@page import="wak.system.server.*" %>
-
 <table style="width:100%; valign:top; border-spacing: 0pt" border="0">
   <tr class="menu">
     <td colspan="3" class="menu"><% Seitenaufbau.getMenu(out);%>
@@ -14,15 +13,16 @@
     </td>
     <td class="main" valign="top">
       <table style="width: 100%; valign:top" border="0">
-        <th style="text-align: center" colspan="3">Unsere Highlights</th>
+        <th style="text-align: center" colspan="3">Artikel</th>
         <tr>
-        <%Seitenaufbau.getEmpfehlungen(out);%>
+
+          <%Seitenaufbau.getArtikel(out, request.getParameter("id"));%>
         </tr>
       </table>
     </td>
-<%Login.getLogin(out, request.getCookies());%>
+    <%Login.getLogin(out, request.getCookies());%>
 
-    </tr>
-    </table>
+  </tr>
+</table>
 
- <%@include file="./html/footer/footer.html"%>
+<%@include file="../html/footer/footer.html"%>
