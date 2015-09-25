@@ -84,7 +84,7 @@ public class Seitenaufbau extends HttpServlet{
 
             DB_Connector.connecttoDatabase();
 
-        String kategorie_string = "SELECT name FROM kategorie WHERE oberkategorie is null ORDER BY name";
+        String kategorie_string = "SELECT name,id FROM kategorie WHERE oberkategorie is null ORDER BY name";
         PreparedStatement kategorie_ps = null;
         ResultSet kategorie_rs;
         //Vorbereiten der Bestellung für die Datenbank
@@ -93,7 +93,8 @@ public class Seitenaufbau extends HttpServlet{
             kategorie_rs = kategorie_ps.executeQuery();
             while(kategorie_rs.next()){
                 String kategorie= kategorie_rs.getString("name");
-                writer.print("<tr><td style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">" +
+                int id= kategorie_rs.getInt("id");
+                writer.print("<tr><td onclick=self.location.href=\"../jsp/kategorie.jsp?katid="+id+"\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\" >" +
                         kategorie+
                         "</td></tr>");
             }
@@ -184,14 +185,9 @@ public class Seitenaufbau extends HttpServlet{
                        String summe_string = formatdouble(summe);
                        writer.print("<tr><td><table style=\"width:100%\"<th>Summe</th><th>"+summe_string+"</th></table></td></tr>");
                        writer.print("</td></tr></table></td>");
-
-
-
                    }
                }
-
             } else {
-
                 if(produkt_id==null){
                    writer.print(tabelle_anfang);
                     writer.print("<th style=\"text-align: center\">Es sind keine Produkte ausgewaehlt.</th>");
@@ -223,14 +219,66 @@ public class Seitenaufbau extends HttpServlet{
                     String summe_string = formatdouble(summe);
                     writer.print("<tr><td><table style=\"width:100%\"><tr><td colspan=\"2\">Summe:</td><td align=right style=\"font-weight:bold\">"+summe_string+"</td></table></td></tr>");
                     writer.print("</td></tr></table></td>");
-
-
                 }
-
-
             }
         }catch(IOException e){
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void getKategorieArtikel(JspWriter writer,String kat_id){
+        DB_Connector.connecttoDatabase();
+
+        String kategorien_string = "Select id FROM kategorie WHERE oberkategorie=? Order BY id";
+        PreparedStatement kategorien_ps = null;
+        ResultSet kategorien_rs;
+        String produkte_string = "SELECT id,name, bezeichnung, mietzins FROM produkt WHERE Kategorieid=? ORDER BY id";
+        PreparedStatement produkte_ps = null;
+        ResultSet produkte_rs;
+
+        try {
+            kategorien_ps = DB_Connector.con.prepareStatement(kategorien_string);
+            kategorien_ps.setInt(1,Integer.parseInt(kat_id));
+            kategorien_rs = kategorien_ps.executeQuery();
+            while(kategorien_rs.next()){
+
+                int kategorie_id = kategorien_rs.getInt("id");
+                produkte_ps = DB_Connector.con.prepareStatement(produkte_string);
+                produkte_ps.setInt(1,kategorie_id);
+                produkte_rs = produkte_ps.executeQuery();
+
+                int zaehler=0;
+                for(int i=0;i<5;i++){
+                    writer.print("<tr>\n");
+                    for(int ii=0;ii<3;ii++){
+                        if(produkte_rs.next()) {
+                            int id = produkte_rs.getInt("id");
+                            String name = produkte_rs.getString("name");
+                            String bezeichnung = produkte_rs.getString("bezeichnung");
+                            Double mietzins = produkte_rs.getDouble("mietzins");
+                            String mietzins_string = formatdouble(mietzins);
+                            writer.print("<td onmouseover=this.style.background=\"#FCFD7A\" onmouseout=this.style.background=\"#FCFD5A\" style=\"width:33%; align:center; border:solid 1px #000000\" onclick=self.location.href=\"./jsp/artikel.jsp?id=" + id + "\">");
+                            writer.print("<table style=\"max-width:100%\" border=0 ><tr><td colspan=\"2\">" +
+                                    name +
+                                    "</td></tr><tr><td rowspan=\"2\" style=\" min-width:30pt; max-width:30pt; min-height:30pt ; max-height:30pt\">" +
+                                    "Bild" +
+                                    "</td><td>" +
+                                    bezeichnung +
+                                    "</td></tr><tr><td>" +
+                                    mietzins_string + "" +
+                                    "</td></tr></table>");
+
+                            writer.print("</td>\n");
+                            zaehler++;
+                        }
+                    }
+                    writer.print("</tr>\n");
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         }
