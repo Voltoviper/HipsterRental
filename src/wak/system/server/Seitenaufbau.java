@@ -136,7 +136,6 @@ public class Seitenaufbau extends HttpServlet{
        } catch (SQLException e) {
         }
     }
-
     public static void getWarenkorb(JspWriter writer,Cookie[] cookies, String produkt_id){
         DB_Connector.connecttoDatabase();
         String produkt_string = "SELECT name, bezeichnung, mietzins  FROM produkt WHERE id=?";
