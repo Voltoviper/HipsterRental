@@ -19,7 +19,7 @@ import java.util.UUID;
  * Created by chris_000 on 24.09.2015.
  */
 public class Seitenaufbau extends HttpServlet{
-   static  ArrayList<Warenkorb> koerbe = new ArrayList<Warenkorb>();
+   public static  ArrayList<Warenkorb> koerbe = new ArrayList<Warenkorb>();
 
     public static void getEmpfehlungen(JspWriter stream){
         DB_Connector.connecttoDatabase();
@@ -160,14 +160,14 @@ public class Seitenaufbau extends HttpServlet{
         }
 
         try {
-
             if (cookie_vorhanden) {
-
                for(Warenkorb b: koerbe){
                    if(b.getUuid().equals(cook.getValue())){
-                       b.addprodukt(Integer.parseInt(produkt_id));
-
-                       writer.print("<th style=\"text-align: center\">Es sind " + b.getProdukt_id().size() + "Produkte im Warenkorb</th>");
+                       if(produkt_id!=null) {
+                           b.addprodukt(Integer.parseInt(produkt_id));
+                       }
+                        writer.print(tabelle_anfang);
+                       writer.print("<td style=\"text-align: center\">Es sind " + b.getProdukt_id().size() + " Produkte im Warenkorb</td>");
                         double summe=0.00;
                        for(Integer produkt: b.getProdukt_id()){
                            produkt_ps = DB_Connector.con.prepareStatement(produkt_string);
@@ -179,11 +179,13 @@ public class Seitenaufbau extends HttpServlet{
                            Double mietzins = produkt_rs.getDouble("mietzins");
                            summe+=mietzins;
                            String mietzins_string = formatdouble(mietzins);
-                           writer.print("<tr><td style=\"width:33%; align:center; border:solid 1px #000000\"><table style=\"width:100%\"><th colspan=\"2\" align=left>"+name+"</th><tr><td>Bezeichnung:</td><td>"+bezeichnung+"</td><td align=right>"+mietzins_string+"</td></tr></table>");
+                           writer.print("<tr><td style=\"width:33%; align:center; border:solid 1px #000000\"><table style=\"width:100%\"><th colspan=\"2\" align=left>"+name+"</th><tr><td>Bezeichnung:</td><td>"+bezeichnung+"</td><td align=right>"+mietzins_string+"</td></tr></table></td></tr>");
                        }
                        String summe_string = formatdouble(summe);
-                       writer.print("<tr><td><table style=\"width:100%\"<th>Summe</th><th>"+summe_string+"</th></table></td></tr>");
-                       writer.print("</td></tr></table></td>");
+                       writer.print("<tr><td><table style=\"width:100%\"><td>Summe</td><td align=\"right\">"+summe_string+"</td></table></td></tr>");
+                       writer.print("</td></tr></table>");
+                       writer.print("<table border=0 width\"100%\"><tr><td width=\"90%\"></td><td><form action=\"/bestellung\" method=\"post\"><input type=submit value=\"Kostenpflichtig bestellen\" name=\"Registrieren\"></form></td><td><form action\"/clear\" method=\"post\"><input type=submit value=\"Warenkorb leeren\" name=\"clear\"></form></td></tr></table> ");
+                       writer.print("</td>");
                    }
                }
             } else {
@@ -192,32 +194,7 @@ public class Seitenaufbau extends HttpServlet{
                     writer.print("<th style=\"text-align: center\">Es sind keine Produkte ausgewaehlt.</th>");
                     writer.print("</table>");
                 }else{
-                    //Cookie wird nicht gesetzt
-                    UUID uuid = UUID.randomUUID();
-                    Cookie id =
-                            new Cookie("id", uuid.toString());
-                    id.setDomain("localhost");
-                    id.setPath("./");
-                    Warenkorb korb = new Warenkorb(uuid.toString());
-                    koerbe.add(korb);
-                    writer.print(tabelle_anfang);
-                    korb.addprodukt(Integer.parseInt(produkt_id));
-                    double summe=0.00;
-                    for(Integer produkt: korb.getProdukt_id()){
-                        produkt_ps = DB_Connector.con.prepareStatement(produkt_string);
-                        produkt_ps.setInt(1,produkt);
-                        produkt_rs = produkt_ps.executeQuery();
-                        produkt_rs.next();
-                        String name= produkt_rs.getString("name");
-                        String bezeichnung = produkt_rs.getString("bezeichnung");
-                        Double mietzins = produkt_rs.getDouble("mietzins");
-                        summe+=mietzins;
-                        String mietzins_string = formatdouble(mietzins);
-                        writer.print("<tr><td style=\"width:33%; align:center; border:solid 1px #000000\"><table border=0 style=\"width:100%\"><tr><th colspan=\"3\" align=left>"+name+"</th></tr><tr><td>Bezeichnung:</td><td>"+bezeichnung+"</td><td align=right>"+mietzins_string+"</td></tr></table>");
-                    }
-                    String summe_string = formatdouble(summe);
-                    writer.print("<tr><td><table style=\"width:100%\"><tr><td colspan=\"2\">Summe:</td><td align=right style=\"font-weight:bold\">"+summe_string+"</td></table></td></tr>");
-                    writer.print("</td></tr></table></td>");
+                    //Fall, falls keine Cookie gefunden wurde.
                 }
             }
         }catch(IOException e){
@@ -229,7 +206,7 @@ public class Seitenaufbau extends HttpServlet{
     public static void getKategorieArtikel(JspWriter writer,String kat_id){
         DB_Connector.connecttoDatabase();
 
-        String kategorien_string = "Select id FROM kategorie WHERE oberkategorie=? Order BY id";
+        String kategorien_string = "Select id,name FROM kategorie WHERE oberkategorie=? Order BY id";
         PreparedStatement kategorien_ps = null;
         ResultSet kategorien_rs;
         String produkte_string = "SELECT id,name, bezeichnung, mietzins FROM produkt WHERE Kategorieid=? ORDER BY id";
@@ -243,13 +220,20 @@ public class Seitenaufbau extends HttpServlet{
             while(kategorien_rs.next()){
 
                 int kategorie_id = kategorien_rs.getInt("id");
+                String kategorie_name = kategorien_rs.getString("name");
                 produkte_ps = DB_Connector.con.prepareStatement(produkte_string);
                 produkte_ps.setInt(1,kategorie_id);
                 produkte_rs = produkte_ps.executeQuery();
 
                 int zaehler=0;
+                String kat_name =".";
                 for(int i=0;i<5;i++){
                     writer.print("<tr>\n");
+                    if(!kat_name.equals(kategorie_name)){
+                        writer.print("<td><b>"+kategorie_name+"</b></td></tr><tr>\n");
+                        kat_name=kategorie_name;
+                    }
+
                     for(int ii=0;ii<3;ii++){
                         if(produkte_rs.next()) {
                             int id = produkte_rs.getInt("id");
@@ -257,7 +241,7 @@ public class Seitenaufbau extends HttpServlet{
                             String bezeichnung = produkte_rs.getString("bezeichnung");
                             Double mietzins = produkte_rs.getDouble("mietzins");
                             String mietzins_string = formatdouble(mietzins);
-                            writer.print("<td onmouseover=this.style.background=\"#FCFD7A\" onmouseout=this.style.background=\"#FCFD5A\" style=\"width:33%; align:center; border:solid 1px #000000\" onclick=self.location.href=\"./jsp/artikel.jsp?id=" + id + "\">");
+                            writer.print("<td onmouseover=this.style.background=\"#FCFD7A\" onmouseout=this.style.background=\"#FCFD5A\" style=\"width:33%; align:center; border:solid 1px #000000\" onclick=self.location.href=\"./artikel.jsp?id=" + id + "\">");
                             writer.print("<table style=\"max-width:100%\" border=0 ><tr><td colspan=\"2\">" +
                                     name +
                                     "</td></tr><tr><td rowspan=\"2\" style=\" min-width:30pt; max-width:30pt; min-height:30pt ; max-height:30pt\">" +
@@ -282,6 +266,7 @@ public class Seitenaufbau extends HttpServlet{
             e.printStackTrace();
         }
     }
+
     private static  String formatdouble(Double d){
         DecimalFormat format = new DecimalFormat("#####0.00");
         return format.format(d)+"&#8364";

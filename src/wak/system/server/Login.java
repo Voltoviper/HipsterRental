@@ -1,5 +1,6 @@
 package wak.system.server;
 
+import wak.objects.Warenkorb;
 import wak.user.Person;
 
 import javax.servlet.http.Cookie;
@@ -42,6 +43,7 @@ public class Login extends HttpServlet {
             test=nutzer;
             request.setAttribute("user", nutzer);
             UUID uuid = UUID.randomUUID();
+            Seitenaufbau.koerbe.add(new Warenkorb(uuid.toString()));
             Cookie id =
                     new Cookie("id", uuid.toString());
             id.setDomain("localhost");

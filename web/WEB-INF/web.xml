@@ -21,4 +21,12 @@
         <servlet-name>Empfehlung</servlet-name>
         <url-pattern>/Empfehlung</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>proofCookie</servlet-name>
+        <servlet-class>wak.system.server.proofCookie</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>proofCookie</servlet-name>
+        <url-pattern>/Cookie</url-pattern>
+    </servlet-mapping>
 </web-app>
