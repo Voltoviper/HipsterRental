@@ -1,11 +1,12 @@
 package wak.objects;
 
+
 import java.util.ArrayList;
 
 /**
  * Created by chris_000 on 25.09.2015.
  */
-public class Warenkorb {
+public class Warenkorb{
    ArrayList<Integer> produkt_id = new ArrayList<Integer>();
     String uuid;
 
@@ -19,6 +20,9 @@ public class Warenkorb {
 
     public void deleteprodukt(int id){
 
+    }
+    public void dropkorb(){
+        produkt_id.clear();
     }
 
     public ArrayList<Integer> getProdukt_id() {
@@ -36,4 +40,5 @@ public class Warenkorb {
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
+
 }

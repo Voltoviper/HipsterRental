@@ -29,4 +29,12 @@
         <servlet-name>proofCookie</servlet-name>
         <url-pattern>/Cookie</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Warenkorbleeren</servlet-name>
+        <servlet-class>wak.system.server.Warenkorbleeren</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Warenkorbleeren</servlet-name>
+        <url-pattern>/clear</url-pattern>
+    </servlet-mapping>
 </web-app>
