@@ -1,6 +1,7 @@
 package wak.system.server;
 
 import wak.objects.Warenkorb;
+import wak.system.db.DB_Connector;
 import wak.user.Person;
 
 import javax.servlet.http.Cookie;
@@ -13,6 +14,9 @@ import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.UUID;
 
@@ -55,27 +59,43 @@ public class Login extends HttpServlet {
             byte[] messageDigest = md.digest(passwd.getBytes());
             BigInteger number = new BigInteger(1, messageDigest);
             hashtext = number.toString(16);
+            if(!(hashtext.length()==32)){
+                hashtext =("00000000000000000000000000000000" + hashtext).substring(hashtext.length());
+            }
         }catch(NoSuchAlgorithmException e){
             System.out.println("Fehler bei der Passwort Bearbeitung");
         }
-
-        PrintWriter writer = response.getWriter();
-
-        if(passwd.matches("test")){
-            test=nutzer;
-            request.setAttribute("user", nutzer);
-            UUID uuid = UUID.randomUUID();
-            Seitenaufbau.koerbe.add(new Warenkorb(uuid.toString()));
-            Cookie id =
-                    new Cookie("id", uuid.toString());
-            id.setDomain("localhost");
-            id.setPath("./");
-            response.addCookie(id);
-            request.getRequestDispatcher("index.jsp").forward(request, response);
-        }else{
-            response.sendRedirect("./jsp/nologin.jsp");
+        try {
+            PrintWriter writer = response.getWriter();
+            writer.println(hashtext);
+            String nutzer_string = "SELECT passwort, id FROM softwareengineering2.nutzer WHERE benutzername=?;";
+            PreparedStatement nutzer_ps = null;
+            ResultSet nutzer_rs;
+            nutzer_ps = DB_Connector.con.prepareStatement(nutzer_string);
+            nutzer_ps.setString(1, nutzer);
+            nutzer_rs = nutzer_ps.executeQuery();
+            while(nutzer_rs.next()) {
+                String pass = nutzer_rs.getString("passwort");
+                writer.println(pass);
+                if (hashtext.matches(pass)) {
+                    test = nutzer;
+                    request.setAttribute("user", nutzer);
+                    UUID uuid = UUID.randomUUID();
+                    Seitenaufbau.koerbe.add(new Warenkorb(uuid.toString()));
+                    Cookie id =
+                            new Cookie("id", uuid.toString());
+                    id.setDomain("localhost");
+                    id.setPath("./");
+                    response.addCookie(id);
+                    request.getRequestDispatcher("index.jsp").forward(request, response);
+                } else {
+                    //response.sendRedirect("./jsp/nologin.jsp");
+                }
+            }
+            writer.close();
+            }catch(SQLException e) {
         }
-        writer.close();
+
     }
     }
     public static void getLogin(JspWriter writer, Cookie[] cookies){
