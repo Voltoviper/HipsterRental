@@ -24,6 +24,28 @@ public class Login extends HttpServlet {
     Person p;
    static  String test;
     protected void doPost(HttpServletRequest request,HttpServletResponse response) throws javax.servlet.ServletException, IOException {
+        if(request.getParameter("logout")!=null){
+            Cookie[] cookies = request.getCookies();
+            boolean cookie_vorhanden=false;
+            Cookie cook=null;
+            if(cookies!=null){
+                for(int i=0;i<cookies.length;i++){
+                    Cookie c = cookies[i];
+                    if(c.getName().compareTo("id")==0){
+                        cook = c;
+                        cookie_vorhanden=true;
+                        cook.setMaxAge(0);
+                        response.addCookie(cook);
+                        break;
+                    }else{
+
+                    }
+                }
+            }else{
+
+            }
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+        }else{
         String nutzer= request.getParameter("user");
         String passwd=request.getParameter("passwd");
         Enumeration<String> names= request.getParameterNames();
@@ -55,6 +77,7 @@ public class Login extends HttpServlet {
         }
         writer.close();
     }
+    }
     public static void getLogin(JspWriter writer, Cookie[] cookies){
        try {
         boolean cookie_vorhanden=false;
@@ -78,6 +101,7 @@ public class Login extends HttpServlet {
                         "          </tr>\n" +
                         "          <tr>\n" +
                         "            <td align=\"center\">"+test+"</td>\n" +
+                                    "</tr>"+"<td><form action=\"/home\" method=\"post\"><input type=\"submit\" name=\"logout\" value=\"Logout\"></form></td>"+
                         "        </table>\n" +
                         "    </td>");
             }else{

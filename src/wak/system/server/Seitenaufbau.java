@@ -184,7 +184,11 @@ public class Seitenaufbau extends HttpServlet{
                        String summe_string = formatdouble(summe);
                        writer.print("<tr><td><table style=\"width:100%\"><td>Summe</td><td align=\"right\">"+summe_string+"</td></table></td></tr>");
                        writer.print("</td></tr></table>");
-                       writer.print("<table border=0 width\"100%\"><tr><td width=\"90%\"></td><td><form action=\"/bestellung\" method=\"post\"><input type=submit value=\"Kostenpflichtig bestellen\" name=\"Registrieren\"></form></td><td><form action=\"/clear\" method=\"post\"><input type=submit value=\"Warenkorb leeren\" name=\"clear\"></form></td></tr></table> ");
+                       writer.print("<table border=0 width\"100%\"><tr><td width=\"90%\"></td><td><form action=\"/bestellung\" method=\"post\"><input type=submit value=\"Kostenpflichtig bestellen\" name=\"Registrieren\"");
+                       if(b.getProdukt_id().size()==0){
+                           writer.print("disabled");
+                       }
+                       writer.print("></form></td><td><form action=\"/clear\" method=\"post\"><input type=submit value=\"Warenkorb leeren\" name=\"clear\"></form></td></tr></table> ");
                        writer.print("</td>");
                    }
                }
