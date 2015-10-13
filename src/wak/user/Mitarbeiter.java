@@ -36,4 +36,14 @@ public class Mitarbeiter extends Person{
         return id;
     }
 
+    @Override
+    public void setVorname(String vorname) {
+
+    }
+
+    @Override
+    public void setNachname(String nachname) {
+
+    }
+
 }

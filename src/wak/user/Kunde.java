@@ -1,13 +1,17 @@
 package wak.user;
 
+import java.util.UUID;
+
 /**
  * Created by Christoph Nebendahl on 20.09.2015.
  */
 public class Kunde extends Person {
     String email, telefon, organame, handy;
     Adresse addr;
+    UUID uuid;
 
-    public Kunde(String id, String vorname, String nachname,String email, String telefon, String organame, String handy, String strasse, int hausnummer, String plz, String ort) {
+
+    public Kunde(String id, String vorname, String nachname,String email, String telefon, String organame, String handy, String strasse, int hausnummer, String plz, String ort, UUID uuid) {
         this.vorname = vorname;
         this.nachname = nachname;
         this.email = email;
@@ -16,6 +20,12 @@ public class Kunde extends Person {
         this.handy = handy;
         this.addr = new Adresse(strasse, ort, plz, hausnummer);
         this.id = id;
+        this.uuid = uuid;
+    }
+
+    public Kunde(String id, UUID uuid){
+        this.id=id;
+        this.uuid=uuid;
     }
 
     public String getEmail() {
@@ -58,6 +68,10 @@ public class Kunde extends Person {
         this.addr = addr;
     }
 
+    public String getUuid(){
+        return uuid.toString();
+    }
+
     @Override
     public String getVorname() {
         return vorname;
@@ -71,5 +85,15 @@ public class Kunde extends Person {
     @Override
     public String getId() {
         return id;
+    }
+
+    @Override
+    public void setVorname(String vorname) {
+        this.vorname = vorname;
+    }
+
+    @Override
+    public void setNachname(String nachname) {
+        this.nachname= nachname;
     }
 }

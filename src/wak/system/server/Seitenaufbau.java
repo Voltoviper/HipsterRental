@@ -3,6 +3,8 @@ package wak.system.server;
 import sun.text.resources.sq.JavaTimeSupplementary_sq;
 import wak.objects.Warenkorb;
 import wak.system.db.DB_Connector;
+import wak.user.Adresse;
+import wak.user.Kunde;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -20,6 +22,7 @@ import java.util.UUID;
  */
 public class Seitenaufbau extends HttpServlet{
    public static  ArrayList<Warenkorb> koerbe = new ArrayList<Warenkorb>();
+    public static ArrayList<Kunde> kunde = new ArrayList<Kunde>();
 
     public static void getEmpfehlungen(JspWriter stream){
         DB_Connector.connecttoDatabase();
@@ -128,7 +131,7 @@ public class Seitenaufbau extends HttpServlet{
            writer.print("<td style=\"width:33%; align:center; border:solid 1px #000000\" >");
            writer.print("<table border=0 width=100%><th colspan=4>"+name+"</th><tr><td rowspan =4 style=\"min-width=300pt; min-height=300pt\"> Bild</td>" +
                    "<td width=\"100\">Beschreibung:</td><td>"+beschreibung+"</td><td style:\"text-align:right\" onmouseover=this.style.background=\"#6565FC\" onmouseout=this.style.background=\"#FCFD5A\" onclick=self.location.href=\"../jsp/warenkorb.jsp?addid=" + int_id + "\">Warenkorb</td></tr><tr>" +
-                   "<td width=\"100\">Miete:</td><td>"+mietzins_string+"</td></tr><tr>" +
+                   "<td width=\"100\">Miete:</td><td>"+mietzins_string+"</td><td><div class=\"fb-share-button\" data-href=\"http://www.hipster-rental.de/jsp/artikel?id="+int_id+"\" data-layout=\"button\"></div></tr><tr>" +
                    "<td width=\"100\">Bezeichnung:</td><td>"+bezeichnung+"</td></tr><tr>" +
                    "<td width=\"100\">Hersteller:</td><td>"+hersteller+"</table>");
        }catch(IOException e){
@@ -140,10 +143,9 @@ public class Seitenaufbau extends HttpServlet{
         DB_Connector.connecttoDatabase();
         String produkt_string = "SELECT name, bezeichnung, mietzins  FROM produkt WHERE id=?";
         PreparedStatement produkt_ps = null;
-
+        String tabelle_anfang= "<td><table border=0 style=\"width:100%\">";
         ResultSet produkt_rs;
         boolean cookie_vorhanden=false;
-        String tabelle_anfang= "<td><table border=0 style=\"width:100%\">";
         Cookie cook=null;
         if(cookies!=null){
             for(int i=0;i<cookies.length;i++){
@@ -167,7 +169,11 @@ public class Seitenaufbau extends HttpServlet{
                            b.addprodukt(Integer.parseInt(produkt_id));
                        }
                         writer.print(tabelle_anfang);
-                       writer.print("<td style=\"text-align: center\">Es sind " + b.getProdukt_id().size() + " Produkte im Warenkorb</td>");
+                       if(b.getProdukt_id().size()==1){
+                           writer.print("<td style=\"text-align: center\">Es ist 1 Produkt im Warenkorb</td>");
+                       }else {
+                           writer.print("<td style=\"text-align: center\">Es sind " + b.getProdukt_id().size() + " Produkte im Warenkorb</td>");
+                       }
                         double summe=0.00;
                        for(Integer produkt: b.getProdukt_id()){
                            produkt_ps = DB_Connector.con.prepareStatement(produkt_string);
@@ -184,7 +190,7 @@ public class Seitenaufbau extends HttpServlet{
                        String summe_string = formatdouble(summe);
                        writer.print("<tr><td><table style=\"width:100%\"><td>Summe</td><td align=\"right\">"+summe_string+"</td></table></td></tr>");
                        writer.print("</td></tr></table>");
-                       writer.print("<table border=0 width\"100%\"><tr><td width=\"90%\"></td><td><form action=\"/bestellung\" method=\"post\"><input type=submit value=\"Kostenpflichtig bestellen\" name=\"Registrieren\"");
+                       writer.print("<table border=0 width\"100%\"><tr><td width=\"90%\"></td><td><form action=\"/Bestellung\" method=\"post\"><input type=submit value=\"Kostenpflichtig bestellen\" name=\"Registrieren\"");
                        if(b.getProdukt_id().size()==0){
                            writer.print("disabled");
                        }
@@ -270,11 +276,129 @@ public class Seitenaufbau extends HttpServlet{
             e.printStackTrace();
         }
     }
+    public static void getBestellung(JspWriter writer, Cookie[] cookies){
+        try {
+            boolean cookie_vorhanden=false;
+            Cookie cook=null;
+            if(cookies!=null){
+                for(int i=0;i<cookies.length;i++){
+                    Cookie c = cookies[i];
+                    if(c.getName().compareTo("id")==0){
+                        cook = c;
+                        cookie_vorhanden=true;
+                        break;
+                    }else{
+                    }
+                }
+            }else{
 
+            }
+            if(cookie_vorhanden){
+                writer.print("<td>");
+                Kunde k = getKunde(cook.getValue());
+                String vorname=" ", nachname=" ", strasse=" ",  plz=" ", ort=" ", telefon=" ", handy=" ", email = " ";
+                int hausnummer=0;
+                if((k.getVorname()==null)||(k.getVorname().isEmpty())){
+                    String kunde_string = "SELECT nutzer.vorname, nutzer.nachname, kunde.strasse, kunde.hausnummer, kunde.plz, kunde.ort, kunde.telefonnummer, kunde.handynummer, kunde.email FROM kunde Inner join nutzer on kunde.Nutzerid=nutzer.id WHERE kunde.Nutzerid=?";
+                    PreparedStatement kunde_ps = null;
+                    ResultSet kunde_rs;
+                    kunde_ps = DB_Connector.con.prepareStatement(kunde_string);
+                    kunde_ps.setString(1, k.getId());
+                    kunde_rs = kunde_ps.executeQuery();
+                    kunde_rs.next();
+                     vorname = kunde_rs.getString("vorname");
+                     nachname = kunde_rs.getString("nachname");
+                     strasse = kunde_rs.getString("strasse");
+                     hausnummer = kunde_rs.getInt("hausnummer");
+                     plz = kunde_rs.getString("plz");
+                     ort = kunde_rs.getString("Ort");
+                     telefon = kunde_rs.getString("telefonnummer");
+                     handy = kunde_rs.getString("handynummer");
+                     email = kunde_rs.getString("email");
+                    k.setAddr(new Adresse(strasse,ort, plz, hausnummer));
+                    k.setEmail(email);
+                    k.setTelefon(telefon);
+                    k.setHandy(handy);
+                    k.setVorname(vorname);
+                    k.setNachname(nachname);
+                }
+                writer.print("<form action=\"/Bestelleintragung\" method=\"post\"><table width=100%><tr><td>Vorname</td><td><input type=\"text\" name=\"Vorname\" value=\""+vorname+"\"></td><td rowspan=12>"+getWarenkorbTabelle(k.getUuid())+"</td></tr>");
+                writer.print("<tr><td>Nachname</td><td><input type=text name=Nachname value="+nachname+"></td></tr>");
+                writer.print("<tr><td>Stra&#223;e</td><td><input type=text name=Strasse value="+strasse+"></td></tr>");
+                writer.print("<tr><td>Hausnummer</td><td><input type=text name=Hausnummer value="+hausnummer+"></td></tr>");
+                writer.print("<tr><td>PLZ</td><td><input type=text name=plz value="+plz+"></td></tr>");
+                writer.print("<tr><td>Ort</td><td><input type=text name=ort value="+ort+"></td></tr>");
+                writer.print("<tr><td>Telefon</td><td><input type=text name=telefon value="+telefon+"></td></tr>");
+                writer.print("<tr><td>Handy</td><td><input type=text name=handy value="+handy+"></td></tr>");
+                writer.print("<tr><td>E-Mail</td><td><input type=text name=email value="+email+"></td></tr>");
+                writer.print("<tr><td>Von</td><td><input type=\"Text\"  id=\"von\"/><img src=\"../img/calender/cal.gif\" onclick=\"javascript:NewCssCal('von','ddMMyyyy','arrow', 'true', '24')\" style=\"cursor:pointer\"/></td></tr>");
+                writer.print("<tr><td>Bis</td><td><input type=\"Text\"  id=\"bis\"/><img src=\"../img/calender/cal.gif\" onclick=\"javascript:NewCssCal('bis','ddMMyyyy','arrow', 'true', '24')\" style=\"cursor:pointer\"/>      </td></tr>");
+                writer.print("<tr><td colspan=2><input type=submit value=\"Kostenpflichtig bestellen\" name=\"bestellen\"><input type=submit value=\"abbrechen\"></td></tr>");
+                writer.print("</table></form>");
+            }
+            writer.print("</td>");
+        }catch(IOException e){
+
+        }catch(SQLException e1){
+            try{writer.print(e1);}catch(IOException e2){}
+        }
+    }
+
+    // Interne Funktionen
     private static  String formatdouble(Double d){
         DecimalFormat format = new DecimalFormat("#####0.00");
         return format.format(d)+"&#8364";
     }
+    private static Kunde getKunde(String uuid){
+        for(Kunde k: kunde){
+            if(k.getUuid().equals(uuid)){
+                return k;
+            }
+        }
+        return null;
+    }
+    private static String getWarenkorbTabelle(String uuid){
+
+        DB_Connector.connecttoDatabase();
+        String produkt_string = "SELECT name, bezeichnung, mietzins  FROM produkt WHERE id=?";
+        PreparedStatement produkt_ps = null;
+        String tabelle_anfang= "<table border=0 style=\"width:100%\">";
+        ResultSet produkt_rs;
+        StringBuffer writer=new StringBuffer();
+
+        try {
+                for(Warenkorb b: koerbe){
+                    if(b.getUuid().equals(uuid)){
+
+                        writer.append(tabelle_anfang);
+                        writer.append("<td style=\"text-align: center\">Produkte</td>");
+
+                        double summe=0.00;
+                        for(Integer produkt: b.getProdukt_id()){
+                            produkt_ps = DB_Connector.con.prepareStatement(produkt_string);
+                            produkt_ps.setInt(1,produkt);
+                            produkt_rs = produkt_ps.executeQuery();
+                            produkt_rs.next();
+                            String name= produkt_rs.getString("name");
+                            String bezeichnung = produkt_rs.getString("bezeichnung");
+                            Double mietzins = produkt_rs.getDouble("mietzins");
+                            summe+=mietzins;
+                            String mietzins_string = formatdouble(mietzins);
+                            writer.append("<tr><td style=\"width:33%; align:center; border:solid 1px #000000\"><table style=\"width:100%\"><th colspan=\"2\" align=left>"+name+"</th><tr><td style=\" max-width: 200px;\">Bezeichnung:</td><td>"+bezeichnung+"</td><td align=right>"+mietzins_string+"</td></tr></table></td></tr>");
+                        }
+                        String summe_string = formatdouble(summe);
+                        writer.append("<tr><td><table style=\"width:100%\"><td>Summe</td><td align=\"right\">"+summe_string+"</td></table></td></tr>");
+                        writer.append("</td></tr></table>");
+                    }
+                }
+
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return writer.toString();
+    }
+
 
 
 }

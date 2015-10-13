@@ -13,12 +13,13 @@ import java.time.LocalDateTime;
 public class Home {
 
     public static void main(String args[]){
+        /*
         DB_Connector.connecttoDatabase();
        Kunde k = new Kunde("1","Christoph", "Nebendahl", "christoph@mail-nebendahl","04307-5198","WAK","01573-1655616","Eckernfoerder Str.",61,"24116","Kiel");
         System.out.println(k.getAddr());
        System.out.println(Timestamp.valueOf(LocalDateTime.now()));
         Bestellung b = new Bestellung(k, null, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now()));
         //conn.updateDatabase("INSERT INTO 'kategorie' ('name', 'bild_pfad') VALUES ('Test','C:Christoph')");
-        
+        */
     }
 }

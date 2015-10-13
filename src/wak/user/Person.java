@@ -9,4 +9,7 @@ public abstract class Person {
     public abstract String getVorname();
     public abstract String getNachname();
     public abstract String getId();
+    public abstract void setVorname(String vorname);
+    public abstract void setNachname(String nachname);
+
 }
