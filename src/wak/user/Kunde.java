@@ -10,7 +10,21 @@ public class Kunde extends Person {
     Adresse addr;
     UUID uuid;
 
-
+    /**
+     * Kunde wird angelegt.
+     * @param id
+     * @param vorname
+     * @param nachname
+     * @param email
+     * @param telefon
+     * @param organame
+     * @param handy
+     * @param strasse
+     * @param hausnummer
+     * @param plz
+     * @param ort
+     * @param uuid
+     */
     public Kunde(String id, String vorname, String nachname,String email, String telefon, String organame, String handy, String strasse, int hausnummer, String plz, String ort, UUID uuid) {
         this.vorname = vorname;
         this.nachname = nachname;
@@ -23,6 +37,11 @@ public class Kunde extends Person {
         this.uuid = uuid;
     }
 
+    /**
+     * Kunde wird nur für die Zuordnung von SessionID und Kundennummer angelegt. Es muss später erweitert werden!
+     * @param id
+     * @param uuid
+     */
     public Kunde(String id, UUID uuid){
         this.id=id;
         this.uuid=uuid;

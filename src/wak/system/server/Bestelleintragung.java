@@ -11,7 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by chris_000 on 13.10.2015.
+ * Created by Christoph Nebendahl on 13.10.2015.
+ * @author Christoph Nebendahl
  */
 @WebServlet(name = "Bestelleintragung")
 public class Bestelleintragung extends HttpServlet {
@@ -37,6 +38,9 @@ public class Bestelleintragung extends HttpServlet {
             Kunde kunde = null;
             for(Kunde k:Seitenaufbau.kunde){
                 if(k.getUuid().equals(cook.getValue())){
+
+
+                    //Prüfen, ob die Daten geändert wurden
                     if(!(k.getVorname().equals(request.getParameter("vorname")))){
 
                     }
