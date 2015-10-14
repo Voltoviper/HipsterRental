@@ -34,3 +34,8 @@ body{
 	background-color:#6565FC;
 	vertical-align: top;
 }
+.umrandung{
+	width:25%;
+	align:center;
+	border:solid 1px #000000;
+}

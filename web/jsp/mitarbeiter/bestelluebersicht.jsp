@@ -13,7 +13,7 @@
     </td>
     <td class="main" valign="top">
       <table style="width: 100%; valign:top" border="0">
-        <th style="text-align: center" colspan="3">Bestellübersicht</th>
+        <th style="text-align: center" colspan="3">Bestell&uumlbersicht</th>
         <tr>
           <%Seitenaufbau.getBestelluebersicht(out, request.getCookies());%>
         </tr>

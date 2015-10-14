@@ -367,7 +367,7 @@ public class Seitenaufbau extends HttpServlet{
 
         try {
 
-            writer.print("<td><table><tr><td>Bestellnummer</td><td>von</td><td>bis</td><td>Mietzins</td><td>Annehmen</td><td>Ablehnen</td></tr>");
+            writer.print("<td><table width=100%><tr><td>Bestellnummer</td><td>von</td><td>bis</td><td>Mietzins</td><td>Annehmen</td><td>Ablehnen</td></tr>");
             String bestell_string = "select Bestellungid, von, bis ,gesamtkosten from (select Bestellungid ,round(sum(mietzins), 2) as Gesamtkosten from bestellposition inner join produkt ON(bestellposition.Produktid = produkt.id) group by Bestellungid) as temp inner join bestellung ON(Bestellungid = bestellung.id) where genehmigt = 0;";
             PreparedStatement bestell_ps = null;
             ResultSet bestell_rs;
@@ -379,7 +379,7 @@ public class Seitenaufbau extends HttpServlet{
                 Date von = bestell_rs.getDate("von");
                 Date bis = bestell_rs.getDate("bis");
                 double mietzins = bestell_rs.getDouble("gesamtkosten");
-                writer.print("<tr><td>"+bestellid+"</td><td>"+von.toString()+"</td><td>"+bis.toString()+"</td><td>"+formatdouble(mietzins)+"</td><td>Annehmen</td><td>Ablehnen</td></tr>");
+                writer.print("<tr><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+bestellid+"</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+von.toString()+"</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+bis.toString()+"</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+formatdouble(mietzins)+"</td><td onclick=self.location.href=\"./bestellannahme.jsp?bestellid="+bestellid+"\">Annehmen</td><td>Ablehnen</td></tr>");
             }
             writer.print("</table></td>");
 
@@ -396,6 +396,48 @@ public class Seitenaufbau extends HttpServlet{
 
     }
 
+    public static void getBestelldetails(JspWriter writer, Cookie[] cookies, String bestellid){
+        //Cookie überprüfen
+
+
+
+        try{
+            writer.print("<td><table width=\"100%\"");
+            //Allgemeine Informationen
+            String info_string = "SELECT bestellung.id, bestellung.Nutzerid, bestellung.von, nutzer.vorname, nutzer.nachname ,bestellung.bis, kunde.email, kunde.organame, kunde.strasse, kunde.hausnummer, kunde.plz, kunde.ort, kunde.telefonnummer, kunde.handynummer FROM softwareengineering2.bestellung inner join kunde ON(bestellung.Nutzerid=kunde.Nutzerid) inner join nutzer on(bestellung.Nutzerid=nutzer.id) WHERE bestellung.id=?;\n";
+            PreparedStatement info_ps = DB_Connector.con.prepareStatement(info_string);
+            info_ps.setInt(1,Integer.parseInt(bestellid));
+            ResultSet info_rs = info_ps.executeQuery();
+            info_rs.next();
+            String nutzerid = info_rs.getString("Nutzerid");
+            String vorname = info_rs.getString("vorname");
+            String nachname = info_rs.getString("nachname");
+            String email = info_rs.getString("email");
+            Date von = info_rs.getDate("von");
+            Date bis = info_rs.getDate("bis");
+            writer.print("<th colspan=4 align=center><b>Bestellnummer: "+bestellid+"</b></th>");
+            writer.print("<tr><td class=\"umrandung\"><b>Kundennummer:</b> "+nutzerid+"</td><td class=\"umrandung\"><b>Vorname: </b>"+vorname+"</td><td class=\"umrandung\"><b>Nachname: </b>"+nachname+"</td><td class=\"umrandung\"> <b>E-Mail: </b>"+email+"</td></tr>" +
+                   "<tr><td class=\"umrandung\">Von: "+von+"</td><td class=\"umrandung\">Bis: "+bis+"</td><td></td><td></tr>" );
+
+            //Tabelle der Positionen
+            String position_string = "Select position, bezeichnung,name , hersteller_name, mietzins, kategorieid from bestellposition inner join produkt ON(bestellposition.Produktid = produkt.id) WHERE Bestellungid=?;";
+            PreparedStatement position_ps = DB_Connector.con.prepareStatement(position_string);
+            position_ps.setInt(1,Integer.parseInt(bestellid));
+            ResultSet position_rs = position_ps.executeQuery();
+
+
+            // Tabelle ende
+            writer.print("</table></td>");
+        }catch(IOException e1){
+
+        }catch(SQLException e2){
+            try {
+                writer.print(e2);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     // Interne Funktionen
 
     /**

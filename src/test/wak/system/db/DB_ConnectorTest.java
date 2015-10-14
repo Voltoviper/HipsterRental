@@ -22,7 +22,8 @@ import java.util.ArrayList;
 public class DB_ConnectorTest { 
 
 @Before
-public void before() throws Exception { 
+public void before() throws Exception {
+    DB_Connector.connecttoDatabase();
 } 
 
 @After
@@ -65,6 +66,9 @@ public void testConnecttoDatabase() throws Exception{
         querys.add("SELECT nutzer.vorname, nutzer.nachname, kunde.strasse, kunde.hausnummer, kunde.plz, kunde.ort, kunde.telefonnummer, kunde.handynummer, kunde.email FROM kunde Inner join nutzer on kunde.Nutzerid=nutzer.id WHERE kunde.Nutzerid=\"K000000001\"");
         //Bestellübersicht
         querys.add("select Bestellungid, von, bis ,gesamtkosten from (select Bestellungid ,round(sum(mietzins), 2) as Gesamtkosten from bestellposition inner join produkt ON(bestellposition.Produktid = produkt.id) group by Bestellungid) as temp inner join bestellung ON(Bestellungid = bestellung.id) where genehmigt = 0;");
+        //Bestellpositionen
+        querys.add("Select position, bezeichnung,name , hersteller_name, mietzins, kategorieid from bestellposition inner join produkt ON(bestellposition.Produktid = produkt.id) WHERE Bestellungid=1;");
+
         for(String s:querys){
             PreparedStatement result_ps = DB_Connector.con.prepareStatement(s);
             ResultSet result_rs = result_ps.executeQuery();
@@ -73,7 +77,15 @@ public void testConnecttoDatabase() throws Exception{
 
         System.out.println("QueryTest erfolgreich");
     }
-
+@Test
+    public void testsum() throws Exception{
+    System.out.println("Starte Rundungs Test");
+    PreparedStatement result_ps = DB_Connector.con.prepareStatement("select gesamtkosten from (select Bestellungid ,round(sum(mietzins), 2) as Gesamtkosten from bestellposition inner join produkt ON(bestellposition.Produktid = produkt.id) group by Bestellungid) as temp");
+            ResultSet result_rs = result_ps.executeQuery();
+    result_rs.next();
+    assertEquals(result_rs.getDouble("gesamtkosten") , 121.30,0.00);
+    System.out.println("RundungsTest erfolgreich");
+}
 
 
 } 
