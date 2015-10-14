@@ -2,12 +2,96 @@
 <Diagram>
   <ID>JAVA</ID>
   <OriginalElement />
-  <nodes />
+  <nodes>
+    <node x="-98.0" y="173.0">wak.objects.Warenkorb</node>
+    <node x="-488.0" y="174.0">wak.objects.Produkt</node>
+    <node x="-86.0" y="45.0">wak.system.server.Login</node>
+    <node x="-497.0" y="38.0">wak.objects.Bestellung</node>
+    <node x="-479.0" y="300.0">wak.objects.Paket</node>
+    <node x="-111.0" y="-62.0">wak.user.Mitarbeiter</node>
+    <node x="-331.0" y="173.0">wak.system.server.Seitenaufbau</node>
+    <node x="-302.0" y="230.0">wak.objects.Geraet</node>
+    <node x="28.0" y="103.0">wak.system.server.BestellungServlet</node>
+    <node x="-201.0" y="102.0">wak.user.Adresse</node>
+    <node x="-313.0" y="-64.0">wak.user.Person</node>
+    <node x="-314.0" y="297.0">wak.objects.Kategorie</node>
+    <node x="30.0" y="170.0">wak.system.server.Warenkorbleeren</node>
+    <node x="32.0" y="31.0">wak.system.db.DB_Connector</node>
+    <node x="-314.0" y="39.0">wak.user.Kunde</node>
+    <node x="32.0" y="306.0">wak.system.server.Bestelleintragung</node>
+    <node x="-100.0" y="308.0">wak.system.server.proofCookie</node>
+  </nodes>
   <notes />
-  <edges />
-  <settings layout="Hierarchic Group" zoom="1.0" x="0.0" y="0.0" />
+  <edges>
+    <edge source="wak.system.server.Seitenaufbau" target="wak.user.Adresse">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="wak.system.server.Seitenaufbau" target="wak.objects.Warenkorb">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="wak.user.Mitarbeiter" target="wak.user.Person">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="wak.objects.Paket" target="wak.objects.Kategorie">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="wak.objects.Bestellung" target="wak.user.Kunde">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="wak.system.server.Login" target="wak.user.Kunde">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="wak.objects.Bestellung" target="wak.objects.Produkt">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="wak.objects.Produkt" target="wak.objects.Kategorie">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="wak.objects.Paket" target="wak.objects.Produkt">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="wak.system.server.Login" target="wak.objects.Warenkorb">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="wak.objects.Produkt" target="wak.objects.Geraet">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="wak.system.server.Login" target="wak.user.Person">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="wak.user.Kunde" target="wak.user.Person">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="wak.system.server.Seitenaufbau" target="wak.user.Kunde">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="wak.user.Kunde" target="wak.user.Adresse">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="wak.system.server.proofCookie" target="wak.objects.Warenkorb">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="-180.0" y="-43.0" />
   <SelectedNodes />
   <Categories />
   <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
 </Diagram>
 
