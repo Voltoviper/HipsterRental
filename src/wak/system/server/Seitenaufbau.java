@@ -322,7 +322,7 @@ public class Seitenaufbau extends HttpServlet{
                     k.setVorname(vorname);
                     k.setNachname(nachname);
                 }
-                writer.print("<form action=\"/Bestelleintragung\" method=\"post\"><table width=100%><tr><td>Vorname</td><td><input type=\"text\" name=\"Vorname\" value=\""+vorname+"\"></td><td rowspan=12>"+getWarenkorbTabelle(k.getUuid())+"</td></tr>");
+                writer.print("<form action=\"/Bestelleintragung\" method=\"post\"><table width=100%><tr><td>Vorname</td><td><input type=\"text\" name=\"Vorname\" value=\""+vorname+"\"></td><td rowspan=\"12\" valign=\"top\">"+getWarenkorbTabelle(k.getUuid())+"</td></tr>");
                 writer.print("<tr><td>Nachname</td><td><input type=text name=Nachname value="+nachname+"></td></tr>");
                 writer.print("<tr><td>Stra&#223;e</td><td><input type=text name=Strasse value="+strasse+"></td></tr>");
                 writer.print("<tr><td>Hausnummer</td><td><input type=text name=Hausnummer value="+hausnummer+"></td></tr>");

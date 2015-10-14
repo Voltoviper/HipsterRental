@@ -10,6 +10,7 @@ public class Warenkorb{
    ArrayList<Integer> produkt_id = new ArrayList<Integer>();
     String uuid;
 
+
     public Warenkorb(String uuid) {
         this.uuid = uuid;
     }
