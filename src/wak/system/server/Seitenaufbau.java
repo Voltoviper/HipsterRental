@@ -5,11 +5,13 @@ import wak.objects.Warenkorb;
 import wak.system.db.DB_Connector;
 import wak.user.Adresse;
 import wak.user.Kunde;
+import wak.user.Mitarbeiter;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,6 +25,7 @@ import java.util.UUID;
 public class Seitenaufbau extends HttpServlet{
    public static  ArrayList<Warenkorb> koerbe = new ArrayList<Warenkorb>();
     public static ArrayList<Kunde> kunde = new ArrayList<Kunde>();
+    public static ArrayList<Mitarbeiter> mitarbeiter = new ArrayList<Mitarbeiter>();
 
     public static void getEmpfehlungen(JspWriter stream){
         DB_Connector.connecttoDatabase();
@@ -77,6 +80,19 @@ public class Seitenaufbau extends HttpServlet{
                     "<td style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Buchung</td>" +
                     "<td style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Profil</td>" +
                     "</tr></table>");
+        }catch (IOException e){
+
+        }
+    }
+    public static void getMitarbeiterMenu(JspWriter writer){
+
+        try{
+
+            writer.print("<tr><td onclick=self.location.href=\"../index.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neuer Artikel</td></tr><tr>" +
+                    "<td  style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neues Paket</td></tr><tr>" +
+                    "<td onclick=self.location.href=\"../jsp/mitarbeiter/bestelluebersicht.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Bestell&uumlbersicht</td></tr><tr>" +
+                    "<td style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neue Bestellung</td>" +
+                    "</tr>");
         }catch (IOException e){
 
         }
@@ -298,7 +314,7 @@ public class Seitenaufbau extends HttpServlet{
                 Kunde k = getKunde(cook.getValue());
                 String vorname=" ", nachname=" ", strasse=" ",  plz=" ", ort=" ", telefon=" ", handy=" ", email = " ";
                 int hausnummer=0;
-                if((k.getVorname()==null)||(k.getVorname().isEmpty())){
+
                     String kunde_string = "SELECT nutzer.vorname, nutzer.nachname, kunde.strasse, kunde.hausnummer, kunde.plz, kunde.ort, kunde.telefonnummer, kunde.handynummer, kunde.email FROM kunde Inner join nutzer on kunde.Nutzerid=nutzer.id WHERE kunde.Nutzerid=?";
                     PreparedStatement kunde_ps = null;
                     ResultSet kunde_rs;
@@ -321,7 +337,7 @@ public class Seitenaufbau extends HttpServlet{
                     k.setHandy(handy);
                     k.setVorname(vorname);
                     k.setNachname(nachname);
-                }
+
                 writer.print("<form action=\"/Bestelleintragung\" method=\"post\"><table width=100%><tr><td>Vorname</td><td><input type=\"text\" name=\"Vorname\" value=\""+vorname+"\"></td><td rowspan=\"12\" valign=\"top\">"+getWarenkorbTabelle(k.getUuid())+"</td></tr>");
                 writer.print("<tr><td>Nachname</td><td><input type=text name=Nachname value="+nachname+"></td></tr>");
                 writer.print("<tr><td>Stra&#223;e</td><td><input type=text name=Strasse value="+strasse+"></td></tr>");
@@ -343,8 +359,50 @@ public class Seitenaufbau extends HttpServlet{
             try{writer.print(e1);}catch(IOException e2){}
         }
     }
+    public static void getBestelluebersicht(JspWriter writer, Cookie[] cookies){
+        //Cookie abfragen
+
+
+
+
+        try {
+
+            writer.print("<td><table><tr><td>Bestellnummer</td><td>von</td><td>bis</td><td>Mietzins</td><td>Annehmen</td><td>Ablehnen</td></tr>");
+            String bestell_string = "select Bestellungid, von, bis ,gesamtkosten from (select Bestellungid ,round(sum(mietzins), 2) as Gesamtkosten from bestellposition inner join produkt ON(bestellposition.Produktid = produkt.id) group by Bestellungid) as temp inner join bestellung ON(Bestellungid = bestellung.id) where genehmigt = 0;";
+            PreparedStatement bestell_ps = null;
+            ResultSet bestell_rs;
+            bestell_ps = DB_Connector.con.prepareStatement(bestell_string);
+            bestell_rs = bestell_ps.executeQuery();
+
+            while(bestell_rs.next()){
+                int bestellid = bestell_rs.getInt("Bestellungid");
+                Date von = bestell_rs.getDate("von");
+                Date bis = bestell_rs.getDate("bis");
+                double mietzins = bestell_rs.getDouble("gesamtkosten");
+                writer.print("<tr><td>"+bestellid+"</td><td>"+von.toString()+"</td><td>"+bis.toString()+"</td><td>"+formatdouble(mietzins)+"</td><td>Annehmen</td><td>Ablehnen</td></tr>");
+            }
+            writer.print("</table></td>");
+
+        }catch(IOException e1){
+
+
+        }catch(SQLException e2){
+            try {
+                writer.print(e2);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
 
     // Interne Funktionen
+
+    /**
+     * Benötigt einen Double Wert, der dann als € Einheit in einem String zurückgegeben wird.
+     * @param d
+     * @return
+     */
     private static  String formatdouble(Double d){
         DecimalFormat format = new DecimalFormat("#####0.00");
         return format.format(d)+"&#8364";

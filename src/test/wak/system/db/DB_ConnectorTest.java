@@ -63,7 +63,8 @@ public void testConnecttoDatabase() throws Exception{
         querys.add("SELECT id,name, bezeichnung, mietzins FROM produkt WHERE Kategorieid=3 ORDER BY id");
         //Informationen über die Kunden
         querys.add("SELECT nutzer.vorname, nutzer.nachname, kunde.strasse, kunde.hausnummer, kunde.plz, kunde.ort, kunde.telefonnummer, kunde.handynummer, kunde.email FROM kunde Inner join nutzer on kunde.Nutzerid=nutzer.id WHERE kunde.Nutzerid=\"K000000001\"");
-
+        //Bestellübersicht
+        querys.add("select Bestellungid, von, bis ,gesamtkosten from (select Bestellungid ,round(sum(mietzins), 2) as Gesamtkosten from bestellposition inner join produkt ON(bestellposition.Produktid = produkt.id) group by Bestellungid) as temp inner join bestellung ON(Bestellungid = bestellung.id) where genehmigt = 0;");
         for(String s:querys){
             PreparedStatement result_ps = DB_Connector.con.prepareStatement(s);
             ResultSet result_rs = result_ps.executeQuery();

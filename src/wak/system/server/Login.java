@@ -3,6 +3,7 @@ package wak.system.server;
 import wak.objects.Warenkorb;
 import wak.system.db.DB_Connector;
 import wak.user.Kunde;
+import wak.user.Mitarbeiter;
 import wak.user.Person;
 
 import javax.servlet.http.Cookie;
@@ -23,6 +24,9 @@ import java.util.UUID;
 
 /**
  * Created by Crhistoph Nebendahl on 23.09.2015.
+ * Login Klasse die gleichzeitig auch überprüft welche Person sich angemeldet hat.
+ * @author Christoph Nebendahl
+ * @version 1.1
  */
 public class Login extends HttpServlet {
 
@@ -51,10 +55,12 @@ public class Login extends HttpServlet {
             }
             request.getRequestDispatcher("index.jsp").forward(request, response);
         }else{
-        String nutzer= request.getParameter("user");
-        String passwd=request.getParameter("passwd");
-        Enumeration<String> names= request.getParameterNames();
-        String hashtext = "nichts";
+            String nutzer= request.getParameter("user");
+            String passwd=request.getParameter("passwd");
+            Enumeration<String> names= request.getParameterNames();
+
+            //Hashen des Kennwortes für die Überprüfung
+            String hashtext = "nichts";
         try{
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] messageDigest = md.digest(passwd.getBytes());
@@ -67,6 +73,8 @@ public class Login extends HttpServlet {
             System.out.println("Fehler bei der Passwort Bearbeitung");
         }
         try {
+
+            //Abfrage, ob es die KOmbination in der Datenbank gibt
             PrintWriter writer = response.getWriter();
             writer.println(hashtext);
             String nutzer_string = "SELECT passwort, id FROM softwareengineering2.nutzer WHERE benutzername=?;";
@@ -81,16 +89,30 @@ public class Login extends HttpServlet {
                 writer.println(pass);
                 if (hashtext.matches(pass)) {
                     test = nutzer;
-                    request.setAttribute("user", nutzer);
                     UUID uuid = UUID.randomUUID();
-                    Seitenaufbau.kunde.add(new Kunde(int_id, uuid));
-                    Seitenaufbau.koerbe.add(new Warenkorb(uuid.toString()));
-                    Cookie id =
-                            new Cookie("id", uuid.toString());
+
+                    //Entscheiden um was für eine Person es sich handelt
+                    String c=null;
+                    switch(int_id.charAt(0)){
+                        case 'M':c="M";Mitarbeiter m = new Mitarbeiter(uuid, int_id, false);Seitenaufbau.mitarbeiter.add(m);break;
+                        case 'A':c="M";Mitarbeiter a = new Mitarbeiter(uuid, int_id, true);Seitenaufbau.mitarbeiter.add(a);break;
+                        case 'K':c="K";Kunde k = new Kunde(int_id, uuid);Seitenaufbau.kunde.add(k);Seitenaufbau.koerbe.add(new Warenkorb(uuid.toString()));break;
+                        default: request.getRequestDispatcher("index.jsp");
+                    }
+                    writer.print(c);
+
+                    //Cookie
+                    Cookie id = new Cookie("id", uuid.toString());
                     id.setDomain("localhost");
                     id.setPath("./");
                     response.addCookie(id);
-                    request.getRequestDispatcher("index.jsp").forward(request, response);
+
+                    //Weiterleitung je nachdem was für eine Person sich angemeldet hat
+                    if(c.equals("M")){
+                        request.getRequestDispatcher("/jsp/mitarbeiter/Uebersicht-Mitarbeiter.jsp").forward(request, response);
+                    }else {
+                        request.getRequestDispatcher("index.jsp").forward(request, response);
+                    }
                 } else {
                     //response.sendRedirect("./jsp/nologin.jsp");
                 }
@@ -127,6 +149,7 @@ public class Login extends HttpServlet {
                                     "</tr>"+"<td><form action=\"/home\" method=\"post\"><input type=\"submit\" name=\"logout\" value=\"Logout\"></form></td>"+
                         "        </table>\n" +
                         "    </td>");
+
             }else{
                 writer.print(" <td class=\"login\">\n" +
                         "      <form action=\"/home\" method=\"post\">\n" +

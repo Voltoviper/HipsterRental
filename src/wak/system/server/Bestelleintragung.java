@@ -38,7 +38,7 @@ public class Bestelleintragung extends HttpServlet {
             Kunde kunde = null;
             for(Kunde k:Seitenaufbau.kunde){
                 if(k.getUuid().equals(cook.getValue())){
-
+                    kunde = k;
 
                     //Prüfen, ob die Daten geändert wurden
                     if(!(k.getVorname().equals(request.getParameter("vorname")))){
@@ -69,7 +69,9 @@ public class Bestelleintragung extends HttpServlet {
 
                     }
                 }
+
             }
+
         }
     }
 
