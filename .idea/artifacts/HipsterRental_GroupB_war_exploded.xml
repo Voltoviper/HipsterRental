@@ -12,6 +12,7 @@
           <element id="file-copy" path="$PROJECT_DIR$/mysql-connector-java-5.1.36/mysql-connector-java-5.1.36/mysql-connector-java-5.1.36-bin.jar" />
           <element id="library" level="project" name="mysql-connector-java-5.1.36-bin" />
           <element id="library" level="project" name="junit" />
+          <element id="library" level="project" name="joda-time-2.8.2" />
         </element>
         <element id="library" level="project" name="javax.servlet.jsp" />
       </element>

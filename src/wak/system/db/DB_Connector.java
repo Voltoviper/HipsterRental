@@ -29,4 +29,13 @@ public class DB_Connector {
                        System.out.println(e.getErrorCode());
            }
     }
+    public static void closeDatabase(){
+        try {
+            if(!con.isClosed()){
+                con.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

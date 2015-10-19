@@ -1,5 +1,7 @@
 package wak.system.server;
 
+import org.joda.time.DateTimeZone;
+import org.joda.time.Days;
 import sun.text.resources.sq.JavaTimeSupplementary_sq;
 import wak.objects.Warenkorb;
 import wak.system.db.DB_Connector;
@@ -11,13 +13,13 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
+import java.sql.*;
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.UUID;
+import java.text.*;
+import java.time.ZoneId;
+import java.util.*;
+
+import org.joda.time.DateTime;
 
 /**
  * Created by chris_000 on 24.09.2015.
@@ -404,30 +406,58 @@ public class Seitenaufbau extends HttpServlet{
         try{
             writer.print("<td><table width=\"100%\"");
             //Allgemeine Informationen
-            String info_string = "SELECT bestellung.id, bestellung.Nutzerid, bestellung.von, nutzer.vorname, nutzer.nachname ,bestellung.bis, kunde.email, kunde.organame, kunde.strasse, kunde.hausnummer, kunde.plz, kunde.ort, kunde.telefonnummer, kunde.handynummer FROM softwareengineering2.bestellung inner join kunde ON(bestellung.Nutzerid=kunde.Nutzerid) inner join nutzer on(bestellung.Nutzerid=nutzer.id) WHERE bestellung.id=?;\n";
+            String info_string = "SELECT bestellung.id, bestellung.Nutzerid,bestellung.genehmigt,  bestellung.von, nutzer.vorname, nutzer.nachname ,bestellung.bis, kunde.email, kunde.organame, kunde.strasse, kunde.hausnummer, kunde.plz, kunde.ort, kunde.telefonnummer, kunde.handynummer FROM softwareengineering2.bestellung inner join kunde ON(bestellung.Nutzerid=kunde.Nutzerid) inner join nutzer on(bestellung.Nutzerid=nutzer.id) WHERE bestellung.id=?;\n";
             PreparedStatement info_ps = DB_Connector.con.prepareStatement(info_string);
-            info_ps.setInt(1,Integer.parseInt(bestellid));
+            info_ps.setInt(1, Integer.parseInt(bestellid));
             ResultSet info_rs = info_ps.executeQuery();
             info_rs.next();
             String nutzerid = info_rs.getString("Nutzerid");
             String vorname = info_rs.getString("vorname");
             String nachname = info_rs.getString("nachname");
             String email = info_rs.getString("email");
-            Date von = info_rs.getDate("von");
-            Date bis = info_rs.getDate("bis");
+            Timestamp von = info_rs.getTimestamp("von");
+            Time von_time = info_rs.getTime("von");
+            Timestamp bis = info_rs.getTimestamp("bis");
+            Time bis_time = info_rs.getTime("bis");
+            int genehmigt = info_rs.getInt("genehmigt");
+            int tage = getTage(von, bis);
+
             writer.print("<th colspan=4 align=center><b>Bestellnummer: "+bestellid+"</b></th>");
             writer.print("<tr><td class=\"umrandung\"><b>Kundennummer:</b> "+nutzerid+"</td><td class=\"umrandung\"><b>Vorname: </b>"+vorname+"</td><td class=\"umrandung\"><b>Nachname: </b>"+nachname+"</td><td class=\"umrandung\"> <b>E-Mail: </b>"+email+"</td></tr>" +
-                   "<tr><td class=\"umrandung\">Von: "+von+"</td><td class=\"umrandung\">Bis: "+bis+"</td><td></td><td></tr>" );
-
+                   "<tr><td class=\"umrandung\">Von: "+dateFormatter(von)+"</td><td class=\"umrandung\">Bis: "+dateFormatter(bis)+"</td>");
+            if(genehmigt>=1){
+                writer.print("<td></td><td></td></tr>");
+            }else{
+                writer.print("<td class=\"umrandung\">Genehmigen</td><td class=\"umrandung\">Ablehnen</td></tr>");
+            }
+            writer.print("<tr><td class\"umrandung\">Anzahl Tage: "+tage+"</td></tr>");
+            writer.print("</table><table width=100%>");
             //Tabelle der Positionen
+            writer.print("<tr><td><b>Pos.</b></td><td><b>Name</b></td><td><b>Bezeichnung</b></td><td><b>Hersteller</b></td><td><b>Mietzins pro Tag</b></td><td><b>Kategorie</b></td></tr>");
             String position_string = "Select position, bezeichnung,name , hersteller_name, mietzins, kategorieid from bestellposition inner join produkt ON(bestellposition.Produktid = produkt.id) WHERE Bestellungid=?;";
             PreparedStatement position_ps = DB_Connector.con.prepareStatement(position_string);
             position_ps.setInt(1,Integer.parseInt(bestellid));
             ResultSet position_rs = position_ps.executeQuery();
-
-
+            int pos =0, kategorieid;
+            String name, bezeichnung, hersteller_name;
+            double mietzins, miete=0.0;
+            ArrayList<Double> waren = new ArrayList<Double>();
+            while(position_rs.next()){
+                pos=position_rs.getInt("position");
+                name=position_rs.getString("name");
+                bezeichnung=position_rs.getString("bezeichnung");
+                hersteller_name = position_rs.getString("hersteller_name");
+                mietzins = position_rs.getDouble("mietzins");
+                miete+=mietzins;
+                waren.add(mietzins);
+                writer.print("<tr><td>"+pos+"</td><td>"+name+"</td><td>"+bezeichnung+"</td><td>"+hersteller_name+"</td><td>"+formatdouble(mietzins)+"</td><td>Kategorie</td></tr>");
+            }
+            writer.print("<tr><td colspan=4><b>Summe pro Tag</b></td><td><b>"+formatdouble(miete)+"</b></td><td></td></tr>");
+            writer.print("<tr><td colspan=4><b>Summe Gesamt inkl. Rabatt</b></td><td><b>"+getEndsumme(nutzerid, tage, waren)+"</b></td><td></td></tr>");
+            writer.print("<tr><td colspan=4><b></b></td><td><b>"+""+"</b></td><td></td></tr>");
             // Tabelle ende
-            writer.print("</table></td>");
+            writer.print("</table>");
+            writer.print("</td>");
         }catch(IOException e1){
 
         }catch(SQLException e2){
@@ -438,6 +468,8 @@ public class Seitenaufbau extends HttpServlet{
             }
         }
     }
+
+
     // Interne Funktionen
 
     /**
@@ -498,7 +530,53 @@ public class Seitenaufbau extends HttpServlet{
         }
         return writer.toString();
     }
+    public static String dateFormatter(Timestamp stamp){
+        Calendar start = Calendar.getInstance();
+        start.setTimeInMillis( stamp.getTime() );
+        java.util.Date date = start.getTime();
+        DateFormat date_format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        return  date_format.format(date);
+    }
 
+    /**
+     * Berechnung der Differenz zwischen den Tagen.
+     * @param von Timestamp von wann die Bestellung gilt
+     * @param bis Timestamp bis wann die Bestellung gilt
+     * @return Gibt einen Integerwert zurück, mit der Differenz der Tage
+     */
+    public static int getTage(Timestamp von, Timestamp bis){
+        DateTimeZone Berlin = DateTimeZone.forID("Europe/Berlin");
+        DateTime von_joda = new DateTime(von.getTime(), Berlin);
+        DateTime bis_joda = new DateTime(bis.getTime(), Berlin);
+        Days days = Days.daysBetween(von_joda, bis_joda);
 
+        return days.getDays();
+    }
 
+    /**
+     *
+     * @param mietzins
+     * @param tage
+     * @return
+     */
+    private static String getgesamtsumme(double mietzins, int tage){
+        mietzins=mietzins*tage;
+        double mietzins_round = Math.round(mietzins*100.0)/100.0;
+        return formatdouble(mietzins_round);
+    }
+    public static String getEndsumme(String nutzerid, int tage, ArrayList<Double> waren) {
+        Double Summe=0.0;
+        for(double d:waren){
+               Summe+=d;
+            }
+        if(tage>1){
+            for(int i=1; i<tage;i++){
+                for(double d1:waren) {
+                    Summe += d1* 0.60;
+                }
+            }
+        }
+
+        return formatdouble(Summe);
+    }
 }

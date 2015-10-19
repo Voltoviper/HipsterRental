@@ -23,11 +23,14 @@ public class DB_ConnectorTest {
 
 @Before
 public void before() throws Exception {
+    System.out.println("Starte Datenbankverbindung");
     DB_Connector.connecttoDatabase();
 } 
 
 @After
-public void after() throws Exception { 
+public void after() throws Exception {
+    System.out.println("Schlieﬂe Datenbankverbindung");
+    DB_Connector.closeDatabase();
 } 
 
 /** 
