@@ -453,7 +453,12 @@ public class Seitenaufbau extends HttpServlet{
                 writer.print("<tr><td>"+pos+"</td><td>"+name+"</td><td>"+bezeichnung+"</td><td>"+hersteller_name+"</td><td>"+formatdouble(mietzins)+"</td><td>Kategorie</td></tr>");
             }
             writer.print("<tr><td colspan=4><b>Summe pro Tag</b></td><td><b>"+formatdouble(miete)+"</b></td><td></td></tr>");
-            writer.print("<tr><td colspan=4><b>Summe Gesamt inkl. Rabatt</b></td><td><b>"+getEndsumme(nutzerid, tage, waren)+"</b></td><td></td></tr>");
+            double gesamtsumme = getgesamtsumme(miete, tage);
+            double endsumme = getEndsumme(nutzerid, tage, waren);
+            double rabatt = gesamtsumme-endsumme;
+            writer.print("<tr><td colspan=4><b>Summe Gesamt ohne Rabatt</b></td><td><b>"+formatdouble(gesamtsumme)+"</b></td><td></td></tr>");
+            writer.print("<tr><td colspan=4><b>Rabatt</b></td><td><b>"+formatdouble(rabatt)+"</b></td><td></td></tr>");
+            writer.print("<tr><td colspan=4><b>Summe Gesamt inkl. Rabatt</b></td><td><b>"+formatdouble(endsumme)+"</b></td><td></td></tr>");
             writer.print("<tr><td colspan=4><b></b></td><td><b>"+""+"</b></td><td></td></tr>");
             // Tabelle ende
             writer.print("</table>");
@@ -559,12 +564,12 @@ public class Seitenaufbau extends HttpServlet{
      * @param tage
      * @return
      */
-    private static String getgesamtsumme(double mietzins, int tage){
+    private static double getgesamtsumme(double mietzins, int tage){
         mietzins=mietzins*tage;
         double mietzins_round = Math.round(mietzins*100.0)/100.0;
-        return formatdouble(mietzins_round);
+        return mietzins_round;
     }
-    public static String getEndsumme(String nutzerid, int tage, ArrayList<Double> waren) {
+    public static double getEndsumme(String nutzerid, int tage, ArrayList<Double> waren) {
         Double Summe=0.0;
         for(double d:waren){
                Summe+=d;
@@ -577,6 +582,6 @@ public class Seitenaufbau extends HttpServlet{
             }
         }
 
-        return formatdouble(Summe);
+        return Summe;
     }
 }
