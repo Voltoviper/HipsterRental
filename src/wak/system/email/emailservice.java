@@ -58,28 +58,34 @@ public class emailservice {
         msg.setFrom(new InternetAddress(email));
 
     }
-    public static void sendzusage(Session session, Kunde kunde, Bestellung b){
+    public static void sendgenehmigung(Session session, Kunde kunde, Bestellung b, boolean genehmigt){
         try {
             MimeMessage msg = new MimeMessage(session);
             InternetAddress adressTo = new InternetAddress(kunde.getEmail());
             msg.setRecipient(Message.RecipientType.TO, adressTo);
-            msg.setSubject(MimeUtility.encodeText("Auftragsbestätigung für Bestellung: "+b.getId(), "utf-8", "B"));
+            msg.setSubject(MimeUtility.encodeText("Auftragsaffirmation der Bestellung: " + b.getId(), "utf-8", "B"));
             msg.setFrom(new InternetAddress(email));
-            String input = emailservice.class.getResource("./zusage.html").getPath();
-            File f = new File(input);
-            String content = new Scanner(f).useDelimiter("\\Z").next();
-
-            System.out.println(content);
-
-            msg.setContent(content, "text/html");
+            msg.setContent(getContext(genehmigt, kunde, b), "text/html");
             Transport.send(msg);
 
         }catch(MessagingException e){
             e.printStackTrace();
-        } catch (FileNotFoundException e) {
+        }catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        }
+    }
+    private static String getContext(boolean genehmigt, Kunde kunde, Bestellung b){
+        StringBuffer content = new StringBuffer();
+        content.append("<!DOCTYPE html><html lang=\"de\"><head><meta charset=\"utf-8\"><title></title></head><body>");
+        content.append("Hallo " + kunde.getVorname() +" " + kunde.getNachname()+"<br>");
+        if(genehmigt){
+            content.append("Ihre Bestellung mit der Bestellid:" + b.getId() +"wird mit dieser E-Mail validiert!<br> Hochachtungsvoll <br> Das Hipster Rental Team");
+            content.append("</body></html>");
+            return content.toString();
+        }else{
+            content.append("Leider gibt es ein kleines Problem mit der Bestellung unter der BestellID: "+b.getId()+". Bitte setzen Sie sich mit uns in Verbindung, um dieses Problem aus der Welt zu schaffen.<br> Hochachtungsvoll <br> Das Hipster Rental Team");
+            content.append("</body></html>");
+            return content.toString();
         }
     }
 }

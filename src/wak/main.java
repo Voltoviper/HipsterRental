@@ -25,9 +25,11 @@ public class main {
         ArrayList<Produkt> liste = new ArrayList<Produkt>();
         liste.add(p1);
         Kunde k = new Kunde("K00000001", uuid);
+        k.setNachname("Lücke");
         k.setEmail("christoph@mail-nebendahl.de");
         Bestellung b = new Bestellung(k, liste, new Timestamp(1445419482), new Timestamp(1445419482));
-        emailservice.sendzusage(session, k, b );
+        emailservice.sendgenehmigung(session, k, b , true);
+        emailservice.sendgenehmigung(session, k, b, false);
 
     }
 }
