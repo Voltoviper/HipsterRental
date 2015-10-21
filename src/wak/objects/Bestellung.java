@@ -25,7 +25,7 @@ public class Bestellung {
         this.von = von;
         this.bis = bis;
         this.bestellungdatum = Timestamp.valueOf(LocalDateTime.now());
-        Bestellung_eintragen(this);
+        //Bestellung_eintragen(this);
     }
 
     private boolean ueberschneidet(Bestellung b){

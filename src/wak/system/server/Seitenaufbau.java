@@ -434,23 +434,24 @@ public class Seitenaufbau extends HttpServlet{
             writer.print("</table><table width=100%>");
             //Tabelle der Positionen
             writer.print("<tr><td><b>Pos.</b></td><td><b>Name</b></td><td><b>Bezeichnung</b></td><td><b>Hersteller</b></td><td><b>Mietzins pro Tag</b></td><td><b>Kategorie</b></td></tr>");
-            String position_string = "Select position, bezeichnung,name , hersteller_name, mietzins, kategorieid from bestellposition inner join produkt ON(bestellposition.Produktid = produkt.id) WHERE Bestellungid=?;";
+            String position_string = "SELECT bestellposition.position, produkt.name AS produktname,bezeichnung,hersteller_name, mietzins,kategorie.name AS kategoriename FROM bestellposition INNER JOIN produkt ON(bestellposition.Produktid = produkt.id) INNER JOIN kategorie ON(Kategorieid = kategorie.id) WHERE Bestellungid = ? ;\n";
             PreparedStatement position_ps = DB_Connector.con.prepareStatement(position_string);
             position_ps.setInt(1,Integer.parseInt(bestellid));
             ResultSet position_rs = position_ps.executeQuery();
             int pos =0, kategorieid;
-            String name, bezeichnung, hersteller_name;
+            String name, bezeichnung, hersteller_name, kategorie;
             double mietzins, miete=0.0;
             ArrayList<Double> waren = new ArrayList<Double>();
             while(position_rs.next()){
                 pos=position_rs.getInt("position");
-                name=position_rs.getString("name");
+                name=position_rs.getString("produktname");
                 bezeichnung=position_rs.getString("bezeichnung");
                 hersteller_name = position_rs.getString("hersteller_name");
                 mietzins = position_rs.getDouble("mietzins");
+                kategorie = position_rs.getString("kategoriename");
                 miete+=mietzins;
                 waren.add(mietzins);
-                writer.print("<tr><td>"+pos+"</td><td>"+name+"</td><td>"+bezeichnung+"</td><td>"+hersteller_name+"</td><td>"+formatdouble(mietzins)+"</td><td>Kategorie</td></tr>");
+                writer.print("<tr><td>"+pos+"</td><td>"+name+"</td><td>"+bezeichnung+"</td><td>"+hersteller_name+"</td><td>"+formatdouble(mietzins)+"</td><td>"+kategorie+"</td></tr>");
             }
             writer.print("<tr><td colspan=4><b>Summe pro Tag</b></td><td><b>"+formatdouble(miete)+"</b></td><td></td></tr>");
             double gesamtsumme = getgesamtsumme(miete, tage);

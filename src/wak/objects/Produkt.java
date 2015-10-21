@@ -21,8 +21,8 @@ public class Produkt {
         this.name = name;
         this.mietzins = mietzins;
         this.kategorie = kategorie;
-        this.id = generiereID();
-        produkt_eintragen(this);
+       // this.id = generiereID();
+       // produkt_eintragen(this);
     }
 
     public int getId() {
