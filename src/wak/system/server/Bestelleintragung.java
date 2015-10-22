@@ -1,6 +1,7 @@
 package wak.system.server;
 
 import wak.objects.Bestellung;
+import wak.objects.Produkt;
 import wak.objects.Warenkorb;
 import wak.user.Kunde;
 
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by Christoph Nebendahl on 13.10.2015.
@@ -69,13 +71,21 @@ public class Bestelleintragung extends HttpServlet {
                     if(!(k.getEmail().equals(request.getParameter("email")))){
 
                     }
-                    Warenkorb waren;
+                    Warenkorb waren = null;
                     for (Warenkorb w:Seitenaufbau.koerbe){
                         if(w.getUuid().equals(k.getUuid())){
                             waren=w;
                         }
                     }
-                    //Bestellung b = new Bestellung(k, waren.);
+                    ArrayList<Produkt> produkte  = new ArrayList<Produkt>();
+                    for(int i:waren.getProdukt_id()){
+                        for(Produkt p: Seitenaufbau.katalog){
+                            if(p.getId()==i){
+                                produkte.add(p);
+                            }
+                        }
+                    }
+                    Bestellung b = new Bestellung(k, produkte, request.getParameter("von"), request.getParameter("bis"));
                 }
 
             }
