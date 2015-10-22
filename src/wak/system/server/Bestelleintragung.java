@@ -1,5 +1,7 @@
 package wak.system.server;
 
+import wak.objects.Bestellung;
+import wak.objects.Warenkorb;
 import wak.user.Kunde;
 
 import javax.servlet.ServletException;
@@ -39,7 +41,6 @@ public class Bestelleintragung extends HttpServlet {
             for(Kunde k:Seitenaufbau.kunde){
                 if(k.getUuid().equals(cook.getValue())){
                     kunde = k;
-
                     //Prüfen, ob die Daten geändert wurden
                     if(!(k.getVorname().equals(request.getParameter("vorname")))){
 
@@ -68,6 +69,13 @@ public class Bestelleintragung extends HttpServlet {
                     if(!(k.getEmail().equals(request.getParameter("email")))){
 
                     }
+                    Warenkorb waren;
+                    for (Warenkorb w:Seitenaufbau.koerbe){
+                        if(w.getUuid().equals(k.getUuid())){
+                            waren=w;
+                        }
+                    }
+                    //Bestellung b = new Bestellung(k, waren.);
                 }
 
             }

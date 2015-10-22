@@ -1,7 +1,10 @@
 package wak.system.email;
 
+import com.sun.xml.internal.org.jvnet.mimepull.MIMEMessage;
 import sun.misc.IOUtils;
 import wak.objects.Bestellung;
+import wak.objects.Produkt;
+import wak.system.server.Seitenaufbau;
 import wak.user.Kunde;
 
 import java.io.*;
@@ -65,7 +68,7 @@ public class emailservice {
             msg.setRecipient(Message.RecipientType.TO, adressTo);
             msg.setSubject(MimeUtility.encodeText("Auftragsaffirmation der Bestellung: " + b.getId(), "utf-8", "B"));
             msg.setFrom(new InternetAddress(email));
-            msg.setContent(getContext(genehmigt, kunde, b), "text/html");
+            msg.setContent(getContext(genehmigt, kunde, b), "text/html; charset=UTF-8");
             Transport.send(msg);
 
         }catch(MessagingException e){
@@ -75,6 +78,7 @@ public class emailservice {
         }
     }
     private static String getContext(boolean genehmigt, Kunde kunde, Bestellung b){
+
         StringBuffer content = new StringBuffer();
         content.append("<!DOCTYPE html><html lang=\"de\"><head><meta charset=\"utf-8\"><title></title></head><body>");
         content.append("Hallo " + kunde.getVorname() +" " + kunde.getNachname()+"<br>");
@@ -86,6 +90,36 @@ public class emailservice {
             content.append("Leider gibt es ein kleines Problem mit der Bestellung unter der BestellID: "+b.getId()+". Bitte setzen Sie sich mit uns in Verbindung, um dieses Problem aus der Welt zu schaffen.<br> Hochachtungsvoll <br> Das Hipster Rental Team");
             content.append("</body></html>");
             return content.toString();
+        }
+    }
+    public static void sendZusammenfassung(Session session, Kunde kunde, Bestellung b){
+        try {
+            MimeMessage msg = new MimeMessage(session);
+            InternetAddress addressTo = new InternetAddress(kunde.getEmail());
+            msg.setRecipient(Message.RecipientType.TO, addressTo);
+            msg.setFrom(email);
+            msg.setSubject("Auftragszusammenfassung zu BestellID: " + b.getId());
+            StringBuffer content = new StringBuffer();
+            content.append("<!DOCTYPE html><html lang=\"de\"><head><meta charset=\"utf-8\"><title></title></head><body>");
+            content.append("Dies ist eine automatisch generierte E-Mail:<br> Es wurde folgende Bestellung eingereicht ");
+
+            content.append("<table><tr><td>Name:"+kunde.getVorname()+"</td><td>Nachname: "+kunde.getNachname()+"</td></tr>");
+            content.append("<tr><td></td></td></tr>");
+            content.append("</table><table><tr><td>Position</td><td>Name</td><td>Bezeichnung</td><td>Hersteller</td><td>Mietzins pro Tag</td></tr><tr>");
+            int i = 0;
+            for (Produkt p:b.getPosition()){
+                i++;
+                content.append("<td>"+i+"</td><td>"+p.getName()+"</td><td>"+p.getBezeichnung()+"</td><td>"+p.getHerstellername()+"</td><td>"+p.getMietzins()+"</td></tr><tr>");
+            }
+
+            content.append(        "</tr></table>");
+            content.append("Vielen Dank<br>Das Hipster Rental Team");
+
+
+            msg.setContent(content.toString(),"text/html; charset=UTF-8");
+
+        }catch(MessagingException e){
+            e.printStackTrace();
         }
     }
 }

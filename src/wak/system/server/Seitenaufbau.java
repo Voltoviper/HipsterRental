@@ -3,6 +3,8 @@ package wak.system.server;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Days;
 import sun.text.resources.sq.JavaTimeSupplementary_sq;
+import wak.objects.Kategorie;
+import wak.objects.Produkt;
 import wak.objects.Warenkorb;
 import wak.system.db.DB_Connector;
 import wak.user.Adresse;
@@ -28,6 +30,8 @@ public class Seitenaufbau extends HttpServlet{
    public static  ArrayList<Warenkorb> koerbe = new ArrayList<Warenkorb>();
     public static ArrayList<Kunde> kunde = new ArrayList<Kunde>();
     public static ArrayList<Mitarbeiter> mitarbeiter = new ArrayList<Mitarbeiter>();
+    public static ArrayList<Produkt> katalog = new ArrayList<Produkt>();
+    public static ArrayList<Kategorie> kategorien = new ArrayList<Kategorie>();
 
     public static void getEmpfehlungen(JspWriter stream){
         DB_Connector.connecttoDatabase();
@@ -397,7 +401,6 @@ public class Seitenaufbau extends HttpServlet{
         }
 
     }
-
     public static void getBestelldetails(JspWriter writer, Cookie[] cookies, String bestellid){
         //Cookie überprüfen
 
@@ -495,7 +498,7 @@ public class Seitenaufbau extends HttpServlet{
         }
         return null;
     }
-    private static String getWarenkorbTabelle(String uuid){
+    public static String getWarenkorbTabelle(String uuid){
 
         DB_Connector.connecttoDatabase();
         String produkt_string = "SELECT name, bezeichnung, mietzins  FROM produkt WHERE id=?";
@@ -582,7 +585,7 @@ public class Seitenaufbau extends HttpServlet{
                 }
             }
         }
-
+        Summe=Math.round(Summe*100.0)/100.0;
         return Summe;
     }
 }

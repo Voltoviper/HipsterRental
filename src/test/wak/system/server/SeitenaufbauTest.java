@@ -144,7 +144,7 @@ try {
     preise.add(25.60);
     preise.add(10.00);
     preise.add(10.00);
-    assertEquals(Seitenaufbau.getEndsumme(user_id, tage, preise), "155,04&#8364");
+    assertEquals(Seitenaufbau.getEndsumme(user_id, tage, preise), 155.04,0.0);
 }
 
 
