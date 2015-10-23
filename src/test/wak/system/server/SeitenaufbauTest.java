@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.After;
 import static org.junit.Assert .*;
 
+import wak.system.Formatter;
 import wak.system.db.DB_Connector;
 import wak.system.server.Seitenaufbau;
 
@@ -104,7 +105,7 @@ public void testDateFormatter() throws Exception {
     result_rs.next();
     Timestamp t = result_rs.getTimestamp("von");
     String d = "07.12.2015 13:00";
-    assertEquals(Seitenaufbau.dateFormatter(t), d);
+    assertEquals(Formatter.dateFormatter(t), d);
 /* 
 try { 
    Method method = Seitenaufbau.getClass().getMethod("dateFormatter", Date.class); 

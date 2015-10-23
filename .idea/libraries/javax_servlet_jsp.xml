@@ -2,7 +2,6 @@
   <library name="javax.servlet.jsp">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/javax.servlet.jsp.jar!/" />
-      <root url="jar://D:/xampp/tomcat/lib/servlet-api.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

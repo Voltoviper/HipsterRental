@@ -1,5 +1,7 @@
 package wak.user;
 
+import wak.objects.Warenkorb;
+
 import java.util.UUID;
 
 /**
@@ -9,6 +11,7 @@ public class Kunde extends Person {
     String email, telefon, organame, handy;
     Adresse addr;
     UUID uuid;
+    Warenkorb korb;
 
     /**
      * Kunde wird angelegt.
@@ -45,6 +48,14 @@ public class Kunde extends Person {
     public Kunde(String id, UUID uuid){
         this.id=id;
         this.uuid=uuid;
+    }
+
+    public Warenkorb getKorb() {
+        return korb;
+    }
+
+    public void setKorb(Warenkorb korb) {
+        this.korb = korb;
     }
 
     public String getEmail() {

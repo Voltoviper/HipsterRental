@@ -13,6 +13,8 @@
           <element id="library" level="project" name="mysql-connector-java-5.1.36-bin" />
           <element id="library" level="project" name="junit" />
           <element id="library" level="project" name="joda-time-2.8.2" />
+          <element id="library" level="project" name="javax.mail" />
+          <element id="library" level="project" name="activation-1.1.1" />
         </element>
         <element id="library" level="project" name="javax.servlet.jsp" />
       </element>

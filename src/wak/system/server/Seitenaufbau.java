@@ -6,6 +6,8 @@ import sun.text.resources.sq.JavaTimeSupplementary_sq;
 import wak.objects.Kategorie;
 import wak.objects.Produkt;
 import wak.objects.Warenkorb;
+import wak.system.*;
+import wak.system.Formatter;
 import wak.system.db.DB_Connector;
 import wak.user.Adresse;
 import wak.user.Kunde;
@@ -53,7 +55,7 @@ public class Seitenaufbau extends HttpServlet{
                         String name = produkte_rs.getString("name");
                         String bezeichnung = produkte_rs.getString("bezeichnung");
                         Double mietzins = produkte_rs.getDouble("mietzins");
-                        String mietzins_string = formatdouble(mietzins);
+                        String mietzins_string = Formatter.formatdouble(mietzins);
                         stream.print("<td onmouseover=this.style.background=\"#FCFD7A\" onmouseout=this.style.background=\"#FCFD5A\" style=\"width:33%; align:center; border:solid 1px #000000\" onclick=self.location.href=\"./jsp/artikel.jsp?id=" + id + "\">");
                         stream.print("<table style=\"max-width:100%\" border=0 ><tr><td colspan=\"2\">" +
                                 name +
@@ -149,7 +151,7 @@ public class Seitenaufbau extends HttpServlet{
            String bezeichnung = produkt_rs.getString("bezeichnung");
            String hersteller = produkt_rs.getString("hersteller_name");
            Double mietzins = produkt_rs.getDouble("mietzins");
-           String mietzins_string = formatdouble(mietzins);
+           String mietzins_string = Formatter.formatdouble(mietzins);
            writer.print("<td style=\"width:33%; align:center; border:solid 1px #000000\" >");
            writer.print("<table border=0 width=100%><th colspan=4>"+name+"</th><tr><td rowspan =4 style=\"min-width=300pt; min-height=300pt\"> Bild</td>" +
                    "<td width=\"100\">Beschreibung:</td><td>"+beschreibung+"</td><td style:\"text-align:right\" onmouseover=this.style.background=\"#6565FC\" onmouseout=this.style.background=\"#FCFD5A\" onclick=self.location.href=\"../jsp/warenkorb.jsp?addid=" + int_id + "\">Warenkorb</td></tr><tr>" +
@@ -206,10 +208,10 @@ public class Seitenaufbau extends HttpServlet{
                            String bezeichnung = produkt_rs.getString("bezeichnung");
                            Double mietzins = produkt_rs.getDouble("mietzins");
                            summe+=mietzins;
-                           String mietzins_string = formatdouble(mietzins);
+                           String mietzins_string = Formatter.formatdouble(mietzins);
                            writer.print("<tr><td style=\"width:33%; align:center; border:solid 1px #000000\"><table style=\"width:100%\"><th colspan=\"2\" align=left>"+name+"</th><tr><td style=\" max-width: 200px;\">Bezeichnung:</td><td>"+bezeichnung+"</td><td align=right>"+mietzins_string+"</td></tr></table></td></tr>");
                        }
-                       String summe_string = formatdouble(summe);
+                       String summe_string = Formatter.formatdouble(summe);
                        writer.print("<tr><td><table style=\"width:100%\"><td>Summe</td><td align=\"right\">"+summe_string+"</td></table></td></tr>");
                        writer.print("</td></tr></table>");
                        writer.print("<table border=0 width\"100%\"><tr><td width=\"90%\"></td><td><form action=\"/Bestellung\" method=\"post\"><input type=submit value=\"Kostenpflichtig bestellen\" name=\"Registrieren\"");
@@ -272,7 +274,7 @@ public class Seitenaufbau extends HttpServlet{
                             String name = produkte_rs.getString("name");
                             String bezeichnung = produkte_rs.getString("bezeichnung");
                             Double mietzins = produkte_rs.getDouble("mietzins");
-                            String mietzins_string = formatdouble(mietzins);
+                            String mietzins_string = Formatter.formatdouble(mietzins);
                             writer.print("<td onmouseover=this.style.background=\"#FCFD7A\" onmouseout=this.style.background=\"#FCFD5A\" style=\"width:33%; align:center; border:solid 1px #000000\" onclick=self.location.href=\"./artikel.jsp?id=" + id + "\">");
                             writer.print("<table style=\"max-width:100%\" border=0 ><tr><td colspan=\"2\">" +
                                     name +
@@ -347,14 +349,14 @@ public class Seitenaufbau extends HttpServlet{
                 writer.print("<form action=\"/Bestelleintragung\" method=\"post\"><table width=100%><tr><td>Vorname</td><td><input type=\"text\" name=\"Vorname\" value=\""+vorname+"\"></td><td rowspan=\"12\" valign=\"top\">"+getWarenkorbTabelle(k.getUuid())+"</td></tr>");
                 writer.print("<tr><td>Nachname</td><td><input type=text name=Nachname value="+nachname+"></td></tr>");
                 writer.print("<tr><td>Stra&#223;e</td><td><input type=text name=Strasse value="+strasse+"></td></tr>");
-                writer.print("<tr><td>Hausnummer</td><td><input type=text name=Hausnummer value="+hausnummer+"></td></tr>");
+                writer.print("<tr><td>Hausnummer</td><td><input type=text name=hausnummer value="+hausnummer+"></td></tr>");
                 writer.print("<tr><td>PLZ</td><td><input type=text name=plz value="+plz+"></td></tr>");
                 writer.print("<tr><td>Ort</td><td><input type=text name=ort value="+ort+"></td></tr>");
                 writer.print("<tr><td>Telefon</td><td><input type=text name=telefon value="+telefon+"></td></tr>");
                 writer.print("<tr><td>Handy</td><td><input type=text name=handy value="+handy+"></td></tr>");
                 writer.print("<tr><td>E-Mail</td><td><input type=text name=email value="+email+"></td></tr>");
-                writer.print("<tr><td>Von</td><td><input type=\"Text\"  id=\"von\"/><img src=\"../img/calender/cal.gif\" onclick=\"javascript:NewCssCal('von','ddMMyyyy','arrow', 'true', '24')\" style=\"cursor:pointer\"/></td></tr>");
-                writer.print("<tr><td>Bis</td><td><input type=\"Text\"  id=\"bis\"/><img src=\"../img/calender/cal.gif\" onclick=\"javascript:NewCssCal('bis','ddMMyyyy','arrow', 'true', '24')\" style=\"cursor:pointer\"/>      </td></tr>");
+                writer.print("<tr><td>Von</td><td><input type=\"Text\" name=\"von\" id=\"von\" ><img src=\"../img/calender/cal.gif\" onclick=\"javascript:NewCssCal('von','ddMMyyyy','arrow', 'true', '24')\" style=\"cursor:pointer\"/></td></tr>");
+                writer.print("<tr><td>Bis</td><td><input type=\"Text\"  name=\"bis\"id=\"bis\"/><img src=\"../img/calender/cal.gif\" onclick=\"javascript:NewCssCal('bis','ddMMyyyy','arrow', 'true', '24')\" style=\"cursor:pointer\"/>      </td></tr>");
                 writer.print("<tr><td colspan=2><input type=submit value=\"Kostenpflichtig bestellen\" name=\"bestellen\"><input type=submit value=\"abbrechen\"></td></tr>");
                 writer.print("</table></form>");
             }
@@ -385,7 +387,7 @@ public class Seitenaufbau extends HttpServlet{
                 Date von = bestell_rs.getDate("von");
                 Date bis = bestell_rs.getDate("bis");
                 double mietzins = bestell_rs.getDouble("gesamtkosten");
-                writer.print("<tr><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+bestellid+"</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+von.toString()+"</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+bis.toString()+"</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+formatdouble(mietzins)+"</td><td onclick=self.location.href=\"./bestellannahme.jsp?bestellid="+bestellid+"\">Annehmen</td><td>Ablehnen</td></tr>");
+                writer.print("<tr><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+bestellid+"</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+von.toString()+"</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+bis.toString()+"</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+Formatter.formatdouble(mietzins)+"</td><td onclick=self.location.href=\"./bestellannahme.jsp?bestellid="+bestellid+"\">Annehmen</td><td>Ablehnen</td></tr>");
             }
             writer.print("</table></td>");
 
@@ -427,7 +429,7 @@ public class Seitenaufbau extends HttpServlet{
 
             writer.print("<th colspan=4 align=center><b>Bestellnummer: "+bestellid+"</b></th>");
             writer.print("<tr><td class=\"umrandung\"><b>Kundennummer:</b> "+nutzerid+"</td><td class=\"umrandung\"><b>Vorname: </b>"+vorname+"</td><td class=\"umrandung\"><b>Nachname: </b>"+nachname+"</td><td class=\"umrandung\"> <b>E-Mail: </b>"+email+"</td></tr>" +
-                   "<tr><td class=\"umrandung\">Von: "+dateFormatter(von)+"</td><td class=\"umrandung\">Bis: "+dateFormatter(bis)+"</td>");
+                   "<tr><td class=\"umrandung\">Von: "+ Formatter.dateFormatter(von)+"</td><td class=\"umrandung\">Bis: "+Formatter.dateFormatter(bis)+"</td>");
             if(genehmigt>=1){
                 writer.print("<td></td><td></td></tr>");
             }else{
@@ -454,15 +456,15 @@ public class Seitenaufbau extends HttpServlet{
                 kategorie = position_rs.getString("kategoriename");
                 miete+=mietzins;
                 waren.add(mietzins);
-                writer.print("<tr><td>"+pos+"</td><td>"+name+"</td><td>"+bezeichnung+"</td><td>"+hersteller_name+"</td><td>"+formatdouble(mietzins)+"</td><td>"+kategorie+"</td></tr>");
+                writer.print("<tr><td>"+pos+"</td><td>"+name+"</td><td>"+bezeichnung+"</td><td>"+hersteller_name+"</td><td>"+Formatter.formatdouble(mietzins)+"</td><td>"+kategorie+"</td></tr>");
             }
-            writer.print("<tr><td colspan=4><b>Summe pro Tag</b></td><td><b>"+formatdouble(miete)+"</b></td><td></td></tr>");
+            writer.print("<tr><td colspan=4><b>Summe pro Tag</b></td><td><b>"+Formatter.formatdouble(miete)+"</b></td><td></td></tr>");
             double gesamtsumme = getgesamtsumme(miete, tage);
             double endsumme = getEndsumme(nutzerid, tage, waren);
             double rabatt = gesamtsumme-endsumme;
-            writer.print("<tr><td colspan=4><b>Summe Gesamt ohne Rabatt</b></td><td><b>"+formatdouble(gesamtsumme)+"</b></td><td></td></tr>");
-            writer.print("<tr><td colspan=4><b>Rabatt</b></td><td><b>"+formatdouble(rabatt)+"</b></td><td></td></tr>");
-            writer.print("<tr><td colspan=4><b>Summe Gesamt inkl. Rabatt</b></td><td><b>"+formatdouble(endsumme)+"</b></td><td></td></tr>");
+            writer.print("<tr><td colspan=4><b>Summe Gesamt ohne Rabatt</b></td><td><b>"+Formatter.formatdouble(gesamtsumme)+"</b></td><td></td></tr>");
+            writer.print("<tr><td colspan=4><b>Rabatt</b></td><td><b>"+Formatter.formatdouble(rabatt)+"</b></td><td></td></tr>");
+            writer.print("<tr><td colspan=4><b>Summe Gesamt inkl. Rabatt</b></td><td><b>"+Formatter.formatdouble(endsumme)+"</b></td><td></td></tr>");
             writer.print("<tr><td colspan=4><b></b></td><td><b>"+""+"</b></td><td></td></tr>");
             // Tabelle ende
             writer.print("</table>");
@@ -481,15 +483,8 @@ public class Seitenaufbau extends HttpServlet{
 
     // Interne Funktionen
 
-    /**
-     * Benötigt einen Double Wert, der dann als € Einheit in einem String zurückgegeben wird.
-     * @param d
-     * @return
-     */
-    private static  String formatdouble(Double d){
-        DecimalFormat format = new DecimalFormat("#####0.00");
-        return format.format(d)+"&#8364";
-    }
+
+
     private static Kunde getKunde(String uuid){
         for(Kunde k: kunde){
             if(k.getUuid().equals(uuid)){
@@ -524,10 +519,10 @@ public class Seitenaufbau extends HttpServlet{
                             String bezeichnung = produkt_rs.getString("bezeichnung");
                             Double mietzins = produkt_rs.getDouble("mietzins");
                             summe+=mietzins;
-                            String mietzins_string = formatdouble(mietzins);
+                            String mietzins_string = Formatter.formatdouble(mietzins);
                             writer.append("<tr><td style=\"width:33%; align:center; border:solid 1px #000000\"><table style=\"width:100%\"><th colspan=\"2\" align=left>"+name+"</th><tr><td style=\" max-width: 200px;\">Bezeichnung:</td><td>"+bezeichnung+"</td><td align=right>"+mietzins_string+"</td></tr></table></td></tr>");
                         }
-                        String summe_string = formatdouble(summe);
+                        String summe_string = Formatter.formatdouble(summe);
                         writer.append("<tr><td><table style=\"width:100%\"><td>Summe</td><td align=\"right\">"+summe_string+"</td></table></td></tr>");
                         writer.append("</td></tr></table>");
                     }
@@ -539,13 +534,7 @@ public class Seitenaufbau extends HttpServlet{
         }
         return writer.toString();
     }
-    public static String dateFormatter(Timestamp stamp){
-        Calendar start = Calendar.getInstance();
-        start.setTimeInMillis( stamp.getTime() );
-        java.util.Date date = start.getTime();
-        DateFormat date_format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-        return  date_format.format(date);
-    }
+
 
     /**
      * Berechnung der Differenz zwischen den Tagen.

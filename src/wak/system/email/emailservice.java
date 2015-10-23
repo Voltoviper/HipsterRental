@@ -20,7 +20,7 @@ import javax.mail.internet.MimeUtility;
  */
 public class emailservice {
     final static String email= "software@voltoviper.de";
-    public static Session getGMailSession()
+    public static Session getSession()
     {
         final Properties props = new Properties();
 
@@ -104,19 +104,19 @@ public class emailservice {
             content.append("Dies ist eine automatisch generierte E-Mail:<br> Es wurde folgende Bestellung eingereicht ");
 
             content.append("<table><tr><td>Name:"+kunde.getVorname()+"</td><td>Nachname: "+kunde.getNachname()+"</td></tr>");
-            content.append("<tr><td></td></td></tr>");
-            content.append("</table><table><tr><td>Position</td><td>Name</td><td>Bezeichnung</td><td>Hersteller</td><td>Mietzins pro Tag</td></tr><tr>");
+            content.append("<tr><td>Von: "+b.getVon()+"</td><td>Bis: "+b.getBis()+"</td></tr>");
+            content.append("</table><table border=\"1\"><tr><td>Position</td><td>Name</td><td>Bezeichnung</td><td>Hersteller</td><td>Mietzins pro Tag</td></tr><tr>");
             int i = 0;
             for (Produkt p:b.getPosition()){
                 i++;
-                content.append("<td>"+i+"</td><td>"+p.getName()+"</td><td>"+p.getBezeichnung()+"</td><td>"+p.getHerstellername()+"</td><td>"+p.getMietzins()+"</td></tr><tr>");
+                content.append("<td>"+i+"</td><td>"+p.getName()+
+                        "</td><td>"+p.getBezeichnung()+"</td><td>"+p.getHerstellername()+"</td><td>"+p.getMietzins()+"</td></tr><tr>");
             }
 
             content.append(        "</tr></table>");
             content.append("Vielen Dank<br>Das Hipster Rental Team");
-
-
             msg.setContent(content.toString(),"text/html; charset=UTF-8");
+            Transport.send(msg);
 
         }catch(MessagingException e){
             e.printStackTrace();

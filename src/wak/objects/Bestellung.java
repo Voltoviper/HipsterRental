@@ -25,7 +25,7 @@ public class Bestellung {
         this.von = von;
         this.bis = bis;
         this.bestellungdatum = Timestamp.valueOf(LocalDateTime.now());
-        //Bestellung_eintragen(this);
+        Bestellung_eintragen(this);
     }
 
     private boolean ueberschneidet(Bestellung b){
@@ -56,25 +56,25 @@ public class Bestellung {
         }
     }
     private void Bestellung_eintragen(Bestellung b){
-        int bestell_id;
-        String einfuegen = "INSERT INTO bestellung (id,Kundeid, von, bis)" + "VALUES (?,(select id from kunde WHERE kunde.id='1'),?,?)";
+        String einfuegen = "INSERT INTO bestellung (Nutzerid, von, bis, genehmigt)" + "VALUES ((select Nutzerid from kunde WHERE kunde.Nutzerid=?),?,?,?)";
         String position = "Insert INTO bestellposition (Bestellungid,Produktid,position,ProduktKategorieid) "+"VALUES(?,(select id from produkt WHERE id=?),?,(select id from kategorie WHERE id=?))";
         try {
 
-            //Generieren einer BestellID
-            String bestellung_id_String = "SELECT id FROM softwareengineering2.bestellung order by id DESC;";
-            PreparedStatement bestellung_id = DB_Connector.con.prepareStatement(bestellung_id_String);
-            ResultSet bestellung_id_set = bestellung_id.executeQuery();
-            bestellung_id_set.next();
-            bestell_id=bestellung_id_set.getInt("id")+1;
 
             //Vorbereiten der Bestellung für die Datenbank
             PreparedStatement bestellung = DB_Connector.con.prepareStatement(einfuegen);
-            bestellung.setInt(1, bestell_id);
+            bestellung.setString(1, kunde.getId());
             bestellung.setTimestamp(2, b.von);
             bestellung.setTimestamp(3, b.bis);
+            bestellung.setInt(4,0);
             System.out.println(bestellung.toString());
             bestellung.executeUpdate();
+
+            //Ermitteln der gegebenen ID
+            PreparedStatement id = DB_Connector.con.prepareStatement("SELECT id FROM bestellung WHERE id = ( SELECT max(id) FROM bestellung )");
+            ResultSet id_rs = id.executeQuery();
+            id_rs.next();
+            int bestell_id=id_rs.getInt("id");
 
             //Einfügen der Bestellpositionen
             int i = 1;
@@ -133,4 +133,5 @@ public class Bestellung {
     public void setId(int id) {
         this.id = id;
     }
+
 }

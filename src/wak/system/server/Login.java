@@ -2,6 +2,7 @@ package wak.system.server;
 
 import wak.objects.Warenkorb;
 import wak.system.db.DB_Connector;
+import wak.system.db.DB_Loader;
 import wak.user.Kunde;
 import wak.user.Mitarbeiter;
 import wak.user.Person;
@@ -33,6 +34,7 @@ public class Login extends HttpServlet {
     Person p;
    static  String test;
     protected void doPost(HttpServletRequest request,HttpServletResponse response) throws javax.servlet.ServletException, IOException {
+        new DB_Loader();
         if(request.getParameter("logout")!=null){
             Cookie[] cookies = request.getCookies();
             boolean cookie_vorhanden=false;
@@ -96,7 +98,7 @@ public class Login extends HttpServlet {
                     switch(int_id.charAt(0)){
                         case 'M':c="M";Mitarbeiter m = new Mitarbeiter(uuid, int_id, false);Seitenaufbau.mitarbeiter.add(m);break;
                         case 'A':c="M";Mitarbeiter a = new Mitarbeiter(uuid, int_id, true);Seitenaufbau.mitarbeiter.add(a);break;
-                        case 'K':c="K";Kunde k = new Kunde(int_id, uuid);Seitenaufbau.kunde.add(k);Seitenaufbau.koerbe.add(new Warenkorb(uuid.toString()));break;
+                        case 'K':c="K";Kunde k = new Kunde(int_id, uuid);Seitenaufbau.kunde.add(k);Warenkorb w = new Warenkorb(uuid.toString());Seitenaufbau.koerbe.add(w); k.setKorb(w);break;
                         default: request.getRequestDispatcher("index.jsp");
                     }
                     writer.print(c);

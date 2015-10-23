@@ -3,8 +3,10 @@ package wak.system.server;
 import wak.objects.Bestellung;
 import wak.objects.Produkt;
 import wak.objects.Warenkorb;
+import wak.system.email.emailservice;
 import wak.user.Kunde;
 
+import javax.mail.Session;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -12,7 +14,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by Christoph Nebendahl on 13.10.2015.
@@ -69,23 +75,27 @@ public class Bestelleintragung extends HttpServlet {
 
                     }
                     if(!(k.getEmail().equals(request.getParameter("email")))){
+                        k.setEmail(request.getParameter("email"));
+                    }
 
-                    }
-                    Warenkorb waren = null;
-                    for (Warenkorb w:Seitenaufbau.koerbe){
-                        if(w.getUuid().equals(k.getUuid())){
-                            waren=w;
-                        }
-                    }
                     ArrayList<Produkt> produkte  = new ArrayList<Produkt>();
-                    for(int i:waren.getProdukt_id()){
+                    for(int i:k.getKorb().getProdukt_id()){
                         for(Produkt p: Seitenaufbau.katalog){
                             if(p.getId()==i){
                                 produkte.add(p);
                             }
                         }
                     }
-                    Bestellung b = new Bestellung(k, produkte, request.getParameter("von"), request.getParameter("bis"));
+                    String von = request.getParameter("von");
+                    String bis = request.getParameter("bis");
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy' 'HH:mm", Locale.GERMANY);
+                    LocalDate von_date = LocalDate.parse(von, formatter);
+                    LocalDate bis_date = LocalDate.parse(bis, formatter);
+
+                    Bestellung b = new Bestellung(k, produkte, Timestamp.valueOf(von_date.atStartOfDay()), Timestamp.valueOf(bis_date.atStartOfDay()));
+                    Session session = emailservice.getSession();
+                    emailservice.sendZusammenfassung(session, k, b);
+                    response.sendRedirect("./index.jsp");
                 }
 
             }

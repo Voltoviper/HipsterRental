@@ -3,8 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
-    <servlet> <servlet-name>Try</servlet-name> <servlet-class>wak.system.server.Try</servlet-class> </servlet>
-    <servlet-mapping> <servlet-name>Try</servlet-name> <url-pattern>/HelloServlet</url-pattern> </servlet-mapping>
+
     <servlet>
         <servlet-name>Login</servlet-name>
         <servlet-class>wak.system.server.Login</servlet-class>
@@ -39,10 +38,11 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Bestelleintragung</servlet-name>
-        <servlet-class>wak.system.server.BestellungServlet</servlet-class>
+        <servlet-class>wak.system.server.Bestelleintragung</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Bestelleintragung</servlet-name>
         <url-pattern>/Bestelleintragung</url-pattern>
     </servlet-mapping>
+
 </web-app>
