@@ -25,7 +25,7 @@ public class Produkt {
        // produkt_eintragen(this);
     }
 
-    public Produkt(int id, String name, String bezeichnung, String beschreibung, String herstellername, String details, double mietzins, Produkt alternative, Kategorie kategorie) {
+    public Produkt(String name, String bezeichnung, String beschreibung, String herstellername, String details, double mietzins, Produkt alternative, Kategorie kategorie) {
         this.name = name;
         this.bezeichnung = bezeichnung;
         this.beschreibung = beschreibung;
@@ -34,8 +34,9 @@ public class Produkt {
         this.mietzins = mietzins;
         this.alternative = alternative;
         this.kategorie = kategorie;
-        this.id = id;
+        produkt_eintragen(this);
     }
+
 
     public int getId() {
         return id;
@@ -160,23 +161,22 @@ public class Produkt {
     }
 
     public void produkt_eintragen(Produkt p){
-        String einfuegen = "INSERT INTO produkt (id,name, bezeichnung, hersteller_name, beschreibung, details, mietzins, Kategorieid, alternative)" + "VALUES (?,?, ?, ?, ?, ?, ?,(select id from kategorie WHERE kategorie.id=?),?)";
+        String einfuegen = "INSERT INTO produkt (name, bezeichnung, hersteller_name, beschreibung, details, mietzins, Kategorieid, alternative)" + "VALUES (?, ?, ?, ?, ?, ?,(select id from kategorie WHERE kategorie.id=?),?)";
         PreparedStatement bestellung = null;
         //Vorbereiten der Bestellung für die Datenbank
         try {
             bestellung = DB_Connector.con.prepareStatement(einfuegen);
-            bestellung.setInt(1, generiereID());
-            bestellung.setString(2, p.getName());
-            bestellung.setString(3, p.getBezeichnung());
-            bestellung.setString(4, p.getHerstellername());
-            bestellung.setString(5, p.getBeschreibung());
-            bestellung.setString(6, p.getDetails());
-            bestellung.setDouble(7, p.getMietzins());
-            bestellung.setInt(8, p.getKategorie().getId());
+            bestellung.setString(1, p.getName());
+            bestellung.setString(2, p.getBezeichnung());
+            bestellung.setString(3, p.getHerstellername());
+            bestellung.setString(4, p.getBeschreibung());
+            bestellung.setString(5, p.getDetails());
+            bestellung.setDouble(6, p.getMietzins());
+            bestellung.setInt(7, p.getKategorie().getId());
             if(p.getAlternative()!=null){
-                bestellung.setInt(9, p.getAlternative().getId());
+                bestellung.setInt(8, p.getAlternative().getId());
             }else{
-                bestellung.setNull(9, Types.INTEGER);
+                bestellung.setNull(8, Types.INTEGER);
             }
 
             System.out.println(bestellung.toString());

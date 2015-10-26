@@ -28,6 +28,7 @@ public class SeitenaufbauTest {
 public void before() throws Exception {
     System.out.println("Starte Datenbankverbindung");
     DB_Connector.connecttoDatabase();
+
 } 
 
 @After
@@ -104,7 +105,7 @@ public void testDateFormatter() throws Exception {
     ResultSet result_rs = result_ps.executeQuery();
     result_rs.next();
     Timestamp t = result_rs.getTimestamp("von");
-    String d = "07.12.2015 13:00";
+    String d = "07.12.2015 12:00";
     assertEquals(Formatter.dateFormatter(t), d);
 /* 
 try { 

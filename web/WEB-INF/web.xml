@@ -44,5 +44,13 @@
         <servlet-name>Bestelleintragung</servlet-name>
         <url-pattern>/Bestelleintragung</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>NeuesProdukt</servlet-name>
+        <servlet-class>wak.system.server.NeuesProdukt</servlet-class>
+    </servlet>
+<servlet-mapping>
+    <servlet-name>NeuesProdukt</servlet-name>
+    <url-pattern>/NeuesProdukt</url-pattern>
+</servlet-mapping>
 
 </web-app>

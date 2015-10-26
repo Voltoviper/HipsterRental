@@ -96,7 +96,7 @@ public class Seitenaufbau extends HttpServlet{
 
         try{
 
-            writer.print("<tr><td onclick=self.location.href=\"../index.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neuer Artikel</td></tr><tr>" +
+            writer.print("<tr><td onclick=self.location.href=\"../jsp/mitarbeiter/neues_produkt.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neuer Artikel</td></tr><tr>" +
                     "<td  style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neues Paket</td></tr><tr>" +
                     "<td onclick=self.location.href=\"../jsp/mitarbeiter/bestelluebersicht.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Bestell&uumlbersicht</td></tr><tr>" +
                     "<td style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neue Bestellung</td>" +
@@ -480,7 +480,15 @@ public class Seitenaufbau extends HttpServlet{
         }
     }
 
+    public static void getKategorieRadio(JspWriter writer) {
+        for(Kategorie k:Seitenaufbau.kategorien){
+            try {
+                writer.print("<input type=\"radio\" name=\"kategorie\" value=\"" + k.getName() + "\">"+k.getName()+"</input><br>");
+            }catch(IOException e1){
 
+            }
+        }
+    }
     // Interne Funktionen
 
 
@@ -577,4 +585,6 @@ public class Seitenaufbau extends HttpServlet{
         Summe=Math.round(Summe*100.0)/100.0;
         return Summe;
     }
+
+
 }
