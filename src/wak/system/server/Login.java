@@ -34,7 +34,7 @@ public class Login extends HttpServlet {
     Person p;
    static  String test;
     protected void doPost(HttpServletRequest request,HttpServletResponse response) throws javax.servlet.ServletException, IOException {
-        new DB_Loader();
+
         if(request.getParameter("logout")!=null){
             Cookie[] cookies = request.getCookies();
             boolean cookie_vorhanden=false;
@@ -126,6 +126,7 @@ public class Login extends HttpServlet {
     }
     }
     public static void getLogin(JspWriter writer, Cookie[] cookies){
+        new DB_Loader();
        try {
         boolean cookie_vorhanden=false;
            if(cookies!=null){

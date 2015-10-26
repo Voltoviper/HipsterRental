@@ -4,7 +4,7 @@ package wak.objects;
 import java.util.ArrayList;
 
 /**
- * Created by chris_000 on 25.09.2015.
+ * Created by Christoph Nebendahl on 25.09.2015.
  */
 public class Warenkorb{
    ArrayList<Integer> produkt_id = new ArrayList<Integer>();

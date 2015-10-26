@@ -57,20 +57,22 @@ public class Bestellung {
     }
     private void Bestellung_eintragen(Bestellung b){
         String einfuegen = "INSERT INTO bestellung (Nutzerid, von, bis, genehmigt)" + "VALUES ((select Nutzerid from kunde WHERE kunde.Nutzerid=?),?,?,?)";
-        String position = "Insert INTO bestellposition (Bestellungid,Produktid,position,ProduktKategorieid) "+"VALUES(?,(select id from produkt WHERE id=?),?,(select id from kategorie WHERE id=?))";
+        String position = "Insert INTO bestellposition (Bestellungid,Produktid,position) "+"VALUES(?,(select id from produkt WHERE id=?),?)";
         try {
 
 
             //Vorbereiten der Bestellung für die Datenbank
+            DB_Connector.connecttoDatabase();
             PreparedStatement bestellung = DB_Connector.con.prepareStatement(einfuegen);
             bestellung.setString(1, kunde.getId());
             bestellung.setTimestamp(2, b.von);
             bestellung.setTimestamp(3, b.bis);
-            bestellung.setInt(4,0);
-            System.out.println(bestellung.toString());
+            bestellung.setInt(4, 0);
             bestellung.executeUpdate();
+            DB_Connector.closeDatabase();
 
             //Ermitteln der gegebenen ID
+            DB_Connector.connecttoDatabase();
             PreparedStatement id = DB_Connector.con.prepareStatement("SELECT id FROM bestellung WHERE id = ( SELECT max(id) FROM bestellung )");
             ResultSet id_rs = id.executeQuery();
             id_rs.next();
@@ -83,14 +85,16 @@ public class Bestellung {
                 bestellposition.setInt(1, bestell_id);
                 bestellposition.setInt(2, p.getId());
                 bestellposition.setInt(3, i);
-                bestellposition.setInt(4, p.getKategorie().getId());
+                System.out.println(bestellposition.toString());
                 bestellposition.executeUpdate();
                 i++;
-        }
+            }
         }catch(SQLException e){
             System.out.println("fehler beim Eintragen der Bestellung");
             e.printStackTrace();
 
+        }finally {
+            DB_Connector.closeDatabase();
         }
     }
 

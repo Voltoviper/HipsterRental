@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -49,7 +50,7 @@ public class Bestelleintragung extends HttpServlet {
             for(Kunde k:Seitenaufbau.kunde){
                 if(k.getUuid().equals(cook.getValue())){
                     kunde = k;
-                    //Prüfen, ob die Daten geändert wurden
+                    //Prï¿½fen, ob die Daten geï¿½ndert wurden
                     if(!(k.getVorname().equals(request.getParameter("vorname")))){
 
                     }
@@ -89,10 +90,10 @@ public class Bestelleintragung extends HttpServlet {
                     String von = request.getParameter("von");
                     String bis = request.getParameter("bis");
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy' 'HH:mm", Locale.GERMANY);
-                    LocalDate von_date = LocalDate.parse(von, formatter);
-                    LocalDate bis_date = LocalDate.parse(bis, formatter);
+                    LocalDateTime von_date = LocalDateTime.parse(von, formatter);
+                    LocalDateTime bis_date = LocalDateTime.parse(bis, formatter);
 
-                    Bestellung b = new Bestellung(k, produkte, Timestamp.valueOf(von_date.atStartOfDay()), Timestamp.valueOf(bis_date.atStartOfDay()));
+                    Bestellung b = new Bestellung(k, produkte, Timestamp.valueOf(von_date), Timestamp.valueOf(bis_date));
                     Session session = emailservice.getSession();
                     emailservice.sendZusammenfassung(session, k, b);
                     response.sendRedirect("./index.jsp");

@@ -19,8 +19,9 @@ public class DB_Loader {
     public DB_Loader(){
         try {
             if(!runned) {
-                Produkteanlegen();
                 Kategorieanlegen();
+                Produkteanlegen();
+
                 runned = true;
             }
         }catch(SQLException e){
@@ -52,7 +53,7 @@ public class DB_Loader {
                     Kat = k;
                 }
             }
-            Produkt p = new Produkt(name, bezeichnung, beschreibung, hersteller_name, details, mietzins, null, Kat);
+            Produkt p = new Produkt(id, name, bezeichnung, beschreibung, hersteller_name, details, mietzins, null, Kat);
             Seitenaufbau.katalog.add(p);
         }
 
@@ -60,7 +61,7 @@ public class DB_Loader {
     }
     private void Kategorieanlegen()throws SQLException{
         DB_Connector.connecttoDatabase();
-        String kategorie_string = "SELECT * FROM produkt";
+        String kategorie_string = "SELECT * FROM kategorie";
         PreparedStatement kategorie_ps = DB_Connector.con.prepareStatement(kategorie_string);
         ResultSet kategorie_rs = kategorie_ps.executeQuery();
         String name;
