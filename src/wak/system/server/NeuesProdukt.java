@@ -4,6 +4,7 @@ import wak.objects.Kategorie;
 import wak.objects.Produkt;
 import wak.system.db.DB_Connector;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -54,7 +55,7 @@ public class NeuesProdukt extends HttpServlet {
 
 
         //Produkt erstellen
-        Produkt p = new Produkt(name, bezeichnung, beschreibung, hersteller, details, mietzins, alternative, kat);
+        Produkt p = new Produkt(name, bezeichnung, beschreibung, hersteller, details, mietzins, alternative, kat, true);
         //In Datenbank übertragen
 
 
@@ -75,7 +76,12 @@ public class NeuesProdukt extends HttpServlet {
 
 
         //Weiterleiten
-        response.sendRedirect("../artikel.jsp?id="+produkt_id);
+
+        String nextJSP = "/jsp/artikel.jsp?id="+produkt_id;
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+        dispatcher.forward(request,response);
+
+        //response.sendRedirect("../artikel.jsp?id="+produkt_id);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

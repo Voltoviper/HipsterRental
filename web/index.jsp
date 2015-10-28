@@ -3,7 +3,7 @@
 
 <table style="width:100%; valign:top; border-spacing: 0pt" border="0">
   <tr class="menu">
-    <td colspan="3" class="menu"><% Seitenaufbau.getMenu(out);%>
+    <td colspan="3" class="menu"><% Seitenaufbau.getMenu(out, request.getCookies());%>
     </td>
   </tr>
   <tr>

@@ -52,5 +52,12 @@
     <servlet-name>NeuesProdukt</servlet-name>
     <url-pattern>/NeuesProdukt</url-pattern>
 </servlet-mapping>
-
+<servlet>
+    <servlet-name>NeuerMitarbeiter</servlet-name>
+    <servlet-class>wak.system.server.NeuerMitarbeiter</servlet-class>
+</servlet>
+    <servlet-mapping>
+        <servlet-name>NeuerMitarbeiter</servlet-name>
+        <url-pattern>/NeuerMitarbeiter</url-pattern>
+    </servlet-mapping>
 </web-app>

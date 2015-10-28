@@ -79,28 +79,92 @@ public class Seitenaufbau extends HttpServlet{
             e.printStackTrace();
         }
     }
-    public static void getMenu(JspWriter writer){
+    public static void getMenu(JspWriter writer, Cookie[] cookies){
+        DB_Connector.connecttoDatabase();
+        String produkt_string = "SELECT name, bezeichnung, mietzins  FROM produkt WHERE id=?";
+        PreparedStatement produkt_ps = null;
+        String tabelle_anfang= "<td><table border=0 style=\"width:100%\">";
+        ResultSet produkt_rs;
+        boolean cookie_vorhanden=false;
+        Cookie cook=null;
+        if(cookies!=null){
+            for(int i=0;i<cookies.length;i++){
+                Cookie c = cookies[i];
+                if(c.getName().compareTo("id")==0){
+                    cook = c;
+                    cookie_vorhanden=true;
+                    break;
+                }else{
+                }
+            }
+        }else{
 
+        }
+        DB_Connector.closeDatabase();
+        Mitarbeiter arbeiter=null;
+        for(Mitarbeiter m: mitarbeiter){
+            if(cookie_vorhanden){
+            if(m.getUuid().toString().equals(cook.getValue())){
+                arbeiter=m;
+                break;
+            }}
+        }
         try{
 
             writer.print("<table><tr><td onclick=self.location.href=\"../index.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Shop</td>" +
                     "<td onclick=self.location.href=\"../jsp/warenkorb.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Warenkorb </td>" +
                     "<td style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Buchung</td>" +
-                    "<td style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Profil</td>" +
-                    "</tr></table>");
+                    "<td style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Profil</td>");
+            if(arbeiter!=null){
+                writer.print("<td onclick=self.location.href=\"../jsp/mitarbeiter/Uebersicht-Mitarbeiter.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Mitarbeiterbereich </td>");
+            }
+            writer.print("</tr></table>");
         }catch (IOException e){
 
         }
     }
-    public static void getMitarbeiterMenu(JspWriter writer){
+    public static void getMitarbeiterMenu(JspWriter writer, Cookie[] cookies){
+        DB_Connector.connecttoDatabase();
+        String produkt_string = "SELECT name, bezeichnung, mietzins  FROM produkt WHERE id=?";
+        PreparedStatement produkt_ps = null;
+        String tabelle_anfang= "<td><table border=0 style=\"width:100%\">";
+        ResultSet produkt_rs;
+        boolean cookie_vorhanden=false;
+        Cookie cook=null;
+        if(cookies!=null){
+            for(int i=0;i<cookies.length;i++){
+                Cookie c = cookies[i];
+                if(c.getName().compareTo("id")==0){
+                    cook = c;
+                    cookie_vorhanden=true;
+                    break;
+                }else{
+                }
+            }
+        }else{
 
+        }
+        DB_Connector.closeDatabase();
+        Mitarbeiter arbeiter=null;
+        for(Mitarbeiter m: mitarbeiter){
+            if(m.getUuid().toString().equals(cook.getValue())){
+                arbeiter=m;
+            }
+        }
         try{
 
             writer.print("<tr><td onclick=self.location.href=\"../jsp/mitarbeiter/neues_produkt.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neuer Artikel</td></tr><tr>" +
                     "<td  style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neues Paket</td></tr><tr>" +
                     "<td onclick=self.location.href=\"../jsp/mitarbeiter/bestelluebersicht.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Bestell&uumlbersicht</td></tr><tr>" +
-                    "<td style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neue Bestellung</td>" +
-                    "</tr>");
+                    "<td style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neue Bestellung</td></tr><tr>");
+            if (arbeiter != null) {
+
+
+            if(arbeiter.isAdmin()){
+            writer.print(
+                    "<td onclick=self.location.href=\"./Neuer-Mitarbeiter.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neuer Mitarbeiter</td>");
+            }}
+                writer.print("</tr>");
         }catch (IOException e){
 
         }
@@ -161,7 +225,9 @@ public class Seitenaufbau extends HttpServlet{
        }catch(IOException e){
 
        } catch (SQLException e) {
-        }
+        }finally {
+           DB_Connector.closeDatabase();
+       }
     }
     public static void getWarenkorb(JspWriter writer,Cookie[] cookies, String produkt_id){
         DB_Connector.connecttoDatabase();
@@ -184,7 +250,6 @@ public class Seitenaufbau extends HttpServlet{
         }else{
 
         }
-
         try {
             if (cookie_vorhanden) {
                for(Warenkorb b: koerbe){
@@ -235,6 +300,8 @@ public class Seitenaufbau extends HttpServlet{
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally{
+            DB_Connector.closeDatabase();
         }
     }
     public static void getKategorieArtikel(JspWriter writer,String kat_id){

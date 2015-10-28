@@ -1,14 +1,14 @@
-<%@ include file="../../html/header/header_sub.html"%>
+<%@ include file="../../html/header/header_subsub.html"%>
 <%@page import="wak.system.server.*" %>
 <table style="width:100%; valign:top; border-spacing: 0pt" border="0">
   <tr class="menu">
-    <td colspan="3" class="menu"><% Seitenaufbau.getMenu(out);%>
+    <td colspan="3" class="menu"><% Seitenaufbau.getMenu(out, request.getCookies());%>
     </td>
   </tr>
   <tr>
     <td class="kat_nav">
       <table width="100%">
-        <%Seitenaufbau.getMitarbeiterMenu(out);%>
+        <%Seitenaufbau.getMitarbeiterMenu(out, request.getCookies());%>
       </table>
     </td>
     <td class="main" valign="top">

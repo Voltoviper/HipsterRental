@@ -1,5 +1,8 @@
 package wak.system;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -26,5 +29,21 @@ public class Formatter {
     public static  String formatdouble(Double d){
         DecimalFormat format = new DecimalFormat("#####0.00");
         return format.format(d)+"&#8364";
+    }
+
+    public static String hashen(String passwd){
+        String hashtext = "nichts";
+        try{
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md.digest(passwd.getBytes());
+            BigInteger number = new BigInteger(1, messageDigest);
+            hashtext = number.toString(16);
+            if(!(hashtext.length()==32)){
+                hashtext =("00000000000000000000000000000000" + hashtext).substring(hashtext.length());
+            }
+        }catch(NoSuchAlgorithmException e){
+            System.out.println("Fehler bei der Passwort Bearbeitung");
+        }
+        return hashtext;
     }
 }

@@ -118,6 +118,16 @@ public class Kunde extends Person {
     }
 
     @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public String getPasswort() {
+        return null;
+    }
+
+    @Override
     public void setVorname(String vorname) {
         this.vorname = vorname;
     }
@@ -125,5 +135,15 @@ public class Kunde extends Person {
     @Override
     public void setNachname(String nachname) {
         this.nachname= nachname;
+    }
+
+    @Override
+    public void setUsername(String Username) {
+
+    }
+
+    @Override
+    public void setPasswort(String passwort) {
+
     }
 }

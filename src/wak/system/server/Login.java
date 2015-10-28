@@ -1,12 +1,14 @@
 package wak.system.server;
 
 import wak.objects.Warenkorb;
+import wak.system.Formatter;
 import wak.system.db.DB_Connector;
 import wak.system.db.DB_Loader;
 import wak.user.Kunde;
 import wak.user.Mitarbeiter;
 import wak.user.Person;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +36,7 @@ public class Login extends HttpServlet {
     Person p;
    static  String test;
     protected void doPost(HttpServletRequest request,HttpServletResponse response) throws javax.servlet.ServletException, IOException {
-
+    DB_Connector.connecttoDatabase();
         if(request.getParameter("logout")!=null){
             Cookie[] cookies = request.getCookies();
             boolean cookie_vorhanden=false;
@@ -62,18 +64,7 @@ public class Login extends HttpServlet {
             Enumeration<String> names= request.getParameterNames();
 
             //Hashen des Kennwortes für die Überprüfung
-            String hashtext = "nichts";
-        try{
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] messageDigest = md.digest(passwd.getBytes());
-            BigInteger number = new BigInteger(1, messageDigest);
-            hashtext = number.toString(16);
-            if(!(hashtext.length()==32)){
-                hashtext =("00000000000000000000000000000000" + hashtext).substring(hashtext.length());
-            }
-        }catch(NoSuchAlgorithmException e){
-            System.out.println("Fehler bei der Passwort Bearbeitung");
-        }
+            String hashtext = Formatter.hashen(passwd);
         try {
 
             //Abfrage, ob es die KOmbination in der Datenbank gibt
@@ -104,17 +95,20 @@ public class Login extends HttpServlet {
                     writer.print(c);
 
                     //Cookie
+                    //Weiterleitung je nachdem was für eine Person sich angemeldet hat
+
+
+                    String dispatcher="/jsp/redirect.html";
+
+
+
                     Cookie id = new Cookie("id", uuid.toString());
                     id.setDomain("localhost");
                     id.setPath("./");
                     response.addCookie(id);
 
-                    //Weiterleitung je nachdem was für eine Person sich angemeldet hat
-                    if(c.equals("M")){
-                        request.getRequestDispatcher("/jsp/mitarbeiter/Uebersicht-Mitarbeiter.jsp").forward(request, response);
-                    }else {
-                        request.getRequestDispatcher("index.jsp").forward(request, response);
-                    }
+                    RequestDispatcher d = getServletContext().getRequestDispatcher(dispatcher);
+                    d.forward(request, response);
                 } else {
                     //response.sendRedirect("./jsp/nologin.jsp");
                 }
@@ -124,6 +118,7 @@ public class Login extends HttpServlet {
         }
 
     }
+        DB_Connector.closeDatabase();
     }
     public static void getLogin(JspWriter writer, Cookie[] cookies){
         new DB_Loader();

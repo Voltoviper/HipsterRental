@@ -25,7 +25,7 @@ public class Produkt {
        // produkt_eintragen(this);
     }
 
-    public Produkt(String name, String bezeichnung, String beschreibung, String herstellername, String details, double mietzins, Produkt alternative, Kategorie kategorie) {
+    public Produkt(String name, String bezeichnung, String beschreibung, String herstellername, String details, double mietzins, Produkt alternative, Kategorie kategorie, boolean eintragen) {
         this.name = name;
         this.bezeichnung = bezeichnung;
         this.beschreibung = beschreibung;
@@ -34,7 +34,9 @@ public class Produkt {
         this.mietzins = mietzins;
         this.alternative = alternative;
         this.kategorie = kategorie;
-        produkt_eintragen(this);
+        if(eintragen) {
+            produkt_eintragen(this);
+        }
     }
 
 
