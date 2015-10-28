@@ -58,7 +58,7 @@ public class DB_Loader {
             Seitenaufbau.katalog.add(p);
         }
 
-
+       DB_Connector.closeDatabase();
     }
     private void Kategorieanlegen()throws SQLException{
         DB_Connector.connecttoDatabase();
@@ -74,6 +74,7 @@ public class DB_Loader {
             Kategorie k = new Kategorie(name, id);
             Seitenaufbau.kategorien.add(k);
         }
+        DB_Connector.closeDatabase();
     }
 
 }

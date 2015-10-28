@@ -69,9 +69,10 @@ public class NeuesProdukt extends HttpServlet {
             id_rs.next();
             produkt_id = id_rs.getInt("id");
             p.setId(produkt_id);
-            DB_Connector.closeDatabase();
         }catch(SQLException e){
             e.printStackTrace();
+        }finally{
+            DB_Connector.closeDatabase();
         }
 
 

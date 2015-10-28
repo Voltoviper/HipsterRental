@@ -77,6 +77,8 @@ public class Seitenaufbau extends HttpServlet{
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally{
+            DB_Connector.closeDatabase();
         }
     }
     public static void getMenu(JspWriter writer, Cookie[] cookies){
@@ -121,6 +123,8 @@ public class Seitenaufbau extends HttpServlet{
             writer.print("</tr></table>");
         }catch (IOException e){
 
+        }finally{
+            DB_Connector.closeDatabase();
         }
     }
     public static void getMitarbeiterMenu(JspWriter writer, Cookie[] cookies){
@@ -144,7 +148,7 @@ public class Seitenaufbau extends HttpServlet{
         }else{
 
         }
-        DB_Connector.closeDatabase();
+
         Mitarbeiter arbeiter=null;
         for(Mitarbeiter m: mitarbeiter){
             if(m.getUuid().toString().equals(cook.getValue())){
@@ -167,6 +171,8 @@ public class Seitenaufbau extends HttpServlet{
                 writer.print("</tr>");
         }catch (IOException e){
 
+        }finally{
+            DB_Connector.closeDatabase();
         }
     }
     public static void getKategorie(JspWriter writer){
@@ -193,6 +199,8 @@ public class Seitenaufbau extends HttpServlet{
 
         }catch(IOException e1){
 
+        }finally{
+            DB_Connector.closeDatabase();
         }
     }
     public static void getArtikel(JspWriter writer,String id){
@@ -365,6 +373,8 @@ public class Seitenaufbau extends HttpServlet{
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally{
+            DB_Connector.closeDatabase();
         }
     }
     public static void getBestellung(JspWriter writer, Cookie[] cookies){
@@ -432,6 +442,8 @@ public class Seitenaufbau extends HttpServlet{
 
         }catch(SQLException e1){
             try{writer.print(e1);}catch(IOException e2){}
+        }finally{
+            DB_Connector.closeDatabase();
         }
     }
     public static void getBestelluebersicht(JspWriter writer, Cookie[] cookies){
@@ -467,6 +479,8 @@ public class Seitenaufbau extends HttpServlet{
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }finally{
+            DB_Connector.closeDatabase();
         }
 
     }
@@ -606,6 +620,8 @@ public class Seitenaufbau extends HttpServlet{
 
         }catch (SQLException e) {
             e.printStackTrace();
+        }finally{
+            DB_Connector.closeDatabase();
         }
         return writer.toString();
     }

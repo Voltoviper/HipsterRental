@@ -60,4 +60,12 @@
         <servlet-name>NeuerMitarbeiter</servlet-name>
         <url-pattern>/NeuerMitarbeiter</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>GeraetEinfuegen</servlet-name>
+        <servlet-class>wak.system.server.GeraetEinfuegen</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GeraetEinfuegen</servlet-name>
+        <url-pattern>/GeraetEinfuegen</url-pattern>
+    </servlet-mapping>
 </web-app>

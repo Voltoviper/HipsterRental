@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;
 import static org.junit.Assert .*;
+
+import wak.system.db.DB_Connector;
 import wak.system.db.DB_Loader;
 import wak.system.server.Seitenaufbau;
 
@@ -25,7 +27,7 @@ public void before() throws Exception {
 } 
 
 @After
-public void after() throws Exception { 
+public void after() throws Exception {
 } 
 
 
