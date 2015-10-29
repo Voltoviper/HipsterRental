@@ -76,4 +76,12 @@
         <servlet-name>KategorieAnlegen</servlet-name>
         <url-pattern>/KategorieAnlegen</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>MitarbeiterLoeschen</servlet-name>
+        <servlet-class>wak.system.server.MitarbeiterLoeschen</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MitarbeiterLoeschen</servlet-name>
+        <url-pattern>/jsp/mitarbeiter/MitarbeiterLoeschen</url-pattern>
+    </servlet-mapping>
 </web-app>

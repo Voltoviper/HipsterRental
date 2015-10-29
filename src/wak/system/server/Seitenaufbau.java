@@ -157,9 +157,9 @@ public class Seitenaufbau extends HttpServlet{
         }
         try{
 
-            writer.print("<tr><td onclick=self.location.href=\"../jsp/mitarbeiter/neues_produkt.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neuer Artikel</td></tr><tr>" +
+            writer.print("<tr><td onclick=self.location.href=\"./neues_produkt.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neuer Artikel</td></tr><tr>" +
                     "<td  style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neues Paket</td></tr><tr>" +
-                    "<td onclick=self.location.href=\"../jsp/mitarbeiter/bestelluebersicht.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Bestell&uumlbersicht</td></tr><tr>" +
+                    "<td onclick=self.location.href=\"./bestelluebersicht.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Bestell&uumlbersicht</td></tr><tr>" +
                     "<td style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neue Bestellung</td></tr><tr>"+
                     "<td onclick=self.location.href=\"./KategorieAnlegen.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neue Kategorie</td></tr><tr>"+
                     "<td onclick=self.location.href=\"./GeraetEinfuegen.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neues Ger&aumlt</td></tr><tr>");
@@ -169,7 +169,8 @@ public class Seitenaufbau extends HttpServlet{
 
             if(arbeiter.isAdmin()){
             writer.print(
-                    "<td onclick=self.location.href=\"./Neuer-Mitarbeiter.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neuer Mitarbeiter</td>");
+                    "<td onclick=self.location.href=\"./Neuer-Mitarbeiter.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neuer Mitarbeiter</td></tr><tr>"+
+                "<td onclick=self.location.href=\"./MitarbeiterUebersicht.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Mitarbeiter Uebersicht</td>");
             }}
                 writer.print("</tr>");
         }catch (IOException e){
@@ -451,7 +452,7 @@ public class Seitenaufbau extends HttpServlet{
     }
     public static void getBestelluebersicht(JspWriter writer, Cookie[] cookies){
         //Cookie abfragen
-
+        DB_Connector.connecttoDatabase();
 
 
 
@@ -489,7 +490,7 @@ public class Seitenaufbau extends HttpServlet{
     }
     public static void getBestelldetails(JspWriter writer, Cookie[] cookies, String bestellid){
         //Cookie überprüfen
-
+        DB_Connector.connecttoDatabase();
 
 
         try{
@@ -561,9 +562,35 @@ public class Seitenaufbau extends HttpServlet{
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }finally{
+            DB_Connector.closeDatabase();
         }
     }
+    public static void getMitarbeiterUebersicht(JspWriter writer){
 
+        try{
+            writer.print("<td><table style=\"width:100%\"><tr><td>Vorname</td><td>Nachname</td><td>Benutzerid</td><td>Loeschen?</td></tr>");
+                DB_Connector.connecttoDatabase();
+
+                String mitarbeiter = "SELECT vorname, nachname, id FROM softwareengineering2.nutzer WHERE left(id, 1)='M';";
+                PreparedStatement mitarbeiter_ps = DB_Connector.con.prepareStatement(mitarbeiter);
+                ResultSet mitarbeiter_rs = mitarbeiter_ps.executeQuery();
+                String vorname, nachname, Mitarbeiternummer;
+                while(mitarbeiter_rs.next()){
+                    vorname = mitarbeiter_rs.getString("vorname");
+                    nachname = mitarbeiter_rs.getString("nachname");
+                    Mitarbeiternummer = mitarbeiter_rs.getString("id");
+                    writer.print("<tr><td>"+vorname+"</td><td>"+nachname+"</td><td>"+Mitarbeiternummer+"</td><td  onclick=self.location.href=\"./MitarbeiterLoeschen?id="+Mitarbeiternummer+"\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#6565FC\" onmouseout=this.style.color=\"#000000\"> Loeschen</td></tr>");
+                }
+            writer.print("</table></td>");
+            }catch(SQLException e1){
+
+            }catch(IOException e2){
+
+            }finally{
+                DB_Connector.closeDatabase();
+            }
+    }
     public static void getKategorieRadio(JspWriter writer) {
         for(Kategorie k:Seitenaufbau.kategorien){
             try {
