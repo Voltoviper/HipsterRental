@@ -160,7 +160,9 @@ public class Seitenaufbau extends HttpServlet{
             writer.print("<tr><td onclick=self.location.href=\"../jsp/mitarbeiter/neues_produkt.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neuer Artikel</td></tr><tr>" +
                     "<td  style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neues Paket</td></tr><tr>" +
                     "<td onclick=self.location.href=\"../jsp/mitarbeiter/bestelluebersicht.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Bestell&uumlbersicht</td></tr><tr>" +
-                    "<td style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neue Bestellung</td></tr><tr>");
+                    "<td style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neue Bestellung</td></tr><tr>"+
+                    "<td onclick=self.location.href=\"./GeraetEinfuegen.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neues Ger&aumlt</td></tr><tr>");
+
             if (arbeiter != null) {
 
 
@@ -670,4 +672,13 @@ public class Seitenaufbau extends HttpServlet{
     }
 
 
+    public static void getProdukteDatalist(JspWriter writer) {
+        try {
+            for (Produkt p : katalog) {
+                writer.print("<option value=" + p.getId() + ">"+p.getName()+"</option>");
+            }
+        }catch (IOException e1){
+            e1.printStackTrace();
+        }
+    }
 }

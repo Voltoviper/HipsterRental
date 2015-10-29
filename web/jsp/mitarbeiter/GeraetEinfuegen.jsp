@@ -19,7 +19,18 @@
             <form method="post" action="/GeraetEinfuegen">
               <table>
                 <tr>
-                  <td>Produktauswahl</td><td></td>
+                  <td>Produktauswahl</td>
+                  <td><select name="produkt" size="1" style="width: 200px;">
+                      <%Seitenaufbau.getProdukteDatalist(out);%>
+                    </select>
+
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+
+                  </td>
+                  <td><input type="submit" value="Ger&aumlt hinzuf&uumlgen"></td>
                 </tr>
               </table>
             </form>
