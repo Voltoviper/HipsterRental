@@ -44,7 +44,6 @@ public class Bestelleintragung extends HttpServlet {
         }else{
 
         }
-
         if(cookie_vorhanden){
             Kunde kunde = null;
             for(Kunde k:Seitenaufbau.kunde){
@@ -52,28 +51,28 @@ public class Bestelleintragung extends HttpServlet {
                     kunde = k;
                     //Pr�fen, ob die Daten ge�ndert wurden
                     if(!(k.getVorname().equals(request.getParameter("vorname")))){
-
+                        k.setVorname(request.getParameter("vorname"));
                     }
                     if(!(k.getNachname().equals(request.getParameter("nachname")))){
-
+                        k.setNachname(request.getParameter("nachname"));
                     }
                     if(!(k.getAddr().getStrasse().equals(request.getParameter("strasse")))){
-
+                        k.getAddr().setStrasse(request.getParameter("strasse"));
                     }
                     if(!(k.getAddr().getHausnummer()== Integer.parseInt(request.getParameter("hausnummer")))){
-
+                        k.getAddr().setHausnummer(Integer.parseInt(request.getParameter("hausnummer")));
                     }
                     if(!(k.getAddr().getPlz().equals(request.getParameter("plz")))){
-
+                        k.getAddr().setPlz(request.getParameter("plz"));
                     }
                     if(!(k.getAddr().getOrt().equals(request.getParameter("ort")))){
-
+                        k.getAddr().setOrt(request.getParameter("ort"));
                     }
                     if(!(k.getTelefon().equals(request.getParameter("telefon")))){
-
+                        k.setTelefon(request.getParameter("telefon"));
                     }
                     if(!(k.getHandy().equals(request.getParameter("handy")))){
-
+                        k.setHandy((request.getParameter("handy")));
                     }
                     if(!(k.getEmail().equals(request.getParameter("email")))){
                         k.setEmail(request.getParameter("email"));

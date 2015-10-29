@@ -77,4 +77,15 @@ public class DB_Loader {
         DB_Connector.closeDatabase();
     }
 
+    private void Kundenanlegen() throws SQLException{
+        DB_Connector.connecttoDatabase();
+        String kunden_string="SELECT * FROM kunde";
+        PreparedStatement kunde_ps = DB_Connector.con.prepareStatement(kunden_string);
+        ResultSet kunde_rs = kunde_ps.executeQuery();
+        String vorname, nachname,
+
+
+        DB_Connector.closeDatabase();
+    }
+
 }

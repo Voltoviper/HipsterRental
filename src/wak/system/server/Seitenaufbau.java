@@ -160,7 +160,7 @@ public class Seitenaufbau extends HttpServlet{
             writer.print("<tr><td onclick=self.location.href=\"./neues_produkt.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neuer Artikel</td></tr><tr>" +
                     "<td  style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neues Paket</td></tr><tr>" +
                     "<td onclick=self.location.href=\"./bestelluebersicht.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Bestell&uumlbersicht</td></tr><tr>" +
-                    "<td style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neue Bestellung</td></tr><tr>"+
+                    "<td onclick=self.location.href=\"./neueBestellung.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neue Bestellung</td></tr><tr>"+
                     "<td onclick=self.location.href=\"./KategorieAnlegen.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neue Kategorie</td></tr><tr>"+
                     "<td onclick=self.location.href=\"./GeraetEinfuegen.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neues Ger&aumlt</td></tr><tr>");
 
@@ -714,6 +714,16 @@ public class Seitenaufbau extends HttpServlet{
         try {
             for (Kategorie k : kategorien) {
                 writer.print("<option value=" + k.getId() + ">"+k.getName()+"</option>");
+            }
+        }catch (IOException e1){
+            e1.printStackTrace();
+        }
+    }
+
+    public static void getKundenSelect(JspWriter writer) {
+        try {
+            for (Kunde k : kunde) {
+                writer.print("<option value=" + k.getId() + ">"+k.getVorname()+" "+k.getNachname()+"</option>");
             }
         }catch (IOException e1){
             e1.printStackTrace();
