@@ -68,4 +68,12 @@
         <servlet-name>GeraetEinfuegen</servlet-name>
         <url-pattern>/GeraetEinfuegen</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>KategorieAnlegen</servlet-name>
+        <servlet-class>wak.system.server.KategorieAnlegen</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>KategorieAnlegen</servlet-name>
+        <url-pattern>/KategorieAnlegen</url-pattern>
+    </servlet-mapping>
 </web-app>

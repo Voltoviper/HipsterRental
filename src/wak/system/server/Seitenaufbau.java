@@ -161,6 +161,7 @@ public class Seitenaufbau extends HttpServlet{
                     "<td  style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neues Paket</td></tr><tr>" +
                     "<td onclick=self.location.href=\"../jsp/mitarbeiter/bestelluebersicht.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Bestell&uumlbersicht</td></tr><tr>" +
                     "<td style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neue Bestellung</td></tr><tr>"+
+                    "<td onclick=self.location.href=\"./KategorieAnlegen.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neue Kategorie</td></tr><tr>"+
                     "<td onclick=self.location.href=\"./GeraetEinfuegen.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neues Ger&aumlt</td></tr><tr>");
 
             if (arbeiter != null) {
@@ -676,6 +677,16 @@ public class Seitenaufbau extends HttpServlet{
         try {
             for (Produkt p : katalog) {
                 writer.print("<option value=" + p.getId() + ">"+p.getName()+"</option>");
+            }
+        }catch (IOException e1){
+            e1.printStackTrace();
+        }
+    }
+
+    public static void getKategorieOptionen(JspWriter writer) {
+        try {
+            for (Kategorie k : kategorien) {
+                writer.print("<option value=" + k.getId() + ">"+k.getName()+"</option>");
             }
         }catch (IOException e1){
             e1.printStackTrace();
