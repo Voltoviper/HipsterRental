@@ -4,6 +4,8 @@ import wak.objects.Kategorie;
 import wak.objects.Produkt;
 import wak.system.db.DB_Connector;
 import wak.system.server.Seitenaufbau;
+import wak.user.Adresse;
+import wak.user.Kunde;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,7 +23,7 @@ public class DB_Loader {
             if(!runned) {
                 Kategorieanlegen();
                 Produkteanlegen();
-
+                Kundenanlegen();
                 runned = true;
             }
         }catch(SQLException e){
@@ -79,10 +81,26 @@ public class DB_Loader {
 
     private void Kundenanlegen() throws SQLException{
         DB_Connector.connecttoDatabase();
-        String kunden_string="SELECT * FROM kunde";
+        String kunden_string="SELECT nutzer.vorname, nutzer.nachname, kunde.strasse, kunde.hausnummer, kunde.plz, kunde.ort, kunde.telefonnummer, kunde.handynummer, kunde.email, kunde.Nutzerid FROM kunde Inner join nutzer on kunde.Nutzerid=nutzer.id";
         PreparedStatement kunde_ps = DB_Connector.con.prepareStatement(kunden_string);
         ResultSet kunde_rs = kunde_ps.executeQuery();
-        String vorname, nachname,
+        String vorname, nachname, strasse, plz, ort, telefonnummer, handynummer, email, nutzerid;
+        int hausnumer;
+        while(kunde_rs.next()){
+            vorname = kunde_rs.getString("vorname");
+            nachname = kunde_rs.getString("nachname");
+            strasse = kunde_rs.getString("strasse");
+            int hausnummer= kunde_rs.getInt("hausnummer");
+            plz = kunde_rs.getString("plz");
+            ort = kunde_rs.getString("ort");
+            telefonnummer = kunde_rs.getString("telefonnummer");
+            handynummer = kunde_rs.getString("handynummer");
+            email = kunde_rs.getString("email");
+            nutzerid = kunde_rs.getString("nutzerid");
+            Adresse a = new Adresse(strasse, ort, plz, hausnummer);
+            Kunde k = new Kunde(nutzerid, vorname, nachname, email, telefonnummer, handynummer, a);
+            Seitenaufbau.kunde.add(k);
+        }
 
 
         DB_Connector.closeDatabase();

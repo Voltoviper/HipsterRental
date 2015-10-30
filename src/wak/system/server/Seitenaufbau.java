@@ -115,7 +115,7 @@ public class Seitenaufbau extends HttpServlet{
 
             writer.print("<table><tr><td onclick=self.location.href=\"../index.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Shop</td>" +
                     "<td onclick=self.location.href=\"../jsp/warenkorb.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Warenkorb </td>" +
-                    "<td style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Buchung</td>" +
+                    "<td onclick=self.location.href=\"/jsp/Buchungen.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Buchung</td>" +
                     "<td style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Profil</td>");
             if(arbeiter!=null){
                 writer.print("<td onclick=self.location.href=\"../jsp/mitarbeiter/Uebersicht-Mitarbeiter.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Mitarbeiterbereich </td>");
@@ -699,6 +699,18 @@ public class Seitenaufbau extends HttpServlet{
         return Summe;
     }
 
+    public static double getEndsumme(String nutzerid, int tage, double mietzins){
+        Double Summe=0.0;
+        Summe+=mietzins;
+        if(tage>1){
+            for(int i=1; i<tage;i++){
+                Summe+=mietzins*0.60;
+            }
+        }
+        Summe=Math.round(Summe*100.0)/100.0;
+        return Summe;
+    }
+
 
     public static void getProdukteDatalist(JspWriter writer) {
         try {
@@ -729,4 +741,51 @@ public class Seitenaufbau extends HttpServlet{
             e1.printStackTrace();
         }
     }
+
+    public static void getBestelluebersichtKD(JspWriter writer, Cookie[] cookies) {
+        boolean cookie_vorhanden=false;
+        Cookie cook=null;
+        if(cookies!=null){
+            for(int i=0;i<cookies.length;i++){
+                Cookie c = cookies[i];
+                if(c.getName().compareTo("id")==0){
+                    cook = c;
+                    cookie_vorhanden=true;
+                    break;
+                }else{
+                }
+            }
+        }else{
+
+        }
+try {
+    DB_Connector.connecttoDatabase();
+    if (cookie_vorhanden) {
+        Kunde k = getKunde(cook.getValue());
+        writer.print("<td><table width=100%><tr><td>Bestellnummer</td><td>von</td><td>bis</td><td>Mietzins</td><td>Stornieren</td></tr>");
+        String bestell_string = "SELECT Bestellungid, von, bis ,gesamtkosten FROM (SELECT Bestellungid ,round(sum(mietzins), 2) AS Gesamtkosten FROM bestellposition INNER JOIN produkt ON(bestellposition.Produktid = produkt.id) GROUP BY Bestellungid) AS temp INNER JOIN bestellung ON(Bestellungid = bestellung.id) WHERE genehmigt = 0 AND Nutzerid=?\n ;";
+        PreparedStatement bestell_ps = null;
+        ResultSet bestell_rs;
+        bestell_ps = DB_Connector.con.prepareStatement(bestell_string);
+        bestell_ps.setString(1,k.getId());
+        bestell_rs = bestell_ps.executeQuery();
+        while (bestell_rs.next()) {
+
+            int bestellid = bestell_rs.getInt("Bestellungid");
+            Timestamp von = bestell_rs.getTimestamp("von");
+            Timestamp bis = bestell_rs.getTimestamp("bis");
+            double mietzins = bestell_rs.getDouble("gesamtkosten");
+            writer.print("<tr><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid=" + bestellid + "\">" + bestellid + "</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid=" + bestellid + "\">" + von.toString() + "</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid=" + bestellid + "\">" + bis.toString() + "</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid=" + bestellid + "\">" + Formatter.formatdouble(getEndsumme(k.getId(), getTage(von,bis), mietzins)) + "</td><td onclick=self.location.href=\"./bestellannahme.jsp?bestellid=" + bestellid + "\">Stornieren</td><</tr>");
+        }
+        writer.print("</table></td>");
+    }
+}catch(SQLException e1){
+    e1.printStackTrace();
+}catch(IOException e2) {
+    e2.printStackTrace();
+}finally{
+    DB_Connector.closeDatabase();
 }
+
+
+}}

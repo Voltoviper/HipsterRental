@@ -83,13 +83,20 @@ public class Login extends HttpServlet {
                 if (hashtext.matches(pass)) {
                     test = nutzer;
                     UUID uuid = UUID.randomUUID();
+                    Kunde kunde=null;
+                    for(Kunde k: Seitenaufbau.kunde){
+                        if (int_id.equals(k.getId())){
+                            kunde=k;
+                            kunde.setUuid(uuid);
+                        }
+                    }
 
                     //Entscheiden um was für eine Person es sich handelt
                     String c=null;
                     switch(int_id.charAt(0)){
                         case 'M':c="M";Mitarbeiter m = new Mitarbeiter(uuid, int_id, false);Seitenaufbau.mitarbeiter.add(m);break;
                         case 'A':c="M";Mitarbeiter a = new Mitarbeiter(uuid, int_id, true);Seitenaufbau.mitarbeiter.add(a);break;
-                        case 'K':c="K";Kunde k = new Kunde(int_id, uuid);Seitenaufbau.kunde.add(k);Warenkorb w = new Warenkorb(uuid.toString());Seitenaufbau.koerbe.add(w); k.setKorb(w);break;
+                        case 'K':c="K";Warenkorb w = new Warenkorb(uuid.toString());Seitenaufbau.koerbe.add(w); kunde.setKorb(w);break;
                         default: request.getRequestDispatcher("index.jsp");
                     }
                     writer.print(c);

@@ -40,6 +40,16 @@ public class Kunde extends Person {
         this.uuid = uuid;
     }
 
+    public Kunde(String id, String vorname, String nachname,String email, String telefon, String handy, Adresse addr) {
+        this.vorname = vorname;
+        this.nachname = nachname;
+        this.email = email;
+        this.telefon = telefon;
+        this.handy = handy;
+        this.addr = addr;
+        this.id = id;
+    }
+
     /**
      * Kunde wird nur für die Zuordnung von SessionID und Kundennummer angelegt. Es muss später erweitert werden!
      * @param id
@@ -100,6 +110,10 @@ public class Kunde extends Person {
 
     public String getUuid(){
         return uuid.toString();
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     @Override
