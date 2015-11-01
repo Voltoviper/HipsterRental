@@ -1,7 +1,11 @@
 package wak.user;
 
 import wak.objects.Warenkorb;
+import wak.system.db.DB_Connector;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.UUID;
 
 /**
@@ -40,15 +44,88 @@ public class Kunde extends Person {
         this.uuid = uuid;
     }
 
-    public Kunde(String id, String vorname, String nachname,String email, String telefon, String handy, Adresse addr) {
+    public Kunde(String id, String vorname, String nachname,String email, String telefon, String handy, Adresse addr, String username, String passwort, boolean eintragen) {
         this.vorname = vorname;
         this.nachname = nachname;
         this.email = email;
         this.telefon = telefon;
         this.handy = handy;
         this.addr = addr;
-        this.id = id;
+        if(id!=null){
+            this.id = id;
+        }else{
+            this.id=generateID(false);
+        }
+        this.username = username;
+        this.passwort = passwort;
+        if(eintragen){
+            eintragen(this);
+        }
     }
+
+    private void eintragen(Kunde kunde) {
+        DB_Connector.connecttoDatabase();
+        try {
+            String nutzereintragen = "INSERT INTO `softwareengineering2`.`nutzer` (`benutzername`, `passwort`, `nachname`, `vorname`, `id`) VALUES (?, ?, ?, ?,?);";
+            PreparedStatement nutzereintragen_ps = DB_Connector.con.prepareStatement(nutzereintragen);
+            nutzereintragen_ps.setString(1, kunde.getUsername());
+            nutzereintragen_ps.setString(2, kunde.getPasswort());
+            nutzereintragen_ps.setString(3, kunde.getNachname());
+            nutzereintragen_ps.setString(4, kunde.getVorname());
+            nutzereintragen_ps.setString(5, kunde.getId());
+            nutzereintragen_ps.executeUpdate();
+            String kundeeintragen ="INSERT INTO `softwareengineering2`.`kunde` (`email`, `organame`, `strasse`, `hausnummer`, `plz`, `ort`, `telefonnummer`, `handynummer`, `Nutzerid`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            PreparedStatement kundeeintragen_ps = DB_Connector.con.prepareStatement(kundeeintragen);
+            kundeeintragen_ps.setString(1,kunde.getEmail());
+            kundeeintragen_ps.setString(2,kunde.getEmail());
+            kundeeintragen_ps.setString(3,kunde.getAddr().getStrasse());
+            kundeeintragen_ps.setInt(4,kunde.getAddr().getHausnummer());
+            kundeeintragen_ps.setString(5,kunde.getAddr().getPlz());
+            kundeeintragen_ps.setString(6,kunde.getAddr().getOrt());
+            kundeeintragen_ps.setString(7,kunde.getTelefon());
+            kundeeintragen_ps.setString(8,kunde.getHandy());
+            kundeeintragen_ps.setString(9,kunde.getId());
+            kundeeintragen_ps.executeUpdate();
+
+        }catch (SQLException e1){
+            e1.printStackTrace();
+        }finally {
+            DB_Connector.closeDatabase();
+        }
+
+    }
+
+    private String generateID(boolean b) {
+        DB_Connector.connecttoDatabase();
+        String id=null;
+        try {
+            if (b) {
+
+            } else {
+                String str = "SELECT 0+RIGHT(id,9)as id from nutzer WHERE LEFT(id, 1)='K' order by id DESC;";
+                PreparedStatement str_ps = DB_Connector.con.prepareStatement(str);
+                ResultSet str_rs= str_ps.executeQuery();
+                str_rs.next();
+                int i = str_rs.getInt("id")+1;
+
+                id = String.valueOf(i);
+                if(!(id.length()==9)){
+                    id =("000000000" + String.valueOf(i)).substring(id.length());
+                }
+                id="K"+id;
+
+            }
+        }catch(SQLException e1){
+
+        }finally{
+            DB_Connector.closeDatabase();
+        }
+
+        return id;
+    }
+
+
+
 
     /**
      * Kunde wird nur für die Zuordnung von SessionID und Kundennummer angelegt. Es muss später erweitert werden!
@@ -133,12 +210,12 @@ public class Kunde extends Person {
 
     @Override
     public String getUsername() {
-        return null;
+        return username;
     }
 
     @Override
     public String getPasswort() {
-        return null;
+        return passwort;
     }
 
     @Override

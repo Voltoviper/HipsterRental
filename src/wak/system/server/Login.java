@@ -37,6 +37,12 @@ public class Login extends HttpServlet {
    static  String test;
     protected void doPost(HttpServletRequest request,HttpServletResponse response) throws javax.servlet.ServletException, IOException {
     DB_Connector.connecttoDatabase();
+
+        if((request.getParameter("registrieren")!=null)&&(request.getParameter("registrieren").equals("Registrieren"))){
+            String nextJSP = "/jsp/Registrierung.jsp";
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
+            dispatcher.forward(request, response);
+        }else{
         if(request.getParameter("logout")!=null){
             Cookie[] cookies = request.getCookies();
             boolean cookie_vorhanden=false;
@@ -126,7 +132,7 @@ public class Login extends HttpServlet {
 
     }
         DB_Connector.closeDatabase();
-    }
+    }}
     public static void getLogin(JspWriter writer, Cookie[] cookies){
         new DB_Loader();
        try {

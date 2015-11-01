@@ -84,4 +84,12 @@
         <servlet-name>MitarbeiterLoeschen</servlet-name>
         <url-pattern>/jsp/mitarbeiter/MitarbeiterLoeschen</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Registrierung</servlet-name>
+        <servlet-class>wak.system.server.RegisitrierungServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Registrierung</servlet-name>
+        <url-pattern>/Registrierung</url-pattern>
+    </servlet-mapping>
 </web-app>

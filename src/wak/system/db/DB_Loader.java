@@ -98,7 +98,7 @@ public class DB_Loader {
             email = kunde_rs.getString("email");
             nutzerid = kunde_rs.getString("nutzerid");
             Adresse a = new Adresse(strasse, ort, plz, hausnummer);
-            Kunde k = new Kunde(nutzerid, vorname, nachname, email, telefonnummer, handynummer, a);
+            Kunde k = new Kunde(nutzerid, vorname, nachname, email, telefonnummer, handynummer, a, null, null, false);
             Seitenaufbau.kunde.add(k);
         }
 
