@@ -1,7 +1,9 @@
 package wak.user;
 
 import wak.objects.Warenkorb;
+import wak.system.Formatter;
 import wak.system.db.DB_Connector;
+import wak.system.server.Seitenaufbau;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -61,6 +63,7 @@ public class Kunde extends Person {
         if(eintragen){
             eintragen(this);
         }
+        Seitenaufbau.kunde.add(this);
     }
 
     private void eintragen(Kunde kunde) {
@@ -151,6 +154,19 @@ public class Kunde extends Person {
 
     public void setEmail(String email) {
         this.email = email;
+        try {
+            DB_Connector.connecttoDatabase();
+            String dbEmail = "UPDATE `softwareengineering2`.`kunde` SET `email`=? WHERE `Nutzerid`=?;";
+            PreparedStatement dbEmail_ps = DB_Connector.con.prepareStatement(dbEmail);
+            dbEmail_ps.setString(1,email);
+            dbEmail_ps.setString(2, this.getId());
+            dbEmail_ps.executeUpdate();
+        }catch(SQLException e1){
+            e1.printStackTrace();
+        }finally{
+            DB_Connector.closeDatabase();
+        }
+
     }
 
     public String getTelefon() {
@@ -159,6 +175,18 @@ public class Kunde extends Person {
 
     public void setTelefon(String telefon) {
         this.telefon = telefon;
+        try {
+            DB_Connector.connecttoDatabase();
+            String dbEmail = "UPDATE `softwareengineering2`.`kunde` SET `telefonnummer`=? WHERE `Nutzerid`=?;";
+            PreparedStatement dbEmail_ps = DB_Connector.con.prepareStatement(dbEmail);
+            dbEmail_ps.setString(1,telefon);
+            dbEmail_ps.setString(2, this.getId());
+            dbEmail_ps.executeUpdate();
+        }catch(SQLException e1){
+            e1.printStackTrace();
+        }finally{
+            DB_Connector.closeDatabase();
+        }
     }
 
     public String getOrganame() {
@@ -175,6 +203,18 @@ public class Kunde extends Person {
 
     public void setHandy(String handy) {
         this.handy = handy;
+        try {
+            DB_Connector.connecttoDatabase();
+            String dbEmail = "UPDATE `softwareengineering2`.`kunde` SET `handynummer`=? WHERE `Nutzerid`=?;";
+            PreparedStatement dbEmail_ps = DB_Connector.con.prepareStatement(dbEmail);
+            dbEmail_ps.setString(1,handy);
+            dbEmail_ps.setString(2, this.getId());
+            dbEmail_ps.executeUpdate();
+        }catch(SQLException e1){
+            e1.printStackTrace();
+        }finally{
+            DB_Connector.closeDatabase();
+        }
     }
 
     public Adresse getAddr() {
@@ -221,11 +261,35 @@ public class Kunde extends Person {
     @Override
     public void setVorname(String vorname) {
         this.vorname = vorname;
+        try {
+            DB_Connector.connecttoDatabase();
+            String dbEmail = "UPDATE `softwareengineering2`.`nutzer` SET `vorname`=? WHERE `id`=?;";
+            PreparedStatement dbEmail_ps = DB_Connector.con.prepareStatement(dbEmail);
+            dbEmail_ps.setString(1,vorname);
+            dbEmail_ps.setString(2, this.getId());
+            dbEmail_ps.executeUpdate();
+        }catch(SQLException e1){
+            e1.printStackTrace();
+        }finally{
+            DB_Connector.closeDatabase();
+        }
     }
 
     @Override
     public void setNachname(String nachname) {
         this.nachname= nachname;
+        try {
+            DB_Connector.connecttoDatabase();
+            String dbEmail = "UPDATE `softwareengineering2`.`nutzer` SET `nachname`=? WHERE `id`=?;";
+            PreparedStatement dbEmail_ps = DB_Connector.con.prepareStatement(dbEmail);
+            dbEmail_ps.setString(1,nachname);
+            dbEmail_ps.setString(2, this.getId());
+            dbEmail_ps.executeUpdate();
+        }catch(SQLException e1){
+            e1.printStackTrace();
+        }finally{
+            DB_Connector.closeDatabase();
+        }
     }
 
     @Override
@@ -235,6 +299,21 @@ public class Kunde extends Person {
 
     @Override
     public void setPasswort(String passwort) {
+        passwort= Formatter.hashen(passwort);
+        this.passwort = passwort;
+        try {
+            DB_Connector.connecttoDatabase();
+            String dbEmail = "UPDATE `softwareengineering2`.`nutzer` SET `passwort`=? WHERE `id`=?;";
+            PreparedStatement dbEmail_ps = DB_Connector.con.prepareStatement(dbEmail);
+            dbEmail_ps.setString(1,passwort);
+            dbEmail_ps.setString(2, this.getId());
+            dbEmail_ps.executeUpdate();
+        }catch(SQLException e1){
+            e1.printStackTrace();
+        }finally{
+            DB_Connector.closeDatabase();
+        }
+
 
     }
 }

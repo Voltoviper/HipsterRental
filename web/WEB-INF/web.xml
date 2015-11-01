@@ -92,4 +92,12 @@
         <servlet-name>Registrierung</servlet-name>
         <url-pattern>/Registrierung</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>ProfilUpdate</servlet-name>
+        <servlet-class>wak.system.server.ProfilUpdate</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProfilUpdate</servlet-name>
+        <url-pattern>/ProfilUpdate</url-pattern>
+    </servlet-mapping>
 </web-app>

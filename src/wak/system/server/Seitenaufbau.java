@@ -116,7 +116,7 @@ public class Seitenaufbau extends HttpServlet{
             writer.print("<table><tr><td onclick=self.location.href=\"../index.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Shop</td>" +
                     "<td onclick=self.location.href=\"../jsp/warenkorb.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Warenkorb </td>" +
                     "<td onclick=self.location.href=\"/jsp/Buchungen.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Buchung</td>" +
-                    "<td style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Profil</td>");
+                    "<td onclick=self.location.href=\"/jsp/Profil.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Profil</td>");
             if(arbeiter!=null){
                 writer.print("<td onclick=self.location.href=\"../jsp/mitarbeiter/Uebersicht-Mitarbeiter.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Mitarbeiterbereich </td>");
             }
@@ -788,4 +788,55 @@ try {
 }
 
 
-}}
+}
+
+    public static void getProfil(JspWriter writer, Cookie[] cookies) {
+        boolean cookie_vorhanden=false;
+        Cookie cook=null;
+        if(cookies!=null){
+            for(int i=0;i<cookies.length;i++){
+                Cookie c = cookies[i];
+                if(c.getName().compareTo("id")==0){
+                    cook = c;
+                    cookie_vorhanden=true;
+                    break;
+                }else{
+                }
+            }
+        }else{
+
+        }
+        try{
+            DB_Connector.connecttoDatabase();
+            writer.print("<td><form method=\"post\" action=\"/ProfilUpdate\"><table>");
+            Kunde k = getKunde(cook.getValue());
+
+            String kunde = " SELECT nutzer.vorname, nutzer.nachname, kunde.strasse, kunde.hausnummer, kunde.plz, kunde.ort, kunde.telefonnummer, kunde.handynummer, kunde.email FROM kunde Inner join nutzer on kunde.Nutzerid=nutzer.id WHERE kunde.Nutzerid=?";
+            PreparedStatement kunde_ps = DB_Connector.con.prepareStatement(kunde);
+            kunde_ps.setString(1,k.getId());
+            ResultSet kunde_rs = kunde_ps.executeQuery();
+            kunde_rs.next();
+            writer.print("<tr><td>Vorname: </td><td><input type=\"text\" name=\"vorname\" value=\""+kunde_rs.getString("vorname")+"\"></td></tr>");
+            writer.print("<tr><td>Nachname: </td><td><input type=\"text\" name=\"nachname\" value=\""+kunde_rs.getString("nachname")+"\"></td></tr>");
+            writer.print("<tr><td>Straﬂe: </td><td><input type=\"text\" name=\"strasse\" value=\""+kunde_rs.getString("strasse")+"\"></td></tr>");
+            writer.print("<tr><td>Hausnummer: </td><td><input type=\"number\" name=\"hausnummer\" value=\""+kunde_rs.getInt("hausnummer")+"\"></td></tr>");
+            writer.print("<tr><td>PLZ: </td><td><input type=\"text\" name=\"plz\" value=\""+kunde_rs.getString("plz")+"\"></td></tr>");
+            writer.print("<tr><td>Ort: </td><td><input type=\"text\" name=\"ort\" value=\""+kunde_rs.getString("ort")+"\"></td></tr>");
+            writer.print("<tr><td>Telefon: </td><td><input type=\"text\" name=\"telefon\" value=\""+kunde_rs.getString("telefonnummer")+"\"></td></tr>");
+            writer.print("<tr><td>Handy: </td><td><input type=\"text\" name=\"handy\" value=\""+kunde_rs.getString("handynummer")+"\"></td></tr>");
+            writer.print("<tr><td>E-Mail: </td><td><input type=\"text\" name=\"email\" value=\""+kunde_rs.getString("email")+"\"></td></tr>");
+            writer.print("<tr><td>Kennwort: </td><td><input type=\"password\" name=\"password\" ></td></tr>");
+            writer.print("<tr><td><input type=\"submit\" name=\"Absenden\"></td></tr>");
+
+
+
+            writer.println("</table></form></td>");
+        }catch(SQLException e1){
+            e1.printStackTrace();
+        }catch(IOException e2){
+            e2.printStackTrace();
+        }finally{
+            DB_Connector.closeDatabase();
+        }
+    }
+}
