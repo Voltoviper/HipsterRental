@@ -188,7 +188,7 @@ public class Seitenaufbau extends HttpServlet{
         String kategorie_string = "SELECT name,id FROM kategorie WHERE oberkategorie is null ORDER BY name";
         PreparedStatement kategorie_ps = null;
         ResultSet kategorie_rs;
-        //Vorbereiten der Bestellung für die Datenbank
+        //Vorbereiten der Bestellung fï¿½r die Datenbank
 
             kategorie_ps = DB_Connector.con.prepareStatement(kategorie_string);
             kategorie_rs = kategorie_ps.executeQuery();
@@ -399,6 +399,7 @@ public class Seitenaufbau extends HttpServlet{
 
             }
             if(cookie_vorhanden){
+                DB_Connector.connecttoDatabase();
                 writer.print("<td>");
                 Kunde k = getKunde(cook.getValue());
                 String vorname=" ", nachname=" ", strasse=" ",  plz=" ", ort=" ", telefon=" ", handy=" ", email = " ";
@@ -427,9 +428,9 @@ public class Seitenaufbau extends HttpServlet{
                     k.setVorname(vorname);
                     k.setNachname(nachname);
 
-                writer.print("<form action=\"/Bestelleintragung\" method=\"post\"><table width=100%><tr><td>Vorname</td><td><input type=\"text\" name=\"Vorname\" value=\""+vorname+"\"></td><td rowspan=\"12\" valign=\"top\">"+getWarenkorbTabelle(k.getUuid())+"</td></tr>");
-                writer.print("<tr><td>Nachname</td><td><input type=text name=Nachname value="+nachname+"></td></tr>");
-                writer.print("<tr><td>Stra&#223;e</td><td><input type=text name=Strasse value="+strasse+"></td></tr>");
+                writer.print("<form action=\"/Bestelleintragung\" method=\"post\"><table width=100%><tr><td>Vorname</td><td><input type=\"text\" name=\"vorname\" value=\""+vorname+"\"></td><td rowspan=\"12\" valign=\"top\">"+getWarenkorbTabelle(k.getUuid())+"</td></tr>");
+                writer.print("<tr><td>Nachname</td><td><input type=text name=nachname value="+nachname+"></td></tr>");
+                writer.print("<tr><td>Stra&#223;e</td><td><input type=text name=strasse value="+strasse+"></td></tr>");
                 writer.print("<tr><td>Hausnummer</td><td><input type=text name=hausnummer value="+hausnummer+"></td></tr>");
                 writer.print("<tr><td>PLZ</td><td><input type=text name=plz value="+plz+"></td></tr>");
                 writer.print("<tr><td>Ort</td><td><input type=text name=ort value="+ort+"></td></tr>");
@@ -489,7 +490,7 @@ public class Seitenaufbau extends HttpServlet{
 
     }
     public static void getBestelldetails(JspWriter writer, Cookie[] cookies, String bestellid){
-        //Cookie überprüfen
+        //Cookie ï¿½berprï¿½fen
         DB_Connector.connecttoDatabase();
 
 
@@ -661,7 +662,7 @@ public class Seitenaufbau extends HttpServlet{
      * Berechnung der Differenz zwischen den Tagen.
      * @param von Timestamp von wann die Bestellung gilt
      * @param bis Timestamp bis wann die Bestellung gilt
-     * @return Gibt einen Integerwert zurück, mit der Differenz der Tage
+     * @return Gibt einen Integerwert zurï¿½ck, mit der Differenz der Tage
      */
     public static int getTage(Timestamp von, Timestamp bis){
         DateTimeZone Berlin = DateTimeZone.forID("Europe/Berlin");
@@ -695,6 +696,23 @@ public class Seitenaufbau extends HttpServlet{
                 }
             }
         }
+
+        try {
+            DB_Connector.connecttoDatabase();
+            String rabatt_string ="SELECT case when(sum(id)>2) THEN 1 ELSE 0 END AS rabatt FROM bestellung WHERE bestellung.Nutzerid=?";
+            PreparedStatement rabatt_ps = DB_Connector.con.prepareStatement(rabatt_string);
+            rabatt_ps.setString(1,nutzerid);
+            ResultSet rabatt_rs = rabatt_ps.executeQuery();
+            rabatt_rs.next();
+            if(rabatt_rs.getInt("rabatt")==1){
+                Summe=Summe*0.80;
+            }
+        }catch(SQLException e1){
+            e1.printStackTrace();
+        }finally{
+            DB_Connector.closeDatabase();
+        }
+
         Summe=Math.round(Summe*100.0)/100.0;
         return Summe;
     }
@@ -707,6 +725,23 @@ public class Seitenaufbau extends HttpServlet{
                 Summe+=mietzins*0.60;
             }
         }
+
+        try {
+            DB_Connector.connecttoDatabase();
+            String rabatt_string ="SELECT case when(sum(id)>2) THEN 1 ELSE 0 END AS rabatt FROM bestellung WHERE bestellung.Nutzerid=?";
+            PreparedStatement rabatt_ps = DB_Connector.con.prepareStatement(rabatt_string);
+            rabatt_ps.setString(1,nutzerid);
+            ResultSet rabatt_rs = rabatt_ps.executeQuery();
+            rabatt_rs.next();
+            if(rabatt_rs.getInt("rabatt")==1){
+                Summe=Summe*0.80;
+            }
+        }catch(SQLException e1){
+            e1.printStackTrace();
+        }finally{
+            DB_Connector.closeDatabase();
+        }
+
         Summe=Math.round(Summe*100.0)/100.0;
         return Summe;
     }
@@ -818,7 +853,7 @@ try {
             kunde_rs.next();
             writer.print("<tr><td>Vorname: </td><td><input type=\"text\" name=\"vorname\" value=\""+kunde_rs.getString("vorname")+"\"></td></tr>");
             writer.print("<tr><td>Nachname: </td><td><input type=\"text\" name=\"nachname\" value=\""+kunde_rs.getString("nachname")+"\"></td></tr>");
-            writer.print("<tr><td>Straße: </td><td><input type=\"text\" name=\"strasse\" value=\""+kunde_rs.getString("strasse")+"\"></td></tr>");
+            writer.print("<tr><td>Straï¿½e: </td><td><input type=\"text\" name=\"strasse\" value=\""+kunde_rs.getString("strasse")+"\"></td></tr>");
             writer.print("<tr><td>Hausnummer: </td><td><input type=\"number\" name=\"hausnummer\" value=\""+kunde_rs.getInt("hausnummer")+"\"></td></tr>");
             writer.print("<tr><td>PLZ: </td><td><input type=\"text\" name=\"plz\" value=\""+kunde_rs.getString("plz")+"\"></td></tr>");
             writer.print("<tr><td>Ort: </td><td><input type=\"text\" name=\"ort\" value=\""+kunde_rs.getString("ort")+"\"></td></tr>");

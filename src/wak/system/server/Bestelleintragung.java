@@ -95,12 +95,13 @@ public class Bestelleintragung extends HttpServlet {
                     Bestellung b = new Bestellung(k, produkte, Timestamp.valueOf(von_date), Timestamp.valueOf(bis_date));
                     Session session = emailservice.getSession();
                     emailservice.sendZusammenfassung(session, k, b);
-                    response.sendRedirect("./index.jsp");
+
                 }
 
             }
 
         }
+        response.sendRedirect("./index.jsp");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

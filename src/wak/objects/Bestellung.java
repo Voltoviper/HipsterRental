@@ -25,35 +25,16 @@ public class Bestellung {
         this.von = von;
         this.bis = bis;
         this.bestellungdatum = Timestamp.valueOf(LocalDateTime.now());
-        Bestellung_eintragen(this);
+        if(ueberschneidet(this)) {
+            Bestellung_eintragen(this);
+        }
     }
 
     private boolean ueberschneidet(Bestellung b){
-        String query = "SELECT bestellung.von, bestellung.bis FROM bestellung INNER JOIN bestellposition ON bestellposition.bestellungid = bestellung.id WHERE bestellposition.Produktid=?";
-        try {
-        PreparedStatement bestellung = DB_Connector.con.prepareStatement(query);
-        bestellung.setInt(1, b.Position.get(0).getId());
-           ResultSet rs =  bestellung.executeQuery();
-            while (rs.next()) {
-                Timestamp von = rs.getTimestamp("von");
-                Timestamp bis = rs.getTimestamp("bis");
+        boolean moeglich=true;
 
-                if(this.bis.after(von) | this.bis.equals(von)){
-                    if(this.bis.before(bis)){
-                        return true;
-                    }
 
-                }else{
-                }
-            }
-            return false;
-
-        }
-        catch (SQLException e){
-            System.out.println("Problem bei der Datenbankabfragenverarbeitung");
-        }finally{
-            return true;
-        }
+       return moeglich;
     }
     private void Bestellung_eintragen(Bestellung b){
         String einfuegen = "INSERT INTO bestellung (Nutzerid, von, bis, genehmigt)" + "VALUES ((select Nutzerid from kunde WHERE kunde.Nutzerid=?),?,?,?)";
