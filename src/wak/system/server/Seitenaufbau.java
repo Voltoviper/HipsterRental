@@ -605,7 +605,7 @@ public class Seitenaufbau extends HttpServlet{
 
 
 
-    private static Kunde getKunde(String uuid){
+    static Kunde getKunde(String uuid){
         for(Kunde k: kunde){
             if(k.getUuid().equals(uuid)){
                 return k;
@@ -848,10 +848,10 @@ try {
 
             String kunde = " SELECT nutzer.vorname, nutzer.nachname, kunde.strasse, kunde.hausnummer, kunde.plz, kunde.ort, kunde.telefonnummer, kunde.handynummer, kunde.email FROM kunde Inner join nutzer on kunde.Nutzerid=nutzer.id WHERE kunde.Nutzerid=?";
             PreparedStatement kunde_ps = DB_Connector.con.prepareStatement(kunde);
-            kunde_ps.setString(1,k.getId());
+            kunde_ps.setString(1, k.getId());
             ResultSet kunde_rs = kunde_ps.executeQuery();
             kunde_rs.next();
-            writer.print("<tr><td>Vorname: </td><td><input type=\"text\" name=\"vorname\" value=\""+kunde_rs.getString("vorname")+"\"></td></tr>");
+            writer.print("<tr><td>Vorname: </td><td><input type=\"text\" name=\"vorname\" value=\"" + kunde_rs.getString("vorname") + "\"></td></tr>");
             writer.print("<tr><td>Nachname: </td><td><input type=\"text\" name=\"nachname\" value=\""+kunde_rs.getString("nachname")+"\"></td></tr>");
             writer.print("<tr><td>Stra�e: </td><td><input type=\"text\" name=\"strasse\" value=\""+kunde_rs.getString("strasse")+"\"></td></tr>");
             writer.print("<tr><td>Hausnummer: </td><td><input type=\"number\" name=\"hausnummer\" value=\""+kunde_rs.getInt("hausnummer")+"\"></td></tr>");
@@ -863,9 +863,8 @@ try {
             writer.print("<tr><td>Kennwort: </td><td><input type=\"password\" name=\"password\" ></td></tr>");
             writer.print("<tr><td><input type=\"submit\" name=\"Absenden\"></td></tr>");
 
-
-
             writer.println("</table></form></td>");
+            writer.println("<form method=\"post\" action=\"/UserLoeschen\"><input type=\"submit\" name=\"Benutzer L&oumlschen\" value=\"Benutzer L&oumlschen\"></form></td>");
         }catch(SQLException e1){
             e1.printStackTrace();
         }catch(IOException e2){

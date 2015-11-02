@@ -100,4 +100,12 @@
         <servlet-name>ProfilUpdate</servlet-name>
         <url-pattern>/ProfilUpdate</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>UserLoeschen</servlet-name>
+        <servlet-class>wak.system.server.UserLoeschen</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserLoeschen</servlet-name>
+        <url-pattern>/UserLoeschen</url-pattern>
+    </servlet-mapping>
 </web-app>
