@@ -67,7 +67,6 @@ public class Login extends HttpServlet {
         }else{
             String nutzer= request.getParameter("user");
             String passwd=request.getParameter("passwd");
-            Enumeration<String> names= request.getParameterNames();
 
             //Hashen des Kennwortes für die Überprüfung
             String hashtext = Formatter.hashen(passwd);

@@ -1,6 +1,8 @@
 package wak.objects;
 
+import org.apache.commons.collections4.CollectionUtils;
 import wak.system.db.DB_Connector;
+import wak.system.server.Seitenaufbau;
 import wak.user.Kunde;
 
 import java.sql.PreparedStatement;
@@ -9,6 +11,9 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Created by Christoph Nebendahl on 20.09.2015.
@@ -30,10 +35,37 @@ public class Bestellung {
         }
     }
 
-    private boolean ueberschneidet(Bestellung b){
+    public boolean ueberschneidet(Bestellung b){
+        DB_Connector.connecttoDatabase();
         boolean moeglich=true;
+        String bestellung = "SELECT verfuegbar(?, ?, ?,?) AS possible;";
 
-
+        Collections.sort(this.Position);
+        int zaehler=0;
+        Map m = CollectionUtils.getCardinalityMap(this.getPosition());
+        try {
+            for (Produkt p : Seitenaufbau.katalog) {
+                if(CollectionUtils.cardinality(p, this.getPosition())!=0) {
+                    PreparedStatement bestellung_ps = DB_Connector.con.prepareStatement(bestellung);
+                    bestellung_ps.setInt(1, p.getId());
+                    bestellung_ps.setInt(2, CollectionUtils.cardinality(p, this.getPosition()));
+                    bestellung_ps.setTimestamp(3, b.getVon());
+                    bestellung_ps.setTimestamp(4, b.getBis());
+                    ResultSet bestellung_rs = bestellung_ps.executeQuery();
+                    bestellung_rs.next();
+                    if(bestellung_rs.getBoolean("possible")){
+                        moeglich = true;
+                    }else{
+                        moeglich = false;
+                        break;
+                    }
+                }
+            }
+        }catch(SQLException e1){
+            e1.printStackTrace();
+        }finally{
+            DB_Connector.closeDatabase();
+        }
        return moeglich;
     }
     private void Bestellung_eintragen(Bestellung b){

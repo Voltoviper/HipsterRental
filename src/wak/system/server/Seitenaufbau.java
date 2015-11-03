@@ -863,8 +863,8 @@ try {
             writer.print("<tr><td>Kennwort: </td><td><input type=\"password\" name=\"password\" ></td></tr>");
             writer.print("<tr><td><input type=\"submit\" name=\"Absenden\"></td></tr>");
 
-            writer.println("</table></form></td>");
-            writer.println("<form method=\"post\" action=\"/UserLoeschen\"><input type=\"submit\" name=\"Benutzer L&oumlschen\" value=\"Benutzer L&oumlschen\"></form></td>");
+            writer.println("</table></form>");
+            writer.println("<form method=\"post\" action=\"/UserLoeschen\"><input type=\"submit\" name=\"Benutzer L&oumlschen\" value=\"Benutzer Loeschen\"></form></td>");
         }catch(SQLException e1){
             e1.printStackTrace();
         }catch(IOException e2){

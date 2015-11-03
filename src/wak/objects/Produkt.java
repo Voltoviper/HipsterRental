@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Arrays;
 
-public class Produkt {
+public class Produkt implements Comparable<Produkt> {
     String name, bezeichnung, beschreibung, herstellername, details;
     double mietzins;
     Produkt alternative;
@@ -190,5 +190,18 @@ public class Produkt {
         }
 
 
+    }
+
+    @Override
+    public int compareTo(Produkt o) {
+        if(this.getId()>o.getId()){
+            return 1;
+        }else if(this.getId()==o.getId()){
+            return 0;
+        }else if(this.getId()<o.getId()){
+            return -1;
+        }else{
+            return 0;
+        }
     }
 }
