@@ -7,6 +7,7 @@ import wak.system.email.emailservice;
 import wak.user.Kunde;
 
 import javax.mail.Session;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -28,6 +29,7 @@ import java.util.Locale;
 @WebServlet(name = "Bestelleintragung")
 public class Bestelleintragung extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String weiterleitung = "/index.jsp";
         Cookie[] cookies = request.getCookies();
         boolean cookie_vorhanden=false;
         Cookie cook=null;
@@ -92,16 +94,22 @@ public class Bestelleintragung extends HttpServlet {
                     LocalDateTime von_date = LocalDateTime.parse(von, formatter);
                     LocalDateTime bis_date = LocalDateTime.parse(bis, formatter);
 
-                    Bestellung b = new Bestellung(k, produkte, Timestamp.valueOf(von_date), Timestamp.valueOf(bis_date));
-                    Session session = emailservice.getSession();
-                    emailservice.sendZusammenfassung(session, k, b);
+                    try{
+                        Bestellung b = new Bestellung(k, produkte, Timestamp.valueOf(von_date), Timestamp.valueOf(bis_date));
+                        Session session = emailservice.getSession();
+                        emailservice.sendZusammenfassung(session, k, b);
+                        weiterleitung = "/index.jsp";
+                    }catch(Exception e1){
+                        weiterleitung = "/jsp/error.jsp";
+                    }
 
                 }
 
             }
 
         }
-        response.sendRedirect("./index.jsp");
+        RequestDispatcher d = getServletContext().getRequestDispatcher(weiterleitung);
+        d.forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

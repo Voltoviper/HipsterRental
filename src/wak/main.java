@@ -27,10 +27,14 @@ public class main {
         k.setNachname("Lücke");
         k.setVorname("Christian");
         k.setEmail("christoph@mail-nebendahl.de");
-        Bestellung b = new Bestellung(k, liste, new Timestamp(1445419482), new Timestamp(1445419482));
-        emailservice.sendgenehmigung(session, k, b , true);
-        emailservice.sendgenehmigung(session, k, b, false);
-        emailservice.sendZusammenfassung(session, k, b);
+        try {
+            Bestellung b = new Bestellung(k, liste, new Timestamp(1445419482), new Timestamp(1445419482));
+            emailservice.sendgenehmigung(session, k, b, true);
+            emailservice.sendgenehmigung(session, k, b, false);
+            emailservice.sendZusammenfassung(session, k, b);
+        }catch(Exception e1){
+            e1.getMessage();
+        }
 
     }
 }

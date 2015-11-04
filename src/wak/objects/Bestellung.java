@@ -24,7 +24,7 @@ public class Bestellung {
     Timestamp von, bis, bestellungdatum;
     int id;
 
-    public Bestellung (Kunde kunde, ArrayList<Produkt> Produkte, Timestamp von, Timestamp bis){
+    public Bestellung (Kunde kunde, ArrayList<Produkt> Produkte, Timestamp von, Timestamp bis)throws Exception{
         this.kunde =kunde;
         this.Position = Produkte;
         this.von = von;
@@ -32,13 +32,15 @@ public class Bestellung {
         this.bestellungdatum = Timestamp.valueOf(LocalDateTime.now());
         if(ueberschneidet(this)) {
             Bestellung_eintragen(this);
+        }else{
+            throw new Exception("Fehler! Bestellung konnte nicht eingetragen werden!");
         }
     }
 
     public boolean ueberschneidet(Bestellung b){
         DB_Connector.connecttoDatabase();
         boolean moeglich=true;
-        String bestellung = "SELECT verfuegbar(?, ?, ?,?) AS possible;";
+        String bestellung = "SELECT verfuegbar(?,?,?,?) AS possible;";
 
         Collections.sort(this.Position);
         int zaehler=0;
