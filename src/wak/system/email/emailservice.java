@@ -1,20 +1,15 @@
 package wak.system.email;
 
-import com.sun.xml.internal.org.jvnet.mimepull.MIMEMessage;
-import sun.misc.IOUtils;
 import wak.objects.Bestellung;
 import wak.objects.Produkt;
-import wak.system.server.Seitenaufbau;
 import wak.user.Kunde;
 
-import java.io.*;
-import java.util.Properties;
-import java.util.Scanner;
 import javax.mail.*;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
+import java.io.UnsupportedEncodingException;
+import java.util.Properties;
 
 /**
  * Created by chris_000 on 21.10.2015.

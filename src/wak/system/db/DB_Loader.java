@@ -3,7 +3,6 @@ package wak.system.db;
 import wak.objects.Bestellung;
 import wak.objects.Kategorie;
 import wak.objects.Produkt;
-import wak.system.db.DB_Connector;
 import wak.system.server.Seitenaufbau;
 import wak.user.Adresse;
 import wak.user.Kunde;

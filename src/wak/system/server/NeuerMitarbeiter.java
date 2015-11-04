@@ -1,9 +1,6 @@
 package wak.system.server;
 
-import wak.objects.Kategorie;
-import wak.objects.Produkt;
 import wak.system.Formatter;
-import wak.system.db.DB_Connector;
 import wak.user.Mitarbeiter;
 
 import javax.servlet.RequestDispatcher;
@@ -13,9 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Created by chris_000 on 28.10.2015.

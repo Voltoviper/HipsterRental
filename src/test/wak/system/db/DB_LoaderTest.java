@@ -1,16 +1,12 @@
-package test.wak.system.db; 
+package test.wak.system.db;
 
-import org.junit.Test; 
-import org.junit.Before; 
 import org.junit.After;
-import static org.junit.Assert .*;
-
-import wak.system.db.DB_Connector;
+import org.junit.Before;
+import org.junit.Test;
 import wak.system.db.DB_Loader;
 import wak.system.server.Seitenaufbau;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import static org.junit.Assert.assertEquals;
 
 /** 
 * DB_Loader Tester. 

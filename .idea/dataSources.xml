@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="1828768791">
+    <data-source source="LOCAL" name="MySQL - softwareengineering2@87.106.17.78" uuid="9cf9bfee-717f-4ad0-b181-cbafb9330215">
+      <driver-ref>mysql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://87.106.17.78:3306/softwareengineering2</jdbc-url>
+      <driver-properties>
+        <property name="zeroDateTimeBehavior" value="convertToNull" />
+        <property name="tinyInt1isBit" value="false" />
+        <property name="characterEncoding" value="utf8" />
+        <property name="characterSetResults" value="utf8" />
+        <property name="yearIsDateType" value="false" />
+        <property name="noAccessToProcedureBodies" value="true" />
+      </driver-properties>
+      <libraries />
+    </data-source>
+  </component>
+</project>

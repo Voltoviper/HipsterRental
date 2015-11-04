@@ -1,13 +1,12 @@
 package wak.system.server;
 
+import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Days;
-import sun.text.resources.sq.JavaTimeSupplementary_sq;
 import wak.objects.Bestellung;
 import wak.objects.Kategorie;
 import wak.objects.Produkt;
 import wak.objects.Warenkorb;
-import wak.system.*;
 import wak.system.Formatter;
 import wak.system.db.DB_Connector;
 import wak.user.Adresse;
@@ -16,15 +15,13 @@ import wak.user.Mitarbeiter;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspWriter;
+import java.awt.*;
 import java.io.IOException;
 import java.sql.*;
-import java.sql.Date;
-import java.text.*;
-import java.time.ZoneId;
-import java.util.*;
-
-import org.joda.time.DateTime;
+import java.util.ArrayList;
 
 /**
  * Created by chris_000 on 24.09.2015.
@@ -37,7 +34,7 @@ public class Seitenaufbau extends HttpServlet{
     public static ArrayList<Kategorie> kategorien = new ArrayList<Kategorie>();
     public static ArrayList<Bestellung> bestellungen = new ArrayList<Bestellung>();
 
-    public static void getEmpfehlungen(JspWriter stream){
+    public static void getEmpfehlungen(JspWriter stream ){
         DB_Connector.connecttoDatabase();
 
         String produkte_string = "SELECT id,name, bezeichnung, mietzins FROM produkt ORDER BY id";
@@ -62,7 +59,7 @@ public class Seitenaufbau extends HttpServlet{
                         stream.print("<table style=\"max-width:100%\" border=0 ><tr><td colspan=\"2\">" +
                                 name +
                                 "</td></tr><tr><td rowspan=\"2\" style=\" min-width:30pt; max-width:30pt; min-height:30pt ; max-height:30pt\">" +
-                                "Bild" +
+                                "<img src=\""+ ImageServlet.getImage(id, 3)+"\">" +
                                 "</td><td>" +
                                 bezeichnung +
                                 "</td></tr><tr><td>" +

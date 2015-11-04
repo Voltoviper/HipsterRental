@@ -163,6 +163,7 @@ public class Produkt implements Comparable<Produkt> {
     }
 
     public void produkt_eintragen(Produkt p){
+        DB_Connector.connecttoDatabase();
         String einfuegen = "INSERT INTO produkt (name, bezeichnung, hersteller_name, beschreibung, details, mietzins, Kategorieid, alternative)" + "VALUES (?, ?, ?, ?, ?, ?,(select id from kategorie WHERE kategorie.id=?),?)";
         PreparedStatement bestellung = null;
         //Vorbereiten der Bestellung für die Datenbank
@@ -185,8 +186,9 @@ public class Produkt implements Comparable<Produkt> {
             bestellung.executeUpdate();
         }catch(SQLException e){
             System.out.println("Fehler bei der Produkteintragung");
-            bestellung.toString();
             e.printStackTrace();
+        }finally{
+            DB_Connector.closeDatabase();
         }
 
 

@@ -6,11 +6,14 @@ import wak.system.db.DB_Connector;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,13 +22,17 @@ import java.sql.SQLException;
  * Created by chris_000 on 26.10.2015.
  */
 @WebServlet(name = "NeuesProdukt")
+@MultipartConfig
 public class NeuesProdukt extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Kategorie kat=null;
+
         Produkt alternative= null;
         int produkt_id=0, alternative_id = 0;
         String name, hersteller, details, bezeichnung, beschreibung, kategorie;
         double mietzins;
+
+        Part part = request.getPart("bild");
         name = request.getParameter("name");
         hersteller = request.getParameter("hersteller");
         details = request.getParameter("details");
@@ -34,6 +41,8 @@ public class NeuesProdukt extends HttpServlet {
         kategorie = request.getParameter("kategorie");
         alternative_id = Integer.parseInt(request.getParameter("alternative"));
         mietzins = Double.parseDouble(request.getParameter("mietzins"));
+
+        InputStream fileContent = part.getInputStream();
 
         //Kategorie zuordnen
         for(Kategorie k: Seitenaufbau.kategorien){
@@ -69,11 +78,19 @@ public class NeuesProdukt extends HttpServlet {
             id_rs.next();
             produkt_id = id_rs.getInt("id");
             p.setId(produkt_id);
+
+            PreparedStatement bild_ps = DB_Connector.con.prepareStatement("INSERT INTO bild (Produktid, bild, main) VALUES (?,?,?)");
+            bild_ps.setInt(1,p.getId());
+            bild_ps.setBlob(2,fileContent);
+            bild_ps.setInt(3,1);
+            bild_ps.executeUpdate();
         }catch(SQLException e){
             e.printStackTrace();
         }finally{
             DB_Connector.closeDatabase();
         }
+
+
 
 
         //Weiterleiten

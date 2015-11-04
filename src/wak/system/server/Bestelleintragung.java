@@ -2,7 +2,6 @@ package wak.system.server;
 
 import wak.objects.Bestellung;
 import wak.objects.Produkt;
-import wak.objects.Warenkorb;
 import wak.system.email.emailservice;
 import wak.user.Kunde;
 
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;

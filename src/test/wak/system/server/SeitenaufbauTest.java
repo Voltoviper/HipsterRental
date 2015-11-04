@@ -1,19 +1,18 @@
-package test.wak.system.server; 
+package test.wak.system.server;
 
-import org.junit.Test; 
-import org.junit.Before; 
 import org.junit.After;
-import static org.junit.Assert .*;
-
+import org.junit.Before;
+import org.junit.Test;
 import wak.system.Formatter;
 import wak.system.db.DB_Connector;
 import wak.system.server.Seitenaufbau;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
 
 /** 
 * Seitenaufbau Tester. 

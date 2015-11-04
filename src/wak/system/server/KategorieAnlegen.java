@@ -37,9 +37,10 @@ public class KategorieAnlegen extends HttpServlet {
         try {
             DB_Connector.connecttoDatabase();
             int oberkategorie;
-            String einfuegen="INSERT INTO kategorie (name, oberkategorie) VALUES (?,?);";
+            String einfuegen="INSERT INTO kategorie (name, oberkategorie, bild) VALUES (?,?, ?);";
             PreparedStatement einfuegen_ps = DB_Connector.con.prepareStatement(einfuegen);
             einfuegen_ps.setString(1, name);
+            einfuegen_ps.setBlob(3,fileContent);
             if (request.getParameter("oberkategorie") != null) {
                 oberkategorie = Integer.parseInt(request.getParameter("oberkategorie"));
                 einfuegen_ps.setInt(2, oberkategorie);
@@ -58,18 +59,8 @@ public class KategorieAnlegen extends HttpServlet {
             int id = getID_rs.getInt("id");
             Seitenaufbau.kategorien.add(new Kategorie(name, id));
             //Bild speichern.
-            File directory = new File("web/img/kategorie/"+id+"/main.jpg");
-            if(directory.getParentFile().mkdirs()) {
-                System.out.println(directory.getAbsolutePath());
-                directory.createNewFile();
-                try (InputStream input = part.getInputStream()) {
-                    Files.copy(input, directory.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-            }else{
-                System.out.println("Der gewünschte Ordner konnte nicht erstellt werden "+ directory.getAbsolutePath());
-            }
+
+
         }catch(SQLException e1){
             e1.printStackTrace();
         }finally{

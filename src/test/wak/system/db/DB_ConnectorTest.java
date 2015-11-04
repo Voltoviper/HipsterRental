@@ -1,16 +1,15 @@
-package test.wak.system.db; 
+package test.wak.system.db;
 
-import org.junit.Test;
-import org.junit.Before; 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert .*;
-import junit.framework.JUnit4TestAdapter;
 import wak.system.db.DB_Connector;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+
+import static org.junit.Assert.*;
 
 /** 
 * DB_Connector Tester. 

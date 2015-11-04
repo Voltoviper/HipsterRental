@@ -6,7 +6,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ include file="../../html/header/header_subsub.html" %>
-<%@page import="wak.system.server.*" %>
+<%@page import="wak.system.server.Login" %>
+<%@ page import="wak.system.server.Seitenaufbau" %>
 <table style="width:100%; valign:top; border-spacing: 0pt" border="0">
     <tr class="menu">
         <td colspan="3" class="menu"><% Seitenaufbau.getMenu(out, request.getCookies());%>

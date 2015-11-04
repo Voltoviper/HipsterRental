@@ -1,10 +1,9 @@
-package test.wak.objects; 
+package test.wak.objects;
 
 import org.joda.time.DateTime;
-import org.junit.Test;
-import org.junit.Before; 
 import org.junit.After;
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 import wak.objects.Bestellung;
 import wak.objects.Produkt;
 import wak.system.db.DB_Loader;
@@ -12,6 +11,8 @@ import wak.system.server.Seitenaufbau;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+
+import static org.junit.Assert.assertFalse;
 
 
 

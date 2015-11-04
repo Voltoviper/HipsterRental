@@ -1,12 +1,8 @@
 package wak.system.server;
 
-import wak.objects.Bestellung;
-import wak.objects.Produkt;
 import wak.system.db.DB_Connector;
-import wak.system.email.emailservice;
 import wak.user.Kunde;
 
-import javax.mail.Session;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,11 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Locale;
 
 /**
  * Created by Christoph Nebendahl on 01.11.2015.
