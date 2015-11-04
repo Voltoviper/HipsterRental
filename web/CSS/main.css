@@ -1,41 +1,53 @@
-﻿h1 { color: green; }
-body{
-	background-color:#FCFD5A;
+﻿h1 {
+    color: green;
 }
+
+body {
+    background-color: #FCFD5A;
+}
+
 .menu {
-	background-color:#6565FC;
+    background-color: #6565FC;
 }
-.menu_item{	
-	min-width:70pt;
+
+.menu_item {
+    min-width: 70pt;
 }
-.menu_logout{
-	min-width:70pt;
+
+.menu_logout {
+    min-width: 70pt;
 }
-.menu_platzhalter{
-	background-color:#6565FC;
-	width:100%;
+
+.menu_platzhalter {
+    background-color: #6565FC;
+    width: 100%;
 }
-.titel{
-	width:100%;
-	font-weight:bold;
+
+.titel {
+    width: 100%;
+    font-weight: bold;
 }
-.login{
-	vertical-align: top;
-	background-color:#6565FC;
-	max-width:80pt;
-	min-width: 110pt;
+
+.login {
+    vertical-align: top;
+    background-color: #6565FC;
+    max-width: 80pt;
+    min-width: 110pt;
 }
-.main{
-	min-width:80%;
+
+.main {
+    min-width: 80%;
 }
-.kat_nav{
-	max-width:80pt;
-	min-width:80pt;
-	background-color:#6565FC;
-	vertical-align: top;
+
+.kat_nav {
+    max-width: 80pt;
+    min-width: 80pt;
+    background-color: #6565FC;
+    vertical-align: top;
 }
-.umrandung{
-	width:25%;
-	align:center;
-	border:solid 1px #000000;
+
+.umrandung {
+    width: 25%;
+    align: center;
+    border: solid 1px #000000;
 }

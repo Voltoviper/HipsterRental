@@ -16,7 +16,7 @@
         <th style="text-align: center" colspan="3">Neue Kategorie anlegen</th>
         <tr>
           <td>
-            <form method="post" action="/KategorieAnlegen">
+            <form method="post" action="/KategorieAnlegen" enctype="multipart/form-data">
               <table>
                 <tr>
                   <td>Kategoriename:</td>
@@ -30,12 +30,16 @@
                     <%Seitenaufbau.getKategorieOptionen(out);%>
                   </select>
                   </td>
+
+                </tr>
+                <tr>
+                  <td>Bild</td><td><input type="file" name="bild" accept="image/*"> </td>
                 </tr>
                 <tr>
                   <td>
 
                   </td>
-                  <td><input type="submit" value="Kategorie hinzufügen"></td>
+                  <td><input type="submit" value="Kategorie hinzuf&uuml;gen"></td>
                 </tr>
               </table>
             </form>

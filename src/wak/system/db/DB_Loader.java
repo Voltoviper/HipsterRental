@@ -1,5 +1,6 @@
 package wak.system.db;
 
+import wak.objects.Bestellung;
 import wak.objects.Kategorie;
 import wak.objects.Produkt;
 import wak.system.db.DB_Connector;
@@ -7,10 +8,7 @@ import wak.system.server.Seitenaufbau;
 import wak.user.Adresse;
 import wak.user.Kunde;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * Created by chris_000 on 22.10.2015.
@@ -24,6 +22,7 @@ public class DB_Loader {
                 Kategorieanlegen();
                 Produkteanlegen();
                 Kundenanlegen();
+                Bestellung();
                 runned = true;
             }
         }catch(SQLException e){
@@ -105,5 +104,44 @@ public class DB_Loader {
 
         DB_Connector.closeDatabase();
     }
+    private void Bestellung() throws SQLException{
+        DB_Connector.connecttoDatabase();
+        String bestellung = "SELECT * FROM bestellung";
+        String position = "SELECT * FROM bestellposition WHERE Bestellungid=?";
+        PreparedStatement bestellung_ps = DB_Connector.con.prepareStatement(bestellung);
+        ResultSet bestellung_rs = bestellung_ps.executeQuery();
+        Kunde kunde=null;
+        String nutzerid=null;
+        Timestamp von=null, bis=null;
+        int id=0, genehmigt;
 
+        while(bestellung_rs.next()){
+            nutzerid = bestellung_rs.getString("Nutzerid");
+            von = bestellung_rs.getTimestamp("von");
+            bis =bestellung_rs.getTimestamp("bis");
+            id = bestellung_rs.getInt("id");
+
+            for(Kunde k: Seitenaufbau.kunde){
+                if(k.getId().equals(nutzerid)){
+                    kunde=k;
+                    break;
+                }
+            }
+            Bestellung b = new Bestellung(id, kunde, von, bis);
+            PreparedStatement position_ps = DB_Connector.con.prepareStatement(position);
+            position_ps.setInt(1,b.getId());
+            int produktid;
+            ResultSet position_rs = position_ps.executeQuery();
+            while(position_rs.next()){
+                produktid = position_rs.getInt("Produktid");
+                for(Produkt p: Seitenaufbau.katalog){
+                    if(p.getId()==produktid){
+                        b.getPosition().add(p);
+                    }
+                }
+            }
+            Seitenaufbau.bestellungen.add(b);
+
+        }
+    }
 }

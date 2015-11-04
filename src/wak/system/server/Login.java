@@ -63,7 +63,7 @@ public class Login extends HttpServlet {
             }else{
 
             }
-            request.getRequestDispatcher("index.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/redirect.html").forward(request, response);
         }else{
             String nutzer= request.getParameter("user");
             String passwd=request.getParameter("passwd");

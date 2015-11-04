@@ -24,6 +24,14 @@ public class Bestellung {
     Timestamp von, bis, bestellungdatum;
     int id;
 
+    public Bestellung(int id, Kunde k , Timestamp von, Timestamp bis){
+        this.kunde = k;
+        this.Position = new ArrayList<Produkt>();
+        this.von = von;
+        this.bis = bis;
+        this.id=id;
+    }
+
     public Bestellung (Kunde kunde, ArrayList<Produkt> Produkte, Timestamp von, Timestamp bis)throws Exception{
         this.kunde =kunde;
         this.Position = Produkte;

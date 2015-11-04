@@ -3,6 +3,7 @@ package wak.system.server;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Days;
 import sun.text.resources.sq.JavaTimeSupplementary_sq;
+import wak.objects.Bestellung;
 import wak.objects.Kategorie;
 import wak.objects.Produkt;
 import wak.objects.Warenkorb;
@@ -34,6 +35,7 @@ public class Seitenaufbau extends HttpServlet{
     public static ArrayList<Mitarbeiter> mitarbeiter = new ArrayList<Mitarbeiter>();
     public static ArrayList<Produkt> katalog = new ArrayList<Produkt>();
     public static ArrayList<Kategorie> kategorien = new ArrayList<Kategorie>();
+    public static ArrayList<Bestellung> bestellungen = new ArrayList<Bestellung>();
 
     public static void getEmpfehlungen(JspWriter stream){
         DB_Connector.connecttoDatabase();
@@ -170,7 +172,7 @@ public class Seitenaufbau extends HttpServlet{
             if(arbeiter.isAdmin()){
             writer.print(
                     "<td onclick=self.location.href=\"./Neuer-Mitarbeiter.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neuer Mitarbeiter</td></tr><tr>"+
-                "<td onclick=self.location.href=\"./MitarbeiterUebersicht.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Mitarbeiter Uebersicht</td>");
+                "<td onclick=self.location.href=\"./MitarbeiterUebersicht.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Mitarbeiter &Uml;bersicht</td>");
             }}
                 writer.print("</tr>");
         }catch (IOException e){
@@ -471,7 +473,7 @@ public class Seitenaufbau extends HttpServlet{
                 Date von = bestell_rs.getDate("von");
                 Date bis = bestell_rs.getDate("bis");
                 double mietzins = bestell_rs.getDouble("gesamtkosten");
-                writer.print("<tr><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+bestellid+"</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+von.toString()+"</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+bis.toString()+"</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+Formatter.formatdouble(mietzins)+"</td><td onclick=self.location.href=\"./bestellannahme.jsp?bestellid="+bestellid+"\">Annehmen</td><td>Ablehnen</td></tr>");
+                writer.print("<tr><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+bestellid+"</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+von.toString()+"</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+bis.toString()+"</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+Formatter.formatdouble(mietzins)+"</td><td  onclick=self.location.href=\"./Bestellgenehmigung?bestellid="+bestellid+"&genehmigt=1\">Annehmen</td><td  onclick=self.location.href=\"./Bestellgenehmigung?bestellid="+bestellid+"&genehmigt=0\">Ablehnen</td></tr>");
             }
             writer.print("</table></td>");
 
@@ -519,7 +521,7 @@ public class Seitenaufbau extends HttpServlet{
             if(genehmigt>=1){
                 writer.print("<td></td><td></td></tr>");
             }else{
-                writer.print("<td class=\"umrandung\">Genehmigen</td><td class=\"umrandung\">Ablehnen</td></tr>");
+                writer.print("<td onclick=self.location.href=\"./Bestellgenehmigung?bestellid="+bestellid+"&genehmigt=1\" class=\"umrandung\" >Genehmigen</td><td onclick=self.location.href=\"./Bestellgenehmigung?bestellid="+bestellid+"&genehmigt=0\" class=\"umrandung\">Ablehnen</td></tr>");
             }
             writer.print("<tr><td class\"umrandung\">Anzahl Tage: "+tage+"</td></tr>");
             writer.print("</table><table width=100%>");
@@ -853,7 +855,7 @@ try {
             kunde_rs.next();
             writer.print("<tr><td>Vorname: </td><td><input type=\"text\" name=\"vorname\" value=\"" + kunde_rs.getString("vorname") + "\"></td></tr>");
             writer.print("<tr><td>Nachname: </td><td><input type=\"text\" name=\"nachname\" value=\""+kunde_rs.getString("nachname")+"\"></td></tr>");
-            writer.print("<tr><td>Stra�e: </td><td><input type=\"text\" name=\"strasse\" value=\""+kunde_rs.getString("strasse")+"\"></td></tr>");
+            writer.print("<tr><td>Straße: </td><td><input type=\"text\" name=\"strasse\" value=\""+kunde_rs.getString("strasse")+"\"></td></tr>");
             writer.print("<tr><td>Hausnummer: </td><td><input type=\"number\" name=\"hausnummer\" value=\""+kunde_rs.getInt("hausnummer")+"\"></td></tr>");
             writer.print("<tr><td>PLZ: </td><td><input type=\"text\" name=\"plz\" value=\""+kunde_rs.getString("plz")+"\"></td></tr>");
             writer.print("<tr><td>Ort: </td><td><input type=\"text\" name=\"ort\" value=\""+kunde_rs.getString("ort")+"\"></td></tr>");
