@@ -1,5 +1,7 @@
 package wak.system.server;
 
+import com.sun.org.apache.xml.internal.security.utils.Base64;
+import sun.misc.IOUtils;
 import wak.system.db.DB_Connector;
 
 import javax.servlet.ServletException;
@@ -8,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.DatatypeConverter;
 import java.io.*;
 import java.sql.*;
 
@@ -66,6 +69,7 @@ public class ImageServlet extends HttpServlet {
     }
     public static String getImage(int id, int a){
         StringBuffer s = new StringBuffer();
+        String image =null;
         InputStream in = null;
         try {
         //id= Integer.getInteger(request.getParameter("id"));
@@ -92,9 +96,10 @@ public class ImageServlet extends HttpServlet {
                 photo = query_rs.getBlob("bild");
 
                 in = photo.getBinaryStream();
-
-
-                in.close();
+                byte[] buf = org.apache.commons.io.IOUtils.toByteArray(in);
+                // this throws an exception, message and cause both null as above
+                String photo64 = DatatypeConverter.printBase64Binary(buf);
+                image=photo64;
             }
         }catch(SQLException e1){
             e1.printStackTrace();
@@ -103,7 +108,7 @@ public class ImageServlet extends HttpServlet {
         }finally{
             DB_Connector.closeDatabase();
         }
-    return  fileToBuffer(in);
+    return  image;
     }
     public static String fileToBuffer(InputStream is)  {
         StringBuilder sb = new StringBuilder();

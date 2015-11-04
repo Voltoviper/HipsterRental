@@ -59,7 +59,7 @@ public class Seitenaufbau extends HttpServlet{
                         stream.print("<table style=\"max-width:100%\" border=0 ><tr><td colspan=\"2\">" +
                                 name +
                                 "</td></tr><tr><td rowspan=\"2\" style=\" min-width:30pt; max-width:30pt; min-height:30pt ; max-height:30pt\">" +
-                                "<img src=\""+ ImageServlet.getImage(id, 3)+"\">" +
+                                "<img  src=\"data:image/jpg;base64,"+ ImageServlet.getImage(id, 3)+"\" >" +
                                 "</td><td>" +
                                 bezeichnung +
                                 "</td></tr><tr><td>" +

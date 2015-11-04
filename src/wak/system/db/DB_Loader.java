@@ -127,6 +127,7 @@ public class DB_Loader {
                 }
             }
             Bestellung b = new Bestellung(id, kunde, von, bis);
+            DB_Connector.connecttoDatabase();
             PreparedStatement position_ps = DB_Connector.con.prepareStatement(position);
             position_ps.setInt(1,b.getId());
             int produktid;
@@ -142,5 +143,6 @@ public class DB_Loader {
             Seitenaufbau.bestellungen.add(b);
 
         }
+        DB_Connector.closeDatabase();
     }
 }

@@ -57,5 +57,6 @@
     <orderEntry type="library" name="activation-1.1.1" level="project" />
     <orderEntry type="library" name="servlet-api" level="project" />
     <orderEntry type="library" name="commons-collections4-4.0" level="project" />
+    <orderEntry type="library" name="commons-io-2.4" level="project" />
   </component>
 </module>

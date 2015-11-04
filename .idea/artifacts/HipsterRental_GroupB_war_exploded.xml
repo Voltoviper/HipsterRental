@@ -16,6 +16,7 @@
           <element id="library" level="project" name="javax.mail" />
           <element id="library" level="project" name="activation-1.1.1" />
           <element id="library" level="project" name="commons-collections4-4.0" />
+          <element id="library" level="project" name="commons-io-2.4" />
         </element>
         <element id="library" level="project" name="javax.servlet.jsp" />
       </element>
