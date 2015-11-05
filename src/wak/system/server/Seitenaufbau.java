@@ -769,7 +769,7 @@ try {
     if (cookie_vorhanden) {
         Kunde k = getKunde(cook.getValue());
         writer.print("<td><table width=100%><tr><td><p class=\"h4\">Bestellnummer</p></td><td><p class=\"h4\">von</p></td><td><p class=\"h4\">bis</p></td><td><p class=\"h4\">Mietzins</p></td><td><p class=\"h4\">Stornieren</p></td></tr>");
-        String bestell_string = "SELECT Bestellungid, von, bis ,gesamtkosten FROM (SELECT Bestellungid ,round(sum(mietzins), 2) AS Gesamtkosten FROM bestellposition INNER JOIN produkt ON(bestellposition.Produktid = produkt.id) GROUP BY Bestellungid) AS temp INNER JOIN bestellung ON(Bestellungid = bestellung.id) WHERE genehmigt = 0 AND Nutzerid=?\n ;";
+        String bestell_string = "SELECT Bestellungid, von, bis ,gesamtkosten FROM (SELECT Bestellungid ,round(sum(mietzins), 2) AS Gesamtkosten FROM bestellposition INNER JOIN produkt ON(bestellposition.Produktid = produkt.id) GROUP BY Bestellungid) AS temp INNER JOIN bestellung ON(Bestellungid = bestellung.id) WHERE Nutzerid=?\n ;";
         PreparedStatement bestell_ps = null;
         ResultSet bestell_rs;
         bestell_ps = DB_Connector.con.prepareStatement(bestell_string);
