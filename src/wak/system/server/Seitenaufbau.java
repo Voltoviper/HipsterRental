@@ -56,7 +56,7 @@ public class Seitenaufbau extends HttpServlet{
                         String bezeichnung = produkte_rs.getString("bezeichnung");
                         Double mietzins = produkte_rs.getDouble("mietzins");
                         String mietzins_string = Formatter.formatdouble(mietzins);
-                        stream.print("<td>");
+                        stream.print("<td style=\"width:33%\">");
                         stream.print("<table style=\"max-width:100%\" border=0 ><tr><td colspan=\"2\"><p class=\"h3\">" +
                                 name +
                                 "</td></tr><tr><td rowspan=\"2\" style=\" min-width:30pt; min-height:30pt ;\">" +
@@ -115,69 +115,27 @@ public class Seitenaufbau extends HttpServlet{
             writer.print("<li><a href=\"/jsp/warenkorb.jsp\">Warenkorb</a></li>");
             writer.print("<li><a href=\"/jsp/Buchungen.jsp\">Buchung</a></li>");
             writer.print("<li><a href=\"/jsp/Profil.jsp\">Profil</a></li>");
-            /*writer.print("<table><tr><td onclick=self.location.href=\"../index1.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Shop</td>" +
-                    "<td onclick=self.location.href=\"../jsp/warenkorb.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Warenkorb </td>" +
-                    "<td onclick=self.location.href=\"/jsp/Buchungen.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Buchung</td>" +
-                    "<td onclick=self.location.href=\"/jsp/Profil.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Profil</td>");
-            */
+
 
             if(arbeiter!=null){
-                writer.print("<li><a href=\"/jsp/mitarbeiter/Uebersicht-Mitarbeiter.jsp\">Mitarbeiterbereich</a></li>");
-                //writer.print("<td onclick=self.location.href=\"../jsp/mitarbeiter/Uebersicht-Mitarbeiter.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Mitarbeiterbereich </td>");
+                writer.print("<li class=\"dropdown\">\n" +
+                        "    <a href=\"/jsp/mitarbeiter/Uebersicht-Mitarbeiter.jsp\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">Mitarbeiterbereich<span class=\"caret\"></span></a>\n" +
+                        "       <ul class=\"dropdown-menu\" role=\"menu\">\n" +
+                        "           <li><a href=\"/jsp/mitarbeiter/neues_produkt.jsp\">Neues Produkt</a></li>\n" +
+                        "           <li><a href=\"/jsp/mitarbeiter/neues_produkt.jsp\">Neues Paket</a></li>\n" +
+                        "           <li><a href=\"/jsp/mitarbeiter/bestelluebersicht.jsp\">Bestellübersicht</a></li>\n" +
+                        "           <li><a href=\"/jsp/mitarbeiter/neueBestellung.jsp\">Neue Bestelluing</a></li>\n" +
+                        "           <li><a href=\"/jsp/mitarbeiter/KategorieAnlegen.jsp\">Neue Kategorie</a></li>\n" +
+                        "           <li><a href=\"/jsp/mitarbeiter/GeraetEinfuegen.jsp\">Neues Ger&auml;t</a></li>\n");
+                if(arbeiter.isAdmin()){
+                writer.print("<li><a href=\"/jsp/mitarbeiter/Neuer-Mitarbeiter.jsp\">Neuer Mitarbeiter</a></li>\n" +
+                        "           <li><a href=\"/jsp/mitarbeiter/MitarbeiterUebersicht.jsp\">Mitarbeiter Uebersicht</a></li>\n");
+                }
+                writer.print("</ul>\n" +
+                        "   </li>");
+
             }
             //writer.print("</tr></table>");
-        }catch (IOException e){
-
-        }finally{
-            DB_Connector.closeDatabase();
-        }
-    }
-    public static void getMitarbeiterMenu(JspWriter writer, Cookie[] cookies){
-        DB_Connector.connecttoDatabase();
-        String produkt_string = "SELECT name, bezeichnung, mietzins  FROM produkt WHERE id=?";
-        PreparedStatement produkt_ps = null;
-        String tabelle_anfang= "<td><table border=0 style=\"width:100%\">";
-        ResultSet produkt_rs;
-        boolean cookie_vorhanden=false;
-        Cookie cook=null;
-        if(cookies!=null){
-            for(int i=0;i<cookies.length;i++){
-                Cookie c = cookies[i];
-                if(c.getName().compareTo("id")==0){
-                    cook = c;
-                    cookie_vorhanden=true;
-                    break;
-                }else{
-                }
-            }
-        }else{
-
-        }
-
-        Mitarbeiter arbeiter=null;
-        for(Mitarbeiter m: mitarbeiter){
-            if(m.getUuid().toString().equals(cook.getValue())){
-                arbeiter=m;
-            }
-        }
-        try{
-
-            writer.print("<tr><td onclick=self.location.href=\"./neues_produkt.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neuer Artikel</td></tr><tr>" +
-                    "<td  style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neues Paket</td></tr><tr>" +
-                    "<td onclick=self.location.href=\"./bestelluebersicht.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Bestell&uumlbersicht</td></tr><tr>" +
-                    "<td onclick=self.location.href=\"./neueBestellung.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neue Bestellung</td></tr><tr>"+
-                    "<td onclick=self.location.href=\"./KategorieAnlegen.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neue Kategorie</td></tr><tr>"+
-                    "<td onclick=self.location.href=\"./GeraetEinfuegen.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neues Ger&aumlt</td></tr><tr>");
-
-            if (arbeiter != null) {
-
-
-            if(arbeiter.isAdmin()){
-            writer.print(
-                    "<td onclick=self.location.href=\"./Neuer-Mitarbeiter.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Neuer Mitarbeiter</td></tr><tr>"+
-                "<td onclick=self.location.href=\"./MitarbeiterUebersicht.jsp\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\">Mitarbeiter &Uml;bersicht</td>");
-            }}
-                writer.print("</tr>");
         }catch (IOException e){
 
         }finally{
@@ -295,6 +253,7 @@ public class Seitenaufbau extends HttpServlet{
                            writer.print("<tr><td style=\"width:33%; align:center; border:solid 1px #000000\"><table style=\"width:100%\"><th colspan=\"2\" align=left><p class=\"h4\">"+name+"</p></th><tr><td style=\" max-width: 200px;\"><p class=\"para\">Bezeichnung:</p></td><td><p class=\"para\">"+bezeichnung+"</p></td><td align=right><p class=\"para\">"+mietzins_string+"</p></td></tr></table></td></tr>");
                        }
                        String summe_string = Formatter.formatdouble(summe);
+
                        writer.print("<tr><td><table style=\"width:100%\"><td><p class=\"h3\">Summe</p></td><td align=\"right\"><p class=\"h3\">"+summe_string+"</p></td></table></td></tr>");
                        writer.print("</td></tr></table>");
                        writer.print("<table border=0 width\"100%\"><tr><td width=\"90%\"></td><td><form action=\"/Bestellung\" method=\"post\"><input type=submit value=\"Kostenpflichtig bestellen\" name=\"Registrieren\"");
@@ -464,7 +423,7 @@ public class Seitenaufbau extends HttpServlet{
 
         try {
 
-            writer.print("<td><table width=100%><tr><td>Bestellnummer</td><td>von</td><td>bis</td><td>Mietzins</td><td>Annehmen</td><td>Ablehnen</td></tr>");
+            writer.print("<td><table width=100%><tr><td><p class=\"h4\">Bestellnummer</p></td><td><p class=\"h4\">von</p></td><td><p class=\"h4\">bis</p></td><td><p class=\"h4\">Mietzins</p></td><td></td><td></td><td></td></tr>");
             String bestell_string = "select Bestellungid, von, bis ,gesamtkosten from (select Bestellungid ,round(sum(mietzins), 2) as Gesamtkosten from bestellposition inner join produkt ON(bestellposition.Produktid = produkt.id) group by Bestellungid) as temp inner join bestellung ON(Bestellungid = bestellung.id) where genehmigt = 0;";
             PreparedStatement bestell_ps = null;
             ResultSet bestell_rs;
@@ -476,7 +435,14 @@ public class Seitenaufbau extends HttpServlet{
                 Date von = bestell_rs.getDate("von");
                 Date bis = bestell_rs.getDate("bis");
                 double mietzins = bestell_rs.getDouble("gesamtkosten");
-                writer.print("<tr><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+bestellid+"</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+von.toString()+"</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+bis.toString()+"</td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid="+bestellid+"\">"+Formatter.formatdouble(mietzins)+"</td><td  onclick=self.location.href=\"./Bestellgenehmigung?bestellid="+bestellid+"&genehmigt=1\">Annehmen</td><td  onclick=self.location.href=\"./Bestellgenehmigung?bestellid="+bestellid+"&genehmigt=0\">Ablehnen</td></tr>");
+                writer.print("<tr><td><p class=\"para\">"+bestellid+"</p></td>" +
+                        "<td><p class=\"para\">"+von.toString()+"</p></td>" +
+                        "<td><p class=\"para\">"+bis.toString()+"</p></td>" +
+                        "<td><p class=\"para\">"+Formatter.formatdouble(mietzins)+"</p></td>" +
+                        "<td><div class=\"read_more\"> <a href=\"./bestelldetails.jsp?bestellid="+bestellid+"\"><button class=\"btn_style\">Details</button></a></div></td>"+
+                        "<td><div class=\"read_more\"> <a href=\"./Bestellgenehmigung?bestellid="+bestellid+"&genehmigt=1\"><button class=\"btn_style\">Annehmen</button></a></div></td>" +
+                        "<td><div class=\"read_more\"> <a href=\"./Bestellgenehmigung?bestellid="+bestellid+"&genehmigt=0\"><button class=\"btn_style\">Ablehnen</button></a></div></td>" +
+                        "</tr>");
             }
             writer.print("</table></td>");
 
@@ -765,7 +731,7 @@ public class Seitenaufbau extends HttpServlet{
     public static void getKategorieOptionen(JspWriter writer) {
         try {
             for (Kategorie k : kategorien) {
-                writer.print("<option value=" + k.getId() + ">"+k.getName()+"</option>");
+                writer.print("<option value=" + k.getId() + " class=\"para\">"+k.getName()+"</option>");
             }
         }catch (IOException e1){
             e1.printStackTrace();
@@ -856,16 +822,16 @@ try {
             kunde_ps.setString(1, k.getId());
             ResultSet kunde_rs = kunde_ps.executeQuery();
             kunde_rs.next();
-            writer.print("<tr><td>Vorname: </td><td><input type=\"text\" name=\"vorname\" value=\"" + kunde_rs.getString("vorname") + "\"></td></tr>");
-            writer.print("<tr><td>Nachname: </td><td><input type=\"text\" name=\"nachname\" value=\""+kunde_rs.getString("nachname")+"\"></td></tr>");
-            writer.print("<tr><td>Straße: </td><td><input type=\"text\" name=\"strasse\" value=\""+kunde_rs.getString("strasse")+"\"></td></tr>");
-            writer.print("<tr><td>Hausnummer: </td><td><input type=\"number\" name=\"hausnummer\" value=\""+kunde_rs.getInt("hausnummer")+"\"></td></tr>");
-            writer.print("<tr><td>PLZ: </td><td><input type=\"text\" name=\"plz\" value=\""+kunde_rs.getString("plz")+"\"></td></tr>");
-            writer.print("<tr><td>Ort: </td><td><input type=\"text\" name=\"ort\" value=\""+kunde_rs.getString("ort")+"\"></td></tr>");
-            writer.print("<tr><td>Telefon: </td><td><input type=\"text\" name=\"telefon\" value=\""+kunde_rs.getString("telefonnummer")+"\"></td></tr>");
-            writer.print("<tr><td>Handy: </td><td><input type=\"text\" name=\"handy\" value=\""+kunde_rs.getString("handynummer")+"\"></td></tr>");
-            writer.print("<tr><td>E-Mail: </td><td><input type=\"text\" name=\"email\" value=\""+kunde_rs.getString("email")+"\"></td></tr>");
-            writer.print("<tr><td>Kennwort: </td><td><input type=\"password\" name=\"password\" ></td></tr>");
+            writer.print("<tr><td><p class=\"para\">Vorname: </p> </td><td><input type=\"text\" name=\"vorname\" value=\"" + kunde_rs.getString("vorname") + "\"></td></tr>");
+            writer.print("<tr><td><p class=\"para\">Nachname: </p> </td><td><input type=\"text\" name=\"nachname\" value=\""+kunde_rs.getString("nachname")+"\"></td></tr>");
+            writer.print("<tr><td><p class=\"para\">Straße: </p> </td><td><input type=\"text\" name=\"strasse\" value=\""+kunde_rs.getString("strasse")+"\"></td></tr>");
+            writer.print("<tr><td><p class=\"para\">Hausnummer:</p>  </td><td><input type=\"number\" name=\"hausnummer\" value=\""+kunde_rs.getInt("hausnummer")+"\"></td></tr>");
+            writer.print("<tr><td><p class=\"para\">PLZ: </p> </td><td><input type=\"text\" name=\"plz\" value=\""+kunde_rs.getString("plz")+"\"></td></tr>");
+            writer.print("<tr><td><p class=\"para\">Ort: </p> </td><td><input type=\"text\" name=\"ort\" value=\""+kunde_rs.getString("ort")+"\"></td></tr>");
+            writer.print("<tr><td><p class=\"para\">Telefon: </p> </td><td><input type=\"text\" name=\"telefon\" value=\""+kunde_rs.getString("telefonnummer")+"\"></td></tr>");
+            writer.print("<tr><td><p class=\"para\">Handy:</p>  </td><td><input type=\"text\" name=\"handy\" value=\""+kunde_rs.getString("handynummer")+"\"></td></tr>");
+            writer.print("<tr><td><p class=\"para\">E-Mail: </p> </td><td><input type=\"text\" name=\"email\" value=\""+kunde_rs.getString("email")+"\"></td></tr>");
+            writer.print("<tr><td><p class=\"para\">Kennwort: </p> </td><td><input type=\"password\" name=\"password\" ></td></tr>");
             writer.print("<tr><td><input type=\"submit\" name=\"Absenden\"></td></tr>");
 
             writer.println("</table></form>");

@@ -89,9 +89,4 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                 </div><!-- /.container-fluid -->
             </nav>
         </div>
-        <ol class="breadcrumb">
-            <li><a href="index.jsp">Home</a></li>
-            <li class="active">Details</li>
-        </ol>
-    </div>
-</div>
+

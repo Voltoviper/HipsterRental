@@ -183,7 +183,6 @@ table {
 td,
 th {
   padding: 0;
-  width:33%;
   vertical-align: top;
 }
 @media print {
