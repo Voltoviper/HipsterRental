@@ -234,6 +234,7 @@ public class Seitenaufbau extends HttpServlet{
                    "<td width=\"100\">Bezeichnung:</td><td>"+bezeichnung+"</td></tr><tr>" +
                    "<td width=\"100\">Hersteller:</td><td>"+hersteller+"</table>");
 
+
        }catch(IOException e){
 
        } catch (SQLException e) {
