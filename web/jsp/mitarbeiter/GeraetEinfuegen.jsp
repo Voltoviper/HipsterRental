@@ -44,5 +44,5 @@
   </tr>
 </table>
 
-<%@include file="../../html/footer/footer.html"%>
+<%@include file="../../html/footer/footer.jsp"%>
 

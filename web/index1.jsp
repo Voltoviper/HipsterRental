@@ -1,6 +1,7 @@
-<%@ include file="../html/header/header_sub.jsp" %>
+<%@ include file="html/header/header.jsp" %>
 <%@page import="wak.system.server.Login" %>
 <%@ page import="wak.system.server.Seitenaufbau" %>
+
 <table style="width:100%; valign:top; border-spacing: 0pt" border="0">
     <tr class="menu">
         <td colspan="3" class="menu"><% Seitenaufbau.getMenu(out, request.getCookies());%>
@@ -14,9 +15,9 @@
         </td>
         <td class="main" valign="top">
             <table style="width: 100%; valign:top" border="0">
-                <th style="text-align: center" colspan="3">Kategorie</th>
+                <th style="text-align: center" colspan="3">Unsere Highlights</th>
                 <tr>
-                    <%Seitenaufbau.getKategorieArtikel(out, request.getParameter("katid"));%>
+                    <%Seitenaufbau.getEmpfehlungen(out);%>
                 </tr>
             </table>
         </td>
@@ -25,4 +26,4 @@
     </tr>
 </table>
 
-<%@include file="../html/footer/footer.jsp" %>
+<%@include file="html/footer/footer.jsp" %>

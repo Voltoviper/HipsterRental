@@ -98,7 +98,7 @@ public class Login extends HttpServlet {
                         case 'M':c="M";Mitarbeiter m = new Mitarbeiter(uuid, int_id, false);Seitenaufbau.mitarbeiter.add(m);break;
                         case 'A':c="M";Mitarbeiter a = new Mitarbeiter(uuid, int_id, true);Seitenaufbau.mitarbeiter.add(a);break;
                         case 'K':c="K";Warenkorb w = new Warenkorb(uuid.toString());Seitenaufbau.koerbe.add(w); kunde.setKorb(w);break;
-                        default: request.getRequestDispatcher("index.jsp");
+                        default: request.getRequestDispatcher("index1.jsp");
                     }
                     writer.print(c);
 
@@ -145,20 +145,11 @@ public class Login extends HttpServlet {
 
            }
             if(cookie_vorhanden){
-                writer.print("<td class=\"login\">\n" +
-                        "        <table style=\"width:100%\">\n" +
-                        "          <tr>\n" +
-                        "            <td align=\"center\">Hallo</td>\n" +
-                        "          </tr>\n" +
-                        "          <tr>\n" +
-                        "            <td align=\"center\">"+test+"</td>\n" +
-                                    "</tr>"+"<td><form action=\"/home\" method=\"post\"><input type=\"submit\" name=\"logout\" value=\"Logout\"></form></td>"+
-                        "        </table>\n" +
-                        "    </td>");
+                writer.print("<div class=\"form-group my_search\"><p class=\"h3\">"+test+"</p><form action=\"/home\" method=\"post\"><input type=\"submit\" name=\"logout\" value=\"Logout\"></form>"+
+                        "       </div>\n");
 
             }else{
-                writer.print(" <td class=\"login\">\n" +
-                        "      <form action=\"/home\" method=\"post\">\n" +
+                writer.print(" <form action=\"/home\" method=\"post\">\n" +
                         "        <table>\n" +
                         "          <tr>\n" +
                         "            <td align=\"center\">Benutzername:</td>\n" +
@@ -174,7 +165,7 @@ public class Login extends HttpServlet {
                         "          </tr>\n" +
                         "          <tr><td align=\"center\"><input type=\"submit\" value=\"Login\" name=\"Login\"/><input type=\"submit\" value=\"Registrieren\" name=\"registrieren\"/></td></tr>\n" +
                         "        </table>\n" +
-                        "      </form></td>");
+                        "      </form>");
             }
        }catch(IOException e){
 

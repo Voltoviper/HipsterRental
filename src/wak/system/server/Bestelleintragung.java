@@ -27,7 +27,7 @@ import java.util.Locale;
 @WebServlet(name = "Bestelleintragung")
 public class Bestelleintragung extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String weiterleitung = "/index.jsp";
+        String weiterleitung = "/index1.jsp";
         Cookie[] cookies = request.getCookies();
         boolean cookie_vorhanden=false;
         Cookie cook=null;

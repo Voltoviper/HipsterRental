@@ -48,7 +48,7 @@ public class UserLoeschen extends HttpServlet {
                 e1.printStackTrace();
             }
         }
-        String nextJSP = "/index.jsp";
+        String nextJSP = "/index1.jsp";
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
         dispatcher.forward(request,response);
     }

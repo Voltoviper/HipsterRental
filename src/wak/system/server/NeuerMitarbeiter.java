@@ -31,7 +31,7 @@ public class NeuerMitarbeiter extends HttpServlet {
         //In Datenbank übertragen
 
 
-        String nextJSP = "/index.jsp";
+        String nextJSP = "/index1.jsp";
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(nextJSP);
         dispatcher.forward(request,response);
 

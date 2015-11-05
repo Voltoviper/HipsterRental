@@ -5,7 +5,7 @@
   Time: 10:11
   To change this template use File | Settings | File Templates.
 --%>
-<%@ include file="../html/header/header_sub.html" %>
+<%@ include file="../html/header/header_sub.jsp" %>
 <%@page import="wak.system.server.Login" %>
 <%@ page import="wak.system.server.Seitenaufbau" %>
 <table style="width:100%; valign:top; border-spacing: 0pt" border="0">
@@ -85,4 +85,4 @@
     </tr>
 </table>
 
-<%@include file="../html/footer/footer.html" %>
+<%@include file="../html/footer/footer.jsp" %>
