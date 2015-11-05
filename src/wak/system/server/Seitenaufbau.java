@@ -58,7 +58,7 @@ public class Seitenaufbau extends HttpServlet{
                         stream.print("<td onmouseover=this.style.background=\"#FCFD7A\" onmouseout=this.style.background=\"#FCFD5A\" style=\"width:33%; align:center; border:solid 1px #000000\" onclick=self.location.href=\"./jsp/artikel.jsp?id=" + id + "\">");
                         stream.print("<table style=\"max-width:100%\" border=0 ><tr><td colspan=\"2\">" +
                                 name +
-                                "</td></tr><tr><td rowspan=\"2\" style=\" min-width:30pt; max-width:30pt; min-height:30pt ; max-height:30pt\">" +
+                                "</td></tr><tr><td rowspan=\"2\" style=\" min-width:30pt; min-height:30pt ;\">" +
                                 "<img  src=\"data:image/jpg;base64,"+ ImageServlet.getImage(id, 3)+"\" >" +
                                 "</td><td>" +
                                 bezeichnung +
@@ -228,11 +228,12 @@ public class Seitenaufbau extends HttpServlet{
            Double mietzins = produkt_rs.getDouble("mietzins");
            String mietzins_string = Formatter.formatdouble(mietzins);
            writer.print("<td style=\"width:33%; align:center; border:solid 1px #000000\" >");
-           writer.print("<table border=0 width=100%><th colspan=4>"+name+"</th><tr><td rowspan =4 style=\"min-width=300pt; min-height=300pt\"> Bild</td>" +
+           writer.print("<table border=0 width=100%><th colspan=4>"+name+"</th><tr><td rowspan =4 style=\"min-width=300pt; min-height=300pt\"> <img  src=\"data:image/jpg;base64,"+ ImageServlet.getImage(int_id, 3)+"\" ></td>" +
                    "<td width=\"100\">Beschreibung:</td><td>"+beschreibung+"</td><td style:\"text-align:right\" onmouseover=this.style.background=\"#6565FC\" onmouseout=this.style.background=\"#FCFD5A\" onclick=self.location.href=\"../jsp/warenkorb.jsp?addid=" + int_id + "\">Warenkorb</td></tr><tr>" +
                    "<td width=\"100\">Miete:</td><td>"+mietzins_string+"</td><td><div class=\"fb-share-button\" data-href=\"http://www.hipster-rental.de/jsp/artikel?id="+int_id+"\" data-layout=\"button\"></div></tr><tr>" +
                    "<td width=\"100\">Bezeichnung:</td><td>"+bezeichnung+"</td></tr><tr>" +
                    "<td width=\"100\">Hersteller:</td><td>"+hersteller+"</table>");
+
        }catch(IOException e){
 
        } catch (SQLException e) {

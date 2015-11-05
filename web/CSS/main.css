@@ -51,3 +51,7 @@ body {
     align: center;
     border: solid 1px #000000;
 }
+img{
+    max-width: 170px;
+    max-height: 150px;
+}
