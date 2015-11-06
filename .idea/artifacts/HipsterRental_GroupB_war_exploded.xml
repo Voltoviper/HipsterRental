@@ -8,15 +8,15 @@
           <element id="module-output" name="HipsterRental-GroupB" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="module" name="JUnit4" module-name="HipsterRental-GroupB" />
-          <element id="file-copy" path="$PROJECT_DIR$/mysql-connector-java-5.1.36/mysql-connector-java-5.1.36/mysql-connector-java-5.1.36-bin.jar" />
-          <element id="library" level="project" name="mysql-connector-java-5.1.36-bin" />
           <element id="library" level="project" name="junit" />
-          <element id="library" level="project" name="joda-time-2.8.2" />
-          <element id="library" level="project" name="javax.mail" />
           <element id="library" level="project" name="activation-1.1.1" />
-          <element id="library" level="project" name="commons-collections4-4.0" />
-          <element id="library" level="project" name="commons-io-2.4" />
+          <element id="file-copy" path="$PROJECT_DIR$/commons-collections4-4.0.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/joda-time-2.8.2.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/javax.mail.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/commons-io-2.4.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/activation-1.1.1.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/mail-1.4.1.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/mysql-connector-java-5.1.36-bin.jar" />
         </element>
         <element id="library" level="project" name="javax.servlet.jsp" />
       </element>

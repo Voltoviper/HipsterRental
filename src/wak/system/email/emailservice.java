@@ -93,7 +93,7 @@ public class emailservice {
             MimeMessage msg = new MimeMessage(session);
             InternetAddress addressTo = new InternetAddress(kunde.getEmail());
             msg.setRecipient(Message.RecipientType.TO, addressTo);
-            msg.setFrom(email);
+            msg.setFrom(new InternetAddress(email));
             msg.setSubject("Auftragszusammenfassung zu BestellID: " + b.getId());
             StringBuffer content = new StringBuffer();
             content.append("<!DOCTYPE html><html lang=\"de\"><head><meta charset=\"utf-8\"><title></title></head><body>");

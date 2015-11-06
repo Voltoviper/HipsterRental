@@ -664,6 +664,8 @@ public class Seitenaufbau extends HttpServlet{
         DateTime bis_joda = new DateTime(bis.getTime(), Berlin);
         Days days = Days.daysBetween(von_joda, bis_joda);
 
+        if ( bis_joda.getMinuteOfDay()<von_joda.getMinuteOfDay()) return days.getDays()-1;
+
         return days.getDays();
     }
 
