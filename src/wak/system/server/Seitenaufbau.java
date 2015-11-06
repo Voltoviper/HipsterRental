@@ -112,9 +112,7 @@ public class Seitenaufbau extends HttpServlet{
             }}
         }
         try{
-            writer.print("<li><a href=\"/jsp/warenkorb.jsp\">Warenkorb</a></li>");
-            writer.print("<li><a href=\"/jsp/Buchungen.jsp\">Buchung</a></li>");
-            writer.print("<li><a href=\"/jsp/Profil.jsp\">Profil</a></li>");
+
 
 
             if(arbeiter!=null){
@@ -134,6 +132,10 @@ public class Seitenaufbau extends HttpServlet{
                 writer.print("</ul>\n" +
                         "   </li>");
 
+            }else{
+                writer.print("<li><a href=\"/jsp/warenkorb.jsp\">Warenkorb</a></li>");
+                writer.print("<li><a href=\"/jsp/Buchungen.jsp\">Buchung</a></li>");
+                writer.print("<li><a href=\"/jsp/Profil.jsp\">Profil</a></li>");
             }
             //writer.print("</tr></table>");
         }catch (IOException e){
@@ -401,8 +403,8 @@ public class Seitenaufbau extends HttpServlet{
                 writer.print("<tr><td><p class=\"para\">Telefon</p></td><td><input type=text name=telefon value="+telefon+"></td></tr>");
                 writer.print("<tr><td><p class=\"para\">Handy</p></td><td><input type=text name=handy value="+handy+"></td></tr>");
                 writer.print("<tr><td><p class=\"para\">E-Mail</p></td><td><input type=text name=email value="+email+"></td></tr>");
-                writer.print("<tr><td><p class=\"para\">Von</p></td><td><input type=\"Text\" name=\"von\" id=\"von\" ><img style=\"min-width: 10px; min-height: 10px;\" src=\"../img/calender/cal.gif\" onclick=\"javascript:NewCssCal('von','ddMMyyyy','arrow', 'true', '24')\" style=\"cursor:pointer\"/></td></tr>");
-                writer.print("<tr><td><p class=\"para\">Bis</p></td><td><input type=\"Text\"  name=\"bis\"id=\"bis\"/><img style=\"min-width: 10px; min-height: 10px;\" src=\"../img/calender/cal.gif\" onclick=\"javascript:NewCssCal('bis','ddMMyyyy','arrow', 'true', '24')\" style=\"cursor:pointer\"/>      </td></tr>");
+                writer.print("<tr><td><p class=\"para\">Von</p></td><td><input type=\"Text\" name=\"von\" id=\"von\" ><img style=\"min-width: 10px; min-height: 10px;\" src=\"../img/calender/cal.gif\" onclick=\"javascript:NewCssCal('von','ddMMyyyy','arrow', 'true', '24', '' ,'future')\" style=\"cursor:pointer\"/></td></tr>");
+                writer.print("<tr><td><p class=\"para\">Bis</p></td><td><input type=\"Text\"  name=\"bis\"id=\"bis\"/><img style=\"min-width: 10px; min-height: 10px;\" src=\"../img/calender/cal.gif\" onclick=\"javascript:NewCssCal('bis','ddMMyyyy','arrow', 'true', '24','','future')\" style=\"cursor:pointer\"/>      </td></tr>");
                 writer.print("<tr><td colspan=2><input type=submit value=\"Kostenpflichtig bestellen\" name=\"bestellen\"><input type=submit value=\"abbrechen\"></td></tr>");
                 writer.print("</table></form>");
             }

@@ -12,7 +12,7 @@
 <div class="main"><!-- start main -->
   <div class="container">
     <div class="row details"><!-- start details -->
-      <p class="h2">Mitarbeiterliste</p>
+      <p class="h2">Bestellübersicht</p>
       <table style="width: 100%; valign:top" border="0">
         <tr>
           <%Seitenaufbau.getBestelluebersicht(out, request.getCookies());%>

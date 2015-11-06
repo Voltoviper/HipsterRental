@@ -41,13 +41,13 @@
                   <p class="para">Von:</p>
                 </td><td>
 
-                <input type="Text" name="von" id="von" ><img style="min-width: 10px; min-height: 10px;" src="../../img/calender/cal.gif" onclick="javascript:NewCssCal('von','ddMMyyyy','arrow', 'true', '24')" style="cursor:pointer"/>
+                <input type="Text" name="von" id="von" ><img style="min-width: 10px; min-height: 10px;" src="../../img/calender/cal.gif" onclick="javascript:NewCssCal('von','ddMMyyyy','arrow', 'true', '24', '','future')" style="cursor:pointer"/>
               </td>
               </tr>
               <tr>
                 <td><p class="para">Bis:</p></td>
                 <td>
-                  <input type="Text" name="bis" id="bis" ><img style="min-width: 10px; min-height: 10px;" src="../../img/calender/cal.gif" onclick="javascript:NewCssCal('bis','ddMMyyyy','arrow', 'true', '24')" style="cursor:pointer"/>
+                  <input type="Text" name="bis" id="bis" ><img style="min-width: 10px; min-height: 10px;" src="../../img/calender/cal.gif" onclick="javascript:NewCssCal('bis','ddMMyyyy','arrow', 'true', '24','','future')" style="cursor:pointer"/>
                 </td>
               </tr>
               <tr>
