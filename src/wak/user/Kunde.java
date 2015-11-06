@@ -45,6 +45,27 @@ public class Kunde extends Person {
         this.id = id;
         this.uuid = uuid;
     }
+    public Kunde(String id, String vorname, String nachname,String email, String telefon, String handy,  String strasse, int hausnummer, String plz, String ort, String uuid,  boolean eintragen) {
+        this.vorname = vorname;
+        this.nachname = nachname;
+        this.email = email;
+        this.telefon = telefon;
+        this.handy = handy;
+        this.addr = new Adresse(strasse, ort, plz, hausnummer);
+        this.username = email;
+        this.passwort = Formatter.hashen(email);
+        if(id!=null){
+            this.id = id;
+        }else{
+            this.id=generateID(false);
+        }
+        this.uuid = java.util.UUID.fromString(uuid);
+        if(eintragen){
+            eintragen(this);
+        }
+        Seitenaufbau.kunde.add(this);
+    }
+
 
     public Kunde(String id, String vorname, String nachname,String email, String telefon, String handy, Adresse addr, String username, String passwort, boolean eintragen) {
         this.vorname = vorname;

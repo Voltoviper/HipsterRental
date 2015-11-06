@@ -46,7 +46,7 @@ public void testProdukteanlegen() throws Exception {
 */ 
 @Test
 public void testKategorieanlegen() throws Exception {
-   assertEquals(7, Seitenaufbau.kategorien.size());
+   assertEquals(10, Seitenaufbau.kategorien.size());
 } 
 
 } 

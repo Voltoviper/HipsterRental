@@ -59,6 +59,7 @@ public class Login extends HttpServlet {
             }else{
 
             }
+            Seitenaufbau.kunde.remove(Seitenaufbau.getKunde(cook.getValue()));
             request.getRequestDispatcher("/jsp/redirect.html").forward(request, response);
         }else{
             String nutzer= request.getParameter("user");

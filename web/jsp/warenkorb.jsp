@@ -16,7 +16,7 @@
             <p class="h2">Warenkorb</p>
             <table style="width: 100%; valign:top" border="0">
                 <tr>
-                    <%Seitenaufbau.getWarenkorb(out, request.getCookies(), request.getParameter("addid"));%>
+                    <%Seitenaufbau.getWarenkorb(out, request.getCookies(), request.getParameter("addid"), request, response);%>
                 </tr>
             </table>
 

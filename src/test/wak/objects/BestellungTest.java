@@ -6,17 +6,20 @@ import org.junit.Before;
 import org.junit.Test;
 import wak.objects.Bestellung;
 import wak.objects.Produkt;
+import wak.system.db.DB_Connector;
 import wak.system.db.DB_Loader;
 import wak.system.server.Seitenaufbau;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
-
-/** 
+/**
 * Bestellung Tester. 
 * 
 * @author <Authors name> 
@@ -27,11 +30,17 @@ public class BestellungTest {
 
 @Before
 public void before() throws Exception {
+  DB_Connector.connecttoDatabase();
+   String s =("CALL resetdb");
+   PreparedStatement result_ps = DB_Connector.con.prepareCall(s);
+   result_ps.execute();
+
   new DB_Loader();
 } 
 
 @After
-public void after() throws Exception { 
+public void after() throws Exception {
+   DB_Connector.closeDatabase();
 }
 
    /**
@@ -62,7 +71,7 @@ public void testUeberschneidet() throws Exception {
    produkte.add(Seitenaufbau.katalog.get(2));
    produkte.add(Seitenaufbau.katalog.get(3));
    produkte.add(Seitenaufbau.katalog.get(1));
-   Bestellung b = new Bestellung(Seitenaufbau.kunde.get(1), produkte, new Timestamp(new DateTime().getMillis()), new Timestamp(new DateTime().plusDays(1).getMillis()));
+   Bestellung b = new Bestellung(Seitenaufbau.kunde.get(1), produkte, new Timestamp(new DateTime().plusDays(2).getMillis()), new Timestamp(new DateTime().plusDays(3).getMillis()));
 
    assertFalse(b.ueberschneidet(b));
 

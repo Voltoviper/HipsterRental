@@ -107,7 +107,7 @@ public class Bestellung {
                 bestellposition.setInt(1, bestell_id);
                 bestellposition.setInt(2, p.getId());
                 bestellposition.setInt(3, i);
-                System.out.println(bestellposition.toString());
+
                 bestellposition.executeUpdate();
                 i++;
             }

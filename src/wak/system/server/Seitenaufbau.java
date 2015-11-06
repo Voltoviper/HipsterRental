@@ -13,6 +13,8 @@ import wak.user.Adresse;
 import wak.user.Kunde;
 import wak.user.Mitarbeiter;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +24,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Created by chris_000 on 24.09.2015.
@@ -83,10 +86,6 @@ public class Seitenaufbau extends HttpServlet{
     }
     public static void getMenu(JspWriter writer, Cookie[] cookies){
         DB_Connector.connecttoDatabase();
-        String produkt_string = "SELECT name, bezeichnung, mietzins  FROM produkt WHERE id=?";
-        PreparedStatement produkt_ps = null;
-        String tabelle_anfang= "<td><table border=0 style=\"width:100%\">";
-        ResultSet produkt_rs;
         boolean cookie_vorhanden=false;
         Cookie cook=null;
         if(cookies!=null){
@@ -228,7 +227,7 @@ public class Seitenaufbau extends HttpServlet{
            DB_Connector.closeDatabase();
        }
     }
-    public static void getWarenkorb(JspWriter writer,Cookie[] cookies, String produkt_id){
+    public static void getWarenkorb(JspWriter writer,Cookie[] cookies, String produkt_id,HttpServletRequest request,HttpServletResponse response){
         DB_Connector.connecttoDatabase();
         String produkt_string = "SELECT name, bezeichnung, mietzins  FROM produkt WHERE id=?";
         PreparedStatement produkt_ps = null;
@@ -287,19 +286,66 @@ public class Seitenaufbau extends HttpServlet{
                    }
                }
             } else {
-                if(produkt_id==null){
-                   writer.print(tabelle_anfang);
-                    writer.print("<th style=\"text-align: center\"><p class=\"para\">Es sind keine Produkte ausgewaehlt.</p></th>");
-                    writer.print("</table>");
-                }else{
-                    //Fall, falls keine Cookie gefunden wurde.
-                }
+                    UUID uuid = UUID.randomUUID();
+                    Warenkorb b = new Warenkorb(uuid.toString());
+                     Seitenaufbau.koerbe.add(b);
+                        if(produkt_id!=null) {
+                            b.addprodukt(Integer.parseInt(produkt_id));
+                        }
+
+                        writer.print(tabelle_anfang);
+                        if(b.getProdukt_id().size()==0){
+                            writer.print("<td style=\"text-align: center\"><p class=\"h4\">Es sind keine Produkte im Warenkorb</p></td>");
+                        }
+                        if(b.getProdukt_id().size()==1){
+                            writer.print("<td style=\"text-align: center\"><p class=\"h4\">Es ist 1 Produkt im Warenkorb</p></td>");
+                        }else {
+                            writer.print("<td style=\"text-align: center\"><p class=\"h4\">Es sind " + b.getProdukt_id().size() + " Produkte im Warenkorb</p></td>");
+                        }
+                        double summe=0.00;
+                        for(Integer produkt: b.getProdukt_id()){
+                            produkt_ps = DB_Connector.con.prepareStatement(produkt_string);
+                            produkt_ps.setInt(1,produkt);
+                            produkt_rs = produkt_ps.executeQuery();
+                            produkt_rs.next();
+                            String name= produkt_rs.getString("name");
+                            String bezeichnung = produkt_rs.getString("bezeichnung");
+                            Double mietzins = produkt_rs.getDouble("mietzins");
+                            summe+=mietzins;
+                            String mietzins_string = Formatter.formatdouble(mietzins);
+                            writer.print("<tr><td style=\"width:33%; align:center; border:solid 1px #000000\"><table style=\"width:100%\"><th colspan=\"2\" align=left><p class=\"h4\">"+name+"</p></th><tr><td style=\" max-width: 200px;\"><p class=\"para\">Bezeichnung:</p></td><td><p class=\"para\">"+bezeichnung+"</p></td><td align=right><p class=\"para\">"+mietzins_string+"</p></td></tr></table></td></tr>");
+                        }
+                        String summe_string = Formatter.formatdouble(summe);
+
+                        writer.print("<tr><td><table style=\"width:100%\"><td><p class=\"h3\">Summe</p></td><td align=\"right\"><p class=\"h3\">"+summe_string+"</p></td></table></td></tr>");
+                        writer.print("</td></tr></table>");
+                        writer.print("<table border=0 width\"100%\"><tr><td width=\"90%\"></td><td><form action=\"/Bestellung\" method=\"post\"><input type=submit value=\"Kostenpflichtig bestellen\" name=\"Registrieren\"");
+                        if(b.getProdukt_id().size()==0){
+                            writer.print("disabled");
+                        }
+                        writer.print("></form></td><td><form action=\"/clear\" method=\"post\"><input type=submit value=\"Warenkorb leeren\" name=\"clear\"></form></td></tr></table> ");
+
+                String dispatcher="/jsp/redirect_waren.html";
+
+
+
+                Cookie id = new Cookie("id", uuid.toString());
+                id.setDomain("localhost");
+                id.setPath("/");
+                response.addCookie(id);
+
+                RequestDispatcher d = request.getServletContext().getRequestDispatcher(dispatcher);
+                d.forward(request, response);
+
+
             }
         }catch(IOException e){
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally{
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } finally{
             DB_Connector.closeDatabase();
         }
     }
@@ -388,10 +434,11 @@ public class Seitenaufbau extends HttpServlet{
             if(cookie_vorhanden){
                 DB_Connector.connecttoDatabase();
                 writer.print("<td>");
-                Kunde k = getKunde(cook.getValue());
                 String vorname=" ", nachname=" ", strasse=" ",  plz=" ", ort=" ", telefon=" ", handy=" ", email = " ";
                 int hausnummer=0;
-
+                String uuid;
+                Kunde k = getKunde(cook.getValue());
+                if (k !=null) {
                     String kunde_string = "SELECT nutzer.vorname, nutzer.nachname, kunde.strasse, kunde.hausnummer, kunde.plz, kunde.ort, kunde.telefonnummer, kunde.handynummer, kunde.email FROM kunde Inner join nutzer on kunde.Nutzerid=nutzer.id WHERE kunde.Nutzerid=?";
                     PreparedStatement kunde_ps = null;
                     ResultSet kunde_rs;
@@ -399,33 +446,40 @@ public class Seitenaufbau extends HttpServlet{
                     kunde_ps.setString(1, k.getId());
                     kunde_rs = kunde_ps.executeQuery();
                     kunde_rs.next();
-                     vorname = kunde_rs.getString("vorname");
-                     nachname = kunde_rs.getString("nachname");
-                     strasse = kunde_rs.getString("strasse");
-                     hausnummer = kunde_rs.getInt("hausnummer");
-                     plz = kunde_rs.getString("plz");
-                     ort = kunde_rs.getString("Ort");
-                     telefon = kunde_rs.getString("telefonnummer");
-                     handy = kunde_rs.getString("handynummer");
-                     email = kunde_rs.getString("email");
+                    vorname = kunde_rs.getString("vorname");
+                    nachname = kunde_rs.getString("nachname");
+                    strasse = kunde_rs.getString("strasse");
+                    hausnummer = kunde_rs.getInt("hausnummer");
+                    plz = kunde_rs.getString("plz");
+                    ort = kunde_rs.getString("Ort");
+                    telefon = kunde_rs.getString("telefonnummer");
+                    handy = kunde_rs.getString("handynummer");
+                    email = kunde_rs.getString("email");
                     k.setAddr(new Adresse(strasse,ort, plz, hausnummer));
                     k.setEmail(email);
                     k.setTelefon(telefon);
                     k.setHandy(handy);
                     k.setVorname(vorname);
                     k.setNachname(nachname);
+                    uuid=k.getUuid();
+                }else{
+                    uuid=cook.getValue();
+                }
 
-                writer.print("<form action=\"/Bestelleintragung\" method=\"post\"><table width=100%><tr><td><p class=\"para\">Vorname</p></td><td><input type=\"text\" name=\"vorname\" value=\""+vorname+"\"></td><td rowspan=\"12\" valign=\"top\">"+getWarenkorbTabelle(k.getUuid())+"</td></tr>");
-                writer.print("<tr><td><p class=\"para\">Nachname</p></td><td><input type=text name=nachname value="+nachname+"></td></tr>");
-                writer.print("<tr><td><p class=\"para\">Stra&#223;e</p></td><td><input type=text name=strasse value="+strasse+"></td></tr>");
-                writer.print("<tr><td><p class=\"para\">Hausnummer</p></td><td><input type=text name=hausnummer value="+hausnummer+"></td></tr>");
-                writer.print("<tr><td><p class=\"para\">PLZ</p></td><td><input type=text name=plz value="+plz+"></td></tr>");
-                writer.print("<tr><td><p class=\"para\">Ort</p></td><td><input type=text name=ort value="+ort+"></td></tr>");
-                writer.print("<tr><td><p class=\"para\">Telefon</p></td><td><input type=text name=telefon value="+telefon+"></td></tr>");
-                writer.print("<tr><td><p class=\"para\">Handy</p></td><td><input type=text name=handy value="+handy+"></td></tr>");
-                writer.print("<tr><td><p class=\"para\">E-Mail</p></td><td><input type=text name=email value="+email+"></td></tr>");
+
+
+
+                writer.print("<form action=\"/Bestelleintragung\" method=\"post\"><table width=100%><tr><td><p class=\"para\">Vorname</p></td><td><input type=\"text\" name=\"vorname\" value=\""+vorname+"\"></td><td rowspan=\"12\" valign=\"top\">"+ getWarenkorbTabelle(uuid) +"</td></tr>");
+                writer.print("<tr><td><p class=\"para\">Nachname</p></td><td><input type=\"text\" name=\"nachname\" value=\""+nachname+"\"></td></tr>");
+                writer.print("<tr><td><p class=\"para\">Stra&#223;e</p></td><td><input type=\"text\" name=\"strasse\" value=\""+strasse+"\"></td></tr>");
+                writer.print("<tr><td><p class=\"para\">Hausnummer</p></td><td><input type=\"text\" name=\"hausnummer\" value=\""+hausnummer+"\"></td></tr>");
+                writer.print("<tr><td><p class=\"para\">PLZ</p></td><td><input type=\"text\" name=\"plz\" value=\""+plz+"\"></td></tr>");
+                writer.print("<tr><td><p class=\"para\">Ort</p></td><td><input type=\"text\" name=\"ort\" value=\""+ort+"\"></td></tr>");
+                writer.print("<tr><td><p class=\"para\">Telefon</p></td><td><input type=\"text\" name=\"telefon\" value=\""+telefon+"\"></td></tr>");
+                writer.print("<tr><td><p class=\"para\">Handy</p></td><td><input type=\"text\" name=\"handy\" value=\""+handy+"\"></td></tr>");
+                writer.print("<tr><td><p class=\"para\">E-Mail</p></td><td><input type=\"text\" name=\"email\" value=\""+email+"\"></td></tr>");
                 writer.print("<tr><td><p class=\"para\">Von</p></td><td><input type=\"Text\" name=\"von\" id=\"von\" ><img style=\"min-width: 10px; min-height: 10px;\" src=\"../img/calender/cal.gif\" onclick=\"javascript:NewCssCal('von','ddMMyyyy','arrow', 'true', '24', '' ,'future')\" style=\"cursor:pointer\"/></td></tr>");
-                writer.print("<tr><td><p class=\"para\">Bis</p></td><td><input type=\"Text\"  name=\"bis\"id=\"bis\"/><img style=\"min-width: 10px; min-height: 10px;\" src=\"../img/calender/cal.gif\" onclick=\"javascript:NewCssCal('bis','ddMMyyyy','arrow', 'true', '24','','future')\" style=\"cursor:pointer\"/>      </td></tr>");
+                writer.print("<tr><td><p class=\"para\">Bis</p></td><td><input type=\"Text\" name=\"bis\" id=\"bis\"/><img style=\"min-width: 10px; min-height: 10px;\" src=\"../img/calender/cal.gif\" onclick=\"javascript:NewCssCal('bis','ddMMyyyy','arrow', 'true', '24','','future')\" style=\"cursor:pointer\"/>      </td></tr>");
                 writer.print("<tr><td colspan=2><input type=submit value=\"Kostenpflichtig bestellen\" name=\"bestellen\"><input type=submit value=\"abbrechen\"></td></tr>");
                 writer.print("</table></form>");
             }
@@ -600,10 +654,14 @@ public class Seitenaufbau extends HttpServlet{
 
 
     static Kunde getKunde(String uuid){
-        for(Kunde k: kunde){
-            if(k.getUuid().equals(uuid)){
-                return k;
+        try {
+            for (Kunde k : kunde) {
+                if (k.getUuid().equals(uuid)) {
+                    return k;
+                }
             }
+        }catch(NullPointerException e1){
+
         }
         return null;
     }
@@ -712,7 +770,6 @@ public class Seitenaufbau extends HttpServlet{
         Summe=Math.round(Summe*100.0)/100.0;
         return Summe;
     }
-
     public static double getEndsumme(String nutzerid, int tage, double mietzins){
         Double Summe=0.0;
         Summe+=mietzins;
@@ -752,7 +809,6 @@ public class Seitenaufbau extends HttpServlet{
             e1.printStackTrace();
         }
     }
-
     public static void getKategorieOptionen(JspWriter writer) {
         try {
             for (Kategorie k : kategorien) {
@@ -762,7 +818,6 @@ public class Seitenaufbau extends HttpServlet{
             e1.printStackTrace();
         }
     }
-
     public static void getKundenSelect(JspWriter writer) {
         try {
             for (Kunde k : kunde) {
@@ -772,7 +827,6 @@ public class Seitenaufbau extends HttpServlet{
             e1.printStackTrace();
         }
     }
-
     public static void getBestelluebersichtKD(JspWriter writer, Cookie[] cookies) {
         boolean cookie_vorhanden=false;
         Cookie cook=null;
@@ -820,7 +874,6 @@ try {
 
 
 }
-
     public static void getProfil(JspWriter writer, Cookie[] cookies) {
         boolean cookie_vorhanden=false;
         Cookie cook=null;
