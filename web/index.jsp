@@ -3,7 +3,7 @@
 
 <ol class="breadcrumb">
   <li class="active"><a href="../../index.jsp">Home</a></li>
-
+<%Seitenaufbau.getKategorie(out);%>
 </ol>
 </div>
 </div>

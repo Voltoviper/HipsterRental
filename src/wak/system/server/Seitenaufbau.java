@@ -27,7 +27,7 @@ import java.util.ArrayList;
  * Created by chris_000 on 24.09.2015.
  */
 public class Seitenaufbau extends HttpServlet{
-   public static  ArrayList<Warenkorb> koerbe = new ArrayList<Warenkorb>();
+    public static  ArrayList<Warenkorb> koerbe = new ArrayList<Warenkorb>();
     public static ArrayList<Kunde> kunde = new ArrayList<Kunde>();
     public static ArrayList<Mitarbeiter> mitarbeiter = new ArrayList<Mitarbeiter>();
     public static ArrayList<Produkt> katalog = new ArrayList<Produkt>();
@@ -153,16 +153,37 @@ public class Seitenaufbau extends HttpServlet{
         String kategorie_string = "SELECT name,id FROM kategorie WHERE oberkategorie is null ORDER BY name";
         PreparedStatement kategorie_ps = null;
         ResultSet kategorie_rs;
-        //Vorbereiten der Bestellung f�r die Datenbank
+        //Vorbereiten der Bestellung für die Datenbank
 
             kategorie_ps = DB_Connector.con.prepareStatement(kategorie_string);
             kategorie_rs = kategorie_ps.executeQuery();
             while(kategorie_rs.next()){
                 String kategorie= kategorie_rs.getString("name");
                 int id= kategorie_rs.getInt("id");
-                writer.print("<tr><td onclick=self.location.href=\"../jsp/kategorie.jsp?katid="+id+"\" style=\"min-width:60pt;text-align:center\" onmouseover=this.style.color=\"#FCFD5A\" onmouseout=this.style.color=\"#000000\" >" +
-                        kategorie+
-                        "</td></tr>");
+                String unterkategorie_string = "SELECT name, id FROM kategorie WHERE oberkategorie=? ORDER BY name";
+                PreparedStatement unterkategorie_ps = DB_Connector.con.prepareStatement(unterkategorie_string);
+                unterkategorie_ps.setInt(1,id);
+                ResultSet unterkategorie_rs = unterkategorie_ps.executeQuery();
+                if(unterkategorie_rs.next()){
+                    String unterkategoriename=unterkategorie_rs.getString("name");
+                    int unterkategorie_id = unterkategorie_rs.getInt("id");
+                    writer.print("<li class=\"dropdown\">" +
+                           "    <a href=\"../jsp/kategorie.jsp?katid=" + id + "\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">"+kategorie+"<span class=\"caret\"></span></a>"+
+                           "  <ul class=\"dropdown-menu\" role=\"menu\">");
+                    writer.print("<li><a href=\"../jsp/kategorie.jsp?katid=" + unterkategorie_id + "\">"+unterkategoriename+"</a></li>");
+                    while(unterkategorie_rs.next()){
+                        unterkategoriename=unterkategorie_rs.getString("name");
+                        unterkategorie_id = unterkategorie_rs.getInt("id");
+
+                        writer.print("<li><a href=\"../jsp/kategorie.jsp?katid=" + unterkategorie_id + "\">"+unterkategoriename+"</a></li>");
+                    }
+
+                   writer.print(
+                           " </ul>"+
+                           " </li>");
+                }else {
+                    writer.print(" <li><a href=\"../jsp/kategorie.jsp?katid=" + id + "\">" + kategorie + "</a></li>");
+                }
             }
         }catch(SQLException e){
 
@@ -309,7 +330,7 @@ public class Seitenaufbau extends HttpServlet{
                 for(int i=0;i<5;i++){
                     writer.print("<tr>\n");
                     if(!kat_name.equals(kategorie_name)){
-                        writer.print("<td><b>"+kategorie_name+"</b></td></tr><tr>\n");
+                        writer.print("<td><b><p class=\"h3\">"+kategorie_name+"</p></b></td></tr><tr>\n");
                         kat_name=kategorie_name;
                     }
 
@@ -320,16 +341,16 @@ public class Seitenaufbau extends HttpServlet{
                             String bezeichnung = produkte_rs.getString("bezeichnung");
                             Double mietzins = produkte_rs.getDouble("mietzins");
                             String mietzins_string = Formatter.formatdouble(mietzins);
-                            writer.print("<td onmouseover=this.style.background=\"#FCFD7A\" onmouseout=this.style.background=\"#FCFD5A\" style=\"width:33%; align:center; border:solid 1px #000000\" onclick=self.location.href=\"./artikel.jsp?id=" + id + "\">");
-                            writer.print("<table style=\"max-width:100%\" border=0 ><tr><td colspan=\"2\">" +
+                            writer.print("<td  style=\"width:33%; align:center;\">");
+                            writer.print("<table style=\"max-width:100%\" border=0 ><tr><td colspan=\"2\"><p class=\"h3\">" +
                                     name +
-                                    "</td></tr><tr><td rowspan=\"2\" style=\" min-width:30pt; max-width:30pt; min-height:30pt ; max-height:30pt\">" +
-                                    "Bild" +
+                                    "</td></tr><tr><td rowspan=\"2\" style=\" min-width:30pt; min-height:30pt ;\">" +
+                                    "<img  src=\"data:image/jpg;base64,"+ ImageServlet.getImage(id, 3)+"\" >" +
                                     "</td><td>" +
                                     bezeichnung +
                                     "</td></tr><tr><td>" +
                                     mietzins_string + "" +
-                                    "</td></tr></table>");
+                                    "</td></tr><tr><td><div class=\"read_more\"> <a href=\"/jsp/artikel.jsp?id="+id+"\"><button class=\"btn_style\">Details</button></a></div></td></tr></table>");
 
                             writer.print("</td>\n");
                             zaehler++;
