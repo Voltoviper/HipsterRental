@@ -25,14 +25,13 @@ public class Produkt implements Comparable<Produkt> {
        // produkt_eintragen(this);
     }
 
-    public Produkt(String name, String bezeichnung, String beschreibung, String herstellername, String details, double mietzins, Produkt alternative, Kategorie kategorie, boolean eintragen) {
+    public Produkt(String name, String bezeichnung, String beschreibung, String herstellername, String details, double mietzins,  Kategorie kategorie, boolean eintragen) {
         this.name = name;
         this.bezeichnung = bezeichnung;
         this.beschreibung = beschreibung;
         this.herstellername = herstellername;
         this.details = details;
         this.mietzins = mietzins;
-        this.alternative = alternative;
         this.kategorie = kategorie;
         if(eintragen) {
             produkt_eintragen(this);
@@ -164,7 +163,7 @@ public class Produkt implements Comparable<Produkt> {
 
     public void produkt_eintragen(Produkt p){
         DB_Connector.connecttoDatabase();
-        String einfuegen = "INSERT INTO produkt (name, bezeichnung, hersteller_name, beschreibung, details, mietzins, Kategorieid, alternative)" + "VALUES (?, ?, ?, ?, ?, ?,(select id from kategorie WHERE kategorie.id=?),?)";
+        String einfuegen = "INSERT INTO produkt (name, bezeichnung, hersteller_name, beschreibung, details, mietzins, Kategorieid)" + "VALUES (?, ?, ?, ?, ?, ?,(select id from kategorie WHERE kategorie.id=?))";
         PreparedStatement bestellung = null;
         //Vorbereiten der Bestellung für die Datenbank
         try {
@@ -176,11 +175,7 @@ public class Produkt implements Comparable<Produkt> {
             bestellung.setString(5, p.getDetails());
             bestellung.setDouble(6, p.getMietzins());
             bestellung.setInt(7, p.getKategorie().getId());
-            if(p.getAlternative()!=null){
-                bestellung.setInt(8, p.getAlternative().getId());
-            }else{
-                bestellung.setNull(8, Types.INTEGER);
-            }
+
 
             System.out.println(bestellung.toString());
             bestellung.executeUpdate();

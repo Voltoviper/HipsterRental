@@ -39,7 +39,6 @@ public class NeuesProdukt extends HttpServlet {
         bezeichnung = request.getParameter("bezeichnung");
         beschreibung = request.getParameter("beschreibung");
         kategorie = request.getParameter("kategorie");
-        alternative_id = Integer.parseInt(request.getParameter("alternative"));
         mietzins = Double.parseDouble(request.getParameter("mietzins"));
 
         InputStream fileContent = part.getInputStream();
@@ -64,7 +63,7 @@ public class NeuesProdukt extends HttpServlet {
 
 
         //Produkt erstellen
-        Produkt p = new Produkt(name, bezeichnung, beschreibung, hersteller, details, mietzins, alternative, kat, true);
+        Produkt p = new Produkt(name, bezeichnung, beschreibung, hersteller, details, mietzins, kat, true);
         //In Datenbank übertragen
 
 

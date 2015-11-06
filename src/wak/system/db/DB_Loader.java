@@ -53,7 +53,7 @@ public class DB_Loader {
                     Kat = k;
                 }
             }
-            Produkt p = new Produkt(name, bezeichnung, beschreibung, hersteller_name, details, mietzins, null, Kat, false);
+            Produkt p = new Produkt(name, bezeichnung, beschreibung, hersteller_name, details, mietzins, Kat, false);
             p.setId(id);
             Seitenaufbau.katalog.add(p);
         }

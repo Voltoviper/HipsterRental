@@ -11,8 +11,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <head>
     <title>Hipster Rental</title>
     <!-- Bootstrap -->
-    <link href="/html/CSS/bootstrap.min.css" rel='stylesheet' type='text/css' />
-    <link href="/html/CSS/bootstrap.css" rel='stylesheet' type='text/css' />
+    <link href="./html/CSS/bootstrap.min.css" rel='stylesheet' type='text/css' />
+    <link href="./html/CSS/bootstrap.css" rel='stylesheet' type='text/css' />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
     <!--[if lt IE 9]>
@@ -22,11 +22,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     <!--  webfonts  -->
     <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
     <!-- // webfonts  -->
-    <link href="/html/CSS/style.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="./html/CSS/style.css" rel="stylesheet" type="text/css" media="all" />
     <!-- start plugins -->
-    <script type="text/javascript" src="/html/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/html/js/bootstrap.js"></script>
-    <script type="text/javascript" src="/html/js/datetimepicker_css.js"></script>
+    <script type="text/javascript" src="./html/js/jquery.min.js"></script>
+    <script type="text/javascript" src="./html/js/bootstrap.js"></script>
+    <script type="text/javascript" src="./html/js/datetimepicker_css.js"></script>
     <script>
         $(document).ready(function(){
             $(".dropdown").hover(

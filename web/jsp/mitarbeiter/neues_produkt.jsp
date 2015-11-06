@@ -19,8 +19,7 @@
                 <tr><td><p class="para"> Name: </p></td><td><input type="text" name="name"> </td><td><p class="para">Bezeichnung:</p> </td><td><textarea name="bezeichnung"></textarea></td></tr>
                 <tr><td><p class="para">Hersteller: </p></td><td><input type="text" name="hersteller"> </td><td><p class="para">Beschreibung:</p> </td><td><textarea name="beschreibung"></textarea></td></tr>
                 <tr><td><p class="para">Details:</p> </td><td><textarea name="details"></textarea></td><td><p class="para">Mietzins </p></td><td><input type="number" name="mietzins"></td></tr>
-                <tr><td><p class="para">Kategorie: </p></td><td><%Seitenaufbau.getKategorieRadio(out);%></td><td><p class="para">Produktalternative (ProduktID): </p></td><td><input type="text" name="alternative"></td></tr>
-                <tr><td><p class="para">Bild: </p></td><td><input type="file" name="bild"> </td></tr>
+                <tr><td><p class="para">Kategorie: </p></td><td><%Seitenaufbau.getKategorieRadio(out);%></td><td><p class="para">Bild: </p></td><td><input type="file" name="bild"> </td></tr>
                 <tr><td><input type="submit" value="Eintragen"></td></tr>
               </table>
             </form>
