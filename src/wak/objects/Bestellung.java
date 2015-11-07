@@ -47,7 +47,7 @@ public class Bestellung {
     public boolean ueberschneidet(Bestellung b){
         DB_Connector.connecttoDatabase();
         boolean moeglich=true;
-        String bestellung = "SELECT verfuegbar(?,?,?,?) AS possible;";
+        String bestellung = "SELECT anzVerfuegbareG(?,?,?) as anz";
 
         Collections.sort(this.Position);
         int zaehler=0;
@@ -57,16 +57,13 @@ public class Bestellung {
                 if(CollectionUtils.cardinality(p, this.getPosition())!=0) {
                     PreparedStatement bestellung_ps = DB_Connector.con.prepareStatement(bestellung);
                     bestellung_ps.setInt(1, p.getId());
-                    bestellung_ps.setInt(2, CollectionUtils.cardinality(p, this.getPosition()));
-                    bestellung_ps.setTimestamp(3, b.getVon());
-                    bestellung_ps.setTimestamp(4, b.getBis());
+                    bestellung_ps.setTimestamp(2, b.getVon());
+                    bestellung_ps.setTimestamp(3, b.getBis());
                     ResultSet bestellung_rs = bestellung_ps.executeQuery();
                     bestellung_rs.next();
-                    if(bestellung_rs.getBoolean("possible")){
-                        moeglich = true;
-                    }else{
-                        moeglich = false;
-                        break;
+                    int max_anzahl = bestellung_rs.getInt("anz");
+                    if(max_anzahl<CollectionUtils.cardinality(p, this.getPosition())){
+
                     }
                 }
             }

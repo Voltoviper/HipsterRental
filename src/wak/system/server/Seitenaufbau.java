@@ -40,7 +40,7 @@ public class Seitenaufbau extends HttpServlet{
     public static void getEmpfehlungen(JspWriter stream ){
         DB_Connector.connecttoDatabase();
 
-        String produkte_string = "SELECT id,name, bezeichnung, mietzins FROM produkt ORDER BY id";
+        String produkte_string = "select id, name, bezeichnung, mietzins,COUNT(Produktid) as anzbuchungen from bestellposition b inner join view_produkt p on (b.Produktid = p.id) where Referenzpos is null group by Produktid order by anzbuchungen DESC LIMIT 9;";
         PreparedStatement produkte_ps = null;
         ResultSet produkte_rs;
 
@@ -64,11 +64,11 @@ public class Seitenaufbau extends HttpServlet{
                                 name +
                                 "</td></tr><tr><td rowspan=\"2\" style=\" min-width:30pt; min-height:30pt ;\">" +
                                 "<img  src=\"data:image/jpg;base64,"+ ImageServlet.getImage(id, 3)+"\" >" +
-                                "</td><td>" +
+                                "</td><td><p class=\"para\">Bezeichnung: " +
                                 bezeichnung +
-                                "</td></tr><tr><td>" +
+                                "</p></td></tr><tr><td><p class=\"para\">Miete pro Tag: " +
                                 mietzins_string + "" +
-                                "</td></tr><tr><td><div class=\"read_more\"> <a href=\"/jsp/artikel.jsp?id="+id+"\"><button class=\"btn_style\">Details</button></a></div></td></tr></table>");
+                                "</p></td></tr><tr><td><div class=\"read_more\"> <a href=\"/jsp/artikel.jsp?id="+id+"\"><button class=\"btn_style\">Details</button></a></div></td></tr></table>");
 
                         stream.print("</td>\n");
                         zaehler++;
@@ -119,7 +119,7 @@ public class Seitenaufbau extends HttpServlet{
                         "    <a href=\"/jsp/mitarbeiter/Uebersicht-Mitarbeiter.jsp\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">Mitarbeiterbereich<span class=\"caret\"></span></a>\n" +
                         "       <ul class=\"dropdown-menu\" role=\"menu\">\n" +
                         "           <li><a href=\"/jsp/mitarbeiter/neues_produkt.jsp\">Neues Produkt</a></li>\n" +
-                        "           <li><a href=\"/jsp/mitarbeiter/neues_produkt.jsp\">Neues Paket</a></li>\n" +
+                        "           <li><a href=\"/jsp/mitarbeiter/Paketanlegen.jsp\">Neues Paket</a></li>\n" +
                         "           <li><a href=\"/jsp/mitarbeiter/bestelluebersicht.jsp\">Bestellübersicht</a></li>\n" +
                         "           <li><a href=\"/jsp/mitarbeiter/neueBestellung.jsp\">Neue Bestelluing</a></li>\n" +
                         "           <li><a href=\"/jsp/mitarbeiter/KategorieAnlegen.jsp\">Neue Kategorie</a></li>\n" +
@@ -149,7 +149,7 @@ public class Seitenaufbau extends HttpServlet{
 
             DB_Connector.connecttoDatabase();
 
-        String kategorie_string = "SELECT name,id FROM kategorie WHERE oberkategorie is null ORDER BY name";
+        String kategorie_string = "select distinct k.name,k.id from kategorie k inner join view_kategorie v on (k.id = v.oberkategorie);";
         PreparedStatement kategorie_ps = null;
         ResultSet kategorie_rs;
         //Vorbereiten der Bestellung für die Datenbank
@@ -159,7 +159,7 @@ public class Seitenaufbau extends HttpServlet{
             while(kategorie_rs.next()){
                 String kategorie= kategorie_rs.getString("name");
                 int id= kategorie_rs.getInt("id");
-                String unterkategorie_string = "SELECT name, id FROM kategorie WHERE oberkategorie=? ORDER BY name";
+                String unterkategorie_string = "select name, id from view_kategorie WHERE oberkategorie=? ORDER BY name;";
                 PreparedStatement unterkategorie_ps = DB_Connector.con.prepareStatement(unterkategorie_string);
                 unterkategorie_ps.setInt(1,id);
                 ResultSet unterkategorie_rs = unterkategorie_ps.executeQuery();
@@ -352,10 +352,10 @@ public class Seitenaufbau extends HttpServlet{
     public static void getKategorieArtikel(JspWriter writer,String kat_id){
         DB_Connector.connecttoDatabase();
 
-        String kategorien_string = "Select id,name FROM kategorie WHERE oberkategorie=? Order BY id";
+        String kategorien_string = "Select id,name FROM kategorie WHERE id=? Order BY id";
         PreparedStatement kategorien_ps = null;
         ResultSet kategorien_rs;
-        String produkte_string = "SELECT id,name, bezeichnung, mietzins FROM produkt WHERE Kategorieid=? ORDER BY id";
+        String produkte_string = "SELECT * FROM softwareengineering2.view_produkt WHERE Kategorieid=? ORDER BY id";
         PreparedStatement produkte_ps = null;
         ResultSet produkte_rs;
 
@@ -388,15 +388,14 @@ public class Seitenaufbau extends HttpServlet{
                             Double mietzins = produkte_rs.getDouble("mietzins");
                             String mietzins_string = Formatter.formatdouble(mietzins);
                             writer.print("<td  style=\"width:33%; align:center;\">");
-                            writer.print("<table style=\"max-width:100%\" border=0 ><tr><td colspan=\"2\"><p class=\"h3\">" +
+                            writer.print("<table style=\"max-width:100%\" border=0 ><tr><td colspan=\"2\"><p class=\"h4\">" +
                                     name +
                                     "</td></tr><tr><td rowspan=\"2\" style=\" min-width:30pt; min-height:30pt ;\">" +
                                     "<img  src=\"data:image/jpg;base64,"+ ImageServlet.getImage(id, 3)+"\" >" +
-                                    "</td><td>" +
+                                    "</td><td><p class=\"para\">Bezeichnung: " +
                                     bezeichnung +
-                                    "</td></tr><tr><td>" +
-                                    mietzins_string + "" +
-                                    "</td></tr><tr><td><div class=\"read_more\"> <a href=\"/jsp/artikel.jsp?id="+id+"\"><button class=\"btn_style\">Details</button></a></div></td></tr></table>");
+                                    "</p></td></tr><tr><td><p class=\"para\">Miete pro Tag: " +
+                                    mietzins_string + "</p></td></tr><tr><td><div class=\"read_more\"> <a href=\"/jsp/artikel.jsp?id="+id+"\"><button class=\"btn_style\">Details</button></a></div></td></tr></table>");
 
                             writer.print("</td>\n");
                             zaehler++;
@@ -921,5 +920,29 @@ try {
         }finally{
             DB_Connector.closeDatabase();
         }
+    }
+
+    public static void getProdukteTabelle(JspWriter writer) {
+        try {
+            writer.print("<table>");
+            writer.print("<tr><td>Produkt</td><td>Alternative 1</td><td>Alternative 2</td><td>Alternative 3</td></tr>");
+            for (int i = 0; i < 20; i++) {
+                writer.print("<tr><td><select name=\"produktid_"+i+"\" size=\"1\" style=\"width: 200px;\">\n" +
+                        getProdukte()+" </select></td><td><input type=\"text\" name=\"alt1_"+i+"\"></td><td><input type=\"text\" name=\"alt2_"+i+"\"></td><td><input type=\"text\" name=\"alt3_"+i+"\"></td></tr>");
+            }
+            writer.print("</table>");
+        }catch(IOException e1){
+            e1.printStackTrace();
+        }
+    }
+
+    private static String getProdukte(){
+        StringBuffer buffer= new StringBuffer();
+        buffer.append("<option value=\" \"> </option>");
+        for(Produkt p:katalog) {
+           buffer.append("<option value=" + p.getId() + ">" + p.getName() + " " + p.getId() + "</option>");
+        }
+        return  buffer.toString();
+
     }
 }
