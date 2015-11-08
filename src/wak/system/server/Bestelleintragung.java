@@ -3,6 +3,7 @@ package wak.system.server;
 import wak.objects.Bestellung;
 import wak.objects.Produkt;
 import wak.objects.Warenkorb;
+import wak.system.db.DB_Connector;
 import wak.system.email.emailservice;
 import wak.user.Kunde;
 
@@ -15,7 +16,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -122,6 +127,23 @@ public class Bestelleintragung extends HttpServlet {
             LocalDateTime bis_date = LocalDateTime.parse(bis, formatter);
 
             try{
+                if((von_date.getHour()<13)||(bis_date.getHour()<13)||(von_date.getHour()>17)||(bis_date.getHour()>17)){
+                    throw new Exception("Außerhalb der Geschäftzeiten");
+                }
+
+                DB_Connector.connecttoDatabase();
+                String feiertag ="SELECT sum((case when (datum like ? or datum like ?)  THEN 1 ELSE 0 END)) as feiertag FROM feiertage;";
+                PreparedStatement feiertag_ps = DB_Connector.con.prepareStatement(feiertag);
+                LocalDate von_feiertag = LocalDate.parse(von, formatter);
+                LocalDate bis_feiertag = LocalDate.parse(von, formatter);
+                feiertag_ps.setDate(1, Date.valueOf(von_feiertag));
+                feiertag_ps.setDate(2,Date.valueOf(bis_feiertag));
+                ResultSet feiertag_rs = feiertag_ps.executeQuery();
+                feiertag_rs.next();
+                if(feiertag_rs.getInt("feiertag")>0){
+                    throw new Exception("Außerhalb der Geschäftzeiten");
+                }
+
                 Bestellung b = new Bestellung(k, produkte, Timestamp.valueOf(von_date), Timestamp.valueOf(bis_date));
                 Session session = emailservice.getSession();
                 emailservice.sendZusammenfassung(session, k, b);

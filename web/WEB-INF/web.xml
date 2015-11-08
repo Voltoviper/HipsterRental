@@ -114,7 +114,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Bestellgenehmigung</servlet-name>
-        <url-pattern>/jsp/mitarbeiter/Bestellgenehmigung</url-pattern>
+        <url-pattern>/Bestellgenehmigung</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>ImageServlet</servlet-name>

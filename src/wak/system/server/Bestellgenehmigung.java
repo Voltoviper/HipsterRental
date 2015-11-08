@@ -62,7 +62,7 @@ public class Bestellgenehmigung extends HttpServlet {
         }finally{
             DB_Connector.closeDatabase();
         }
-        String redirect ="/jsp/mitarbeiter/bestelluebersicht.jsp";
+        String redirect ="/index.jsp";
         RequestDispatcher d = getServletContext().getRequestDispatcher(redirect);
         d.forward(request, response);
     }

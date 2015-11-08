@@ -482,6 +482,7 @@ public class Seitenaufbau extends HttpServlet{
                 writer.print("<tr><td><p class=\"para\">Bis</p></td><td><input type=\"Text\" name=\"bis\" id=\"bis\"/><img style=\"min-width: 10px; min-height: 10px;\" src=\"../img/calender/cal.gif\" onclick=\"javascript:NewCssCal('bis','ddMMyyyy','arrow', 'true', '24','','future')\" style=\"cursor:pointer\"/>      </td></tr>");
                 writer.print("<tr><td colspan=2><input type=submit value=\"Kostenpflichtig bestellen\" name=\"bestellen\"><input type=submit value=\"abbrechen\"></td></tr>");
                 writer.print("</table></form>");
+                writer.print("*Bitte beachten Sie unsere Öffnungszeiten von 13:00 bis 17:00 Uhr. Bestellungen außerhalb dieser Zeiten werden leider abgelehnt! Ebenfalls kann nicht Feiertagen und Sonntagen sowohl abgeholt als auch zurückgebracht werden. Anfragen mit diesen Daten werden ebenfalls abgelehnt!");
             }
             writer.print("</td>");
         }catch(IOException e){
@@ -517,8 +518,8 @@ public class Seitenaufbau extends HttpServlet{
                         "<td><p class=\"para\">"+bis.toString()+"</p></td>" +
                         "<td><p class=\"para\">"+Formatter.formatdouble(mietzins)+"</p></td>" +
                         "<td><div class=\"read_more\"> <a href=\"./bestelldetails.jsp?bestellid="+bestellid+"\"><button class=\"btn_style\">Details</button></a></div></td>"+
-                        "<td><div class=\"read_more\"> <a href=\"./Bestellgenehmigung?bestellid="+bestellid+"&genehmigt=1\"><button class=\"btn_style\">Annehmen</button></a></div></td>" +
-                        "<td><div class=\"read_more\"> <a href=\"./Bestellgenehmigung?bestellid="+bestellid+"&genehmigt=0\"><button class=\"btn_style\">Ablehnen</button></a></div></td>" +
+                        "<td><div class=\"read_more\"> <a href=\"/Bestellgenehmigung?bestellid="+bestellid+"&genehmigt=1\"><button class=\"btn_style\">Annehmen</button></a></div></td>" +
+                        "<td><div class=\"read_more\"> <a href=\"/Bestellgenehmigung?bestellid="+bestellid+"&genehmigt=0\"><button class=\"btn_style\">Ablehnen</button></a></div></td>" +
                         "</tr>");
             }
             writer.print("</table></td>");
@@ -733,7 +734,7 @@ public class Seitenaufbau extends HttpServlet{
      * @param tage
      * @return
      */
-    private static double getgesamtsumme(double mietzins, int tage){
+    public static double getgesamtsumme(double mietzins, int tage){
         mietzins=mietzins*tage;
         double mietzins_round = Math.round(mietzins*100.0)/100.0;
         return mietzins_round;
@@ -847,7 +848,7 @@ try {
     DB_Connector.connecttoDatabase();
     if (cookie_vorhanden) {
         Kunde k = getKunde(cook.getValue());
-        writer.print("<td><table width=100%><tr><td><p class=\"h4\">Bestellnummer</p></td><td><p class=\"h4\">von</p></td><td><p class=\"h4\">bis</p></td><td><p class=\"h4\">Mietzins</p></td><td><p class=\"h4\">Stornieren</p></td></tr>");
+        writer.print("<td><table width=100%><tr><td><p class=\"h4\">Bestellnummer</p></td><td><p class=\"h4\">von</p></td><td><p class=\"h4\">bis</p></td><td><p class=\"h4\">Mietzins</p></td><td><p class=\"h4\">Details</p></td><td><p class=\"h4\">Stornieren</p></td></tr>");
         String bestell_string = "SELECT Bestellungid, von, bis ,gesamtkosten FROM (SELECT Bestellungid ,round(sum(mietzins), 2) AS Gesamtkosten FROM bestellposition INNER JOIN produkt ON(bestellposition.Produktid = produkt.id) GROUP BY Bestellungid) AS temp INNER JOIN bestellung ON(Bestellungid = bestellung.id) WHERE Nutzerid=?\n ;";
         PreparedStatement bestell_ps = null;
         ResultSet bestell_rs;
@@ -860,7 +861,12 @@ try {
             Timestamp von = bestell_rs.getTimestamp("von");
             Timestamp bis = bestell_rs.getTimestamp("bis");
             double mietzins = bestell_rs.getDouble("gesamtkosten");
-            writer.print("<tr><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid=" + bestellid + "\"><p class=\"para\">" + bestellid + "</p></td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid=" + bestellid + "\"><p class=\"para\">" + von.toString() + "</p></td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid=" + bestellid + "\"><p class=\"para\">" + bis.toString() + "</p></td><td onclick=self.location.href=\"./bestelldetails.jsp?bestellid=" + bestellid + "\"><p class=\"para\">" + Formatter.formatdouble(getEndsumme(k.getId(), getTage(von,bis), mietzins)) + "</p></td><td onclick=self.location.href=\"./bestellannahme.jsp?bestellid=" + bestellid + "\"><p class=\"para\">Stornieren</p></td></tr>");
+            writer.print("<tr><td><p class=\"para\">" + bestellid + "</p></td>" +
+                    "<td><p class=\"para\">" + von.toString() + "</p></td>" +
+                    "<td><p class=\"para\">" + bis.toString() + "</p></td>" +
+                    "<td><p class=\"para\">" + Formatter.formatdouble(getEndsumme(k.getId(), getTage(von,bis), mietzins)) + "</p></td>" +
+                    "<td><div class=\"read_more\"> <a href=\"./bestelldetails_kd.jsp?bestellid=" + bestellid + "\"><button class=\"btn_style\">Details</button></a></div></td>" +
+                    "<td><div class=\"read_more\"> <a href=\"/Bestellgenehmigung?bestellid="+bestellid+"&genehmigt=0\"><button class=\"btn_style\">Stornieren</button></a></div></td></tr>");
         }
         writer.print("</table></td>");
     }

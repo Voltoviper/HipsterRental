@@ -166,6 +166,7 @@ public class Bestellung {
             ResultSet id_rs = id.executeQuery();
             id_rs.next();
             int bestell_id=id_rs.getInt("id");
+            b.setId(bestell_id);
 
             //Einfügen der Bestellpositionen
             int i = 1;
