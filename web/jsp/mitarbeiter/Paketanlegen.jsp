@@ -19,7 +19,7 @@
             <p class="h2">Mitarbeiterliste</p>
             <table style="width: 100%; valign:top" border="0">
                 <td>
-                    <form method="post" action="/NeuesProdukt" enctype="multipart/form-data">
+                    <form method="post" action="/Paketeintragen" enctype="multipart/form-data">
                         <table style="width:100%; vertical-align: top;">
                             <tr><td><p class="para"> Name: </p></td><td><input type="text" name="name"> </td><td><p class="para">Bezeichnung:</p> </td><td><textarea name="bezeichnung"></textarea></td></tr>
                             <tr><td><p class="para">Hersteller: </p></td><td><input type="text" name="hersteller"> </td><td><p class="para">Beschreibung:</p> </td><td><textarea name="beschreibung"></textarea></td></tr>

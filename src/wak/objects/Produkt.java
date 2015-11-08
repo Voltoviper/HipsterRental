@@ -175,9 +175,6 @@ public class Produkt implements Comparable<Produkt> {
             bestellung.setString(5, p.getDetails());
             bestellung.setDouble(6, p.getMietzins());
             bestellung.setInt(7, p.getKategorie().getId());
-
-
-            System.out.println(bestellung.toString());
             bestellung.executeUpdate();
         }catch(SQLException e){
             System.out.println("Fehler bei der Produkteintragung");

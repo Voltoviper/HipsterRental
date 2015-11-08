@@ -149,7 +149,8 @@ public class Seitenaufbau extends HttpServlet{
 
             DB_Connector.connecttoDatabase();
 
-        String kategorie_string = "select distinct k.name,k.id from kategorie k inner join view_kategorie v on (k.id = v.oberkategorie);";
+        String kategorie_string = "SELECT name,id FROM kategorie WHERE id = '1' UNION\n" +
+                "SELECT DISTINCT k.name,k.id FROM kategorie k INNER JOIN view_kategorie v ON (k.id = v.oberkategorie);";
         PreparedStatement kategorie_ps = null;
         ResultSet kategorie_rs;
         //Vorbereiten der Bestellung für die Datenbank

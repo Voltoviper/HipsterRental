@@ -124,4 +124,12 @@
         <servlet-name>ImageServlet</servlet-name>
         <url-pattern>/ImageServlet</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>PaketEintragen</servlet-name>
+        <servlet-class>wak.system.server.Paketeintragen</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PaketEintragen</servlet-name>
+        <url-pattern>/Paketeintragen</url-pattern>
+    </servlet-mapping>
 </web-app>
