@@ -126,7 +126,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>PaketEintragen</servlet-name>
-        <servlet-class>wak.system.server.Paketeintragen</servlet-class>
+        <servlet-class>wak.objects.Produkt$Paketeintragen</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>PaketEintragen</servlet-name>

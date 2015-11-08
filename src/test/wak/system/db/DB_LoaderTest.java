@@ -35,7 +35,7 @@ public void after() throws Exception {
 @Test
 public void testProdukteanlegen() throws Exception {
 
-   assertEquals(6, Seitenaufbau.katalog.size());
+   assertEquals(10, Seitenaufbau.katalog.size());
 
 } 
 

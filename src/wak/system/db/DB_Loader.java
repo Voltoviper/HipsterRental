@@ -2,6 +2,7 @@ package wak.system.db;
 
 import wak.objects.Bestellung;
 import wak.objects.Kategorie;
+import wak.objects.Paket;
 import wak.objects.Produkt;
 import wak.system.server.Seitenaufbau;
 import wak.user.Adresse;
@@ -53,16 +54,42 @@ public class DB_Loader {
                     Kat = k;
                 }
             }
-            Produkt p = new Produkt(name, bezeichnung, beschreibung, hersteller_name, details, mietzins, Kat, false);
-            p.setId(id);
-            Seitenaufbau.katalog.add(p);
+            DB_Connector.connecttoDatabase();
+            String paket=("SELECT * FROM paketposition WHERE Id=?");
+            PreparedStatement paket_ps = DB_Connector.con.prepareStatement(paket);
+            paket_ps.setInt(1,id);
+            ResultSet paket_rs = paket_ps.executeQuery();
+            if(paket_rs.next()){
+                int i=0;
+                Produkt[][] produkte = new Produkt[300][300];
+                produkte[i][0] = Produkt.getProdukt(paket_rs.getInt("Produktid"));
+                produkte[i][1] = Produkt.getProdukt(paket_rs.getInt("AlternativproduktA"));
+                produkte[i][2] = Produkt.getProdukt(paket_rs.getInt("AlternativproduktB"));
+                produkte[i][3] = Produkt.getProdukt(paket_rs.getInt("AlternativproduktC"));
+                while(paket_rs.next()){
+                    i++;
+                    produkte[i][0] = Produkt.getProdukt(paket_rs.getInt("Produktid"));
+                    produkte[i][1] = Produkt.getProdukt(paket_rs.getInt("AlternativproduktA"));
+                    produkte[i][2] = Produkt.getProdukt(paket_rs.getInt("AlternativproduktB"));
+                    produkte[i][3] = Produkt.getProdukt(paket_rs.getInt("AlternativproduktC"));
+                }
+                Paket p = new Paket(name, bezeichnung, beschreibung, hersteller_name, details, mietzins, Kat,produkte, false);
+                p.setId(id);
+                Seitenaufbau.katalog.add(p);
+
+            }else {
+                Produkt p = new Produkt(name, bezeichnung, beschreibung, hersteller_name, details, mietzins, Kat, false);
+                p.setId(id);
+                Seitenaufbau.katalog.add(p);
+            }
+            DB_Connector.closeDatabase();
         }
 
        DB_Connector.closeDatabase();
     }
     private void Kategorieanlegen()throws SQLException{
         DB_Connector.connecttoDatabase();
-        String kategorie_string = "SELECT * FROM kategorie";
+        String kategorie_string = "SELECT id, name FROM kategorie";
         PreparedStatement kategorie_ps = DB_Connector.con.prepareStatement(kategorie_string);
         ResultSet kategorie_rs = kategorie_ps.executeQuery();
         String name;
@@ -141,7 +168,7 @@ public class DB_Loader {
                 }
             }
             Seitenaufbau.bestellungen.add(b);
-
+            DB_Connector.closeDatabase();
         }
         DB_Connector.closeDatabase();
     }

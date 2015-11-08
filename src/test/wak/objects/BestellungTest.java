@@ -64,7 +64,7 @@ public void testConstructor() throws Exception{
 * Method: ueberschneidet(Bestellung b) 
 * 
 */ 
-@Test
+@Test (expected = Exception.class)
 public void testUeberschneidet() throws Exception {
    ArrayList<Produkt> produkte = new ArrayList<Produkt>();
    produkte.add(Seitenaufbau.katalog.get(1));
@@ -75,7 +75,23 @@ public void testUeberschneidet() throws Exception {
 
    assertFalse(b.ueberschneidet(b));
 
-} 
+    ArrayList<Produkt> produkte2 = new ArrayList<Produkt>();
+    produkte2.add(Seitenaufbau.katalog.get(6));
+    Bestellung b2 = new Bestellung(Seitenaufbau.kunde.get(1), produkte2, new Timestamp(new DateTime().plusYears(1).getMillis()), new Timestamp(new DateTime().plusYears(1).plusDays(1).getMillis()));
+    assertTrue(b2.ueberschneidet(b2));
+
+    ArrayList<Produkt> produkte3 = new ArrayList<Produkt>();
+    produkte3.add(Seitenaufbau.katalog.get(7));
+    Bestellung b3 = new Bestellung(Seitenaufbau.kunde.get(1), produkte3, new Timestamp(new DateTime().plusYears(1).getMillis()), new Timestamp(new DateTime().plusYears(1).plusDays(1).getMillis()));
+    assertTrue(b3.ueberschneidet(b3));
+
+    ArrayList<Produkt> produkte4 = new ArrayList<Produkt>();
+    produkte4.add(Seitenaufbau.katalog.get(7));
+    Bestellung b4 = new Bestellung(Seitenaufbau.kunde.get(1), produkte4, new Timestamp(new DateTime().plusYears(1).getMillis()), new Timestamp(new DateTime().plusYears(1).plusDays(1).getMillis()));
+    assertFalse(b4.ueberschneidet(b4));
+}
+
+
 
 
 

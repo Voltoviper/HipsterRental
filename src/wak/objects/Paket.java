@@ -14,6 +14,10 @@ public class Paket extends Produkt{
 
     Produkt[][] produkte;
 
+    public Paket(Produkt[][] produkte){
+        this.produkte=produkte;
+    }
+
     public Paket(String name,String bezeichnung, String beschreibung, String herstellername,  String detail, double mietzins, Kategorie kategorie,  Produkt[][] produkte, boolean eintragen) {
         super(name, bezeichnung, beschreibung, herstellername,detail, mietzins, kategorie, eintragen);
 
