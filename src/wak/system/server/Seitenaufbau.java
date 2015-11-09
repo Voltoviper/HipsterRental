@@ -754,7 +754,7 @@ public class Seitenaufbau extends HttpServlet{
 
         try {
             DB_Connector.connecttoDatabase();
-            String rabatt_string ="SELECT case when(sum(id)>2) THEN 1 ELSE 0 END AS rabatt FROM bestellung WHERE bestellung.Nutzerid=?";
+            String rabatt_string ="SELECT case when(count(id)>2) THEN 1 ELSE 0 END AS rabatt FROM bestellung WHERE bestellung.Nutzerid=?";
             PreparedStatement rabatt_ps = DB_Connector.con.prepareStatement(rabatt_string);
             rabatt_ps.setString(1,nutzerid);
             ResultSet rabatt_rs = rabatt_ps.executeQuery();
