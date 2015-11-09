@@ -33,7 +33,7 @@ public class DB_Loader {
    private void Produkteanlegen() throws SQLException{
 
         DB_Connector.connecttoDatabase();
-        String produkt_string = "SELECT name, bezeichnung, beschreibung, hersteller_name, details, id, mietzins, Kategorieid FROM produkt";
+        String produkt_string = "SELECT * FROM produkt";
         PreparedStatement produkt_ps = DB_Connector.con.prepareStatement(produkt_string);
         ResultSet produkt_rs = produkt_ps.executeQuery();
         String name, bezeichnung, beschreibung, hersteller_name, details;
@@ -83,9 +83,10 @@ public class DB_Loader {
                 Seitenaufbau.katalog.add(p);
             }
             DB_Connector.closeDatabase();
+            DB_Connector.closeDatabase();
         }
 
-       DB_Connector.closeDatabase();
+
     }
     private void Kategorieanlegen()throws SQLException{
         DB_Connector.connecttoDatabase();
