@@ -3017,8 +3017,8 @@ input[type="button"].btn-block {
   display: none;
   float: left;
   min-width: 160px;
-  padding: 5px 0;
-  margin: 2px 0 0;
+  padding: 0px 0;
+  margin: 0px 0 0;
   font-size: 14px;
   list-style: none;
   background-color: #fff;
