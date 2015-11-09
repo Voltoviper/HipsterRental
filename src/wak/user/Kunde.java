@@ -247,7 +247,11 @@ public class Kunde extends Person {
     }
 
     public String getUuid(){
-        return uuid.toString();
+        if(uuid==null){
+            return null;
+        }else {
+            return uuid.toString();
+        }
     }
 
     public void setUuid(UUID uuid) {

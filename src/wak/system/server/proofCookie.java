@@ -47,6 +47,6 @@ public class proofCookie extends HttpServlet {
             id.setPath("./");
             response.addCookie(id);
         }
-        request.getRequestDispatcher("index1.jsp").forward(request, response);
+        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 }

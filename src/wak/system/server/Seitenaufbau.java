@@ -133,8 +133,10 @@ public class Seitenaufbau extends HttpServlet{
 
             }else{
                 writer.print("<li><a href=\"/jsp/warenkorb.jsp\">Warenkorb</a></li>");
-                writer.print("<li><a href=\"/jsp/Buchungen.jsp\">Buchung</a></li>");
-                writer.print("<li><a href=\"/jsp/Profil.jsp\">Profil</a></li>");
+                if(cookie_vorhanden) {
+                    writer.print("<li><a href=\"/jsp/Buchungen.jsp\">Buchung</a></li>");
+                    writer.print("<li><a href=\"/jsp/Profil.jsp\">Profil</a></li>");
+                }
             }
             //writer.print("</tr></table>");
         }catch (IOException e){
@@ -655,15 +657,15 @@ public class Seitenaufbau extends HttpServlet{
 
 
     static Kunde getKunde(String uuid){
-        try {
+
             for (Kunde k : kunde) {
-                if (k.getUuid().equals(uuid)) {
-                    return k;
+                if(k.getUuid()!=null) {
+                    if (k.getUuid().equals(uuid)) {
+                        return k;
+                    }
                 }
             }
-        }catch(NullPointerException e1){
 
-        }
         return null;
     }
     public static String getWarenkorbTabelle(String uuid){

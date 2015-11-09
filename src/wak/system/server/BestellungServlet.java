@@ -17,6 +17,6 @@ public class BestellungServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.sendRedirect("index1.jsp");
+        response.sendRedirect("index.jsp");
     }
 }
