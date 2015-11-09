@@ -40,7 +40,11 @@ public class Mitarbeiter extends Person{
     }
 
     public UUID getUuid() {
-        return uuid;
+        if(uuid==null){
+            return null;
+        }else {
+            return uuid;
+        }
     }
 
     public void setUuid(UUID uuid) {
