@@ -206,7 +206,6 @@ public class Bestellung {
                         i++;
                     }
                 }
-                DB_Connector.closeDatabase();
             }
         }catch(SQLException e){
             System.out.println("fehler beim Eintragen der Bestellung");

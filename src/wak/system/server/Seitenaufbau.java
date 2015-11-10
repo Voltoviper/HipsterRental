@@ -186,7 +186,6 @@ public class Seitenaufbau extends HttpServlet{
                 }else {
                     writer.print(" <li><a href=\"../jsp/kategorie.jsp?katid=" + id + "\">" + kategorie + "</a></li>");
                 }
-                DB_Connector.closeDatabase();
             }
         }catch(SQLException e){
 
@@ -697,7 +696,6 @@ public class Seitenaufbau extends HttpServlet{
                             summe+=mietzins;
                             String mietzins_string = Formatter.formatdouble(mietzins);
                             writer.append("<tr><td style=\"width:33%; align:center; border:solid 1px #000000\"><table style=\"width:100%\"><th colspan=\"2\" align=left>"+name+"</th><tr><td style=\" max-width: 200px;\">Bezeichnung:</td><td>"+bezeichnung+"</td><td align=right>"+mietzins_string+"</td></tr></table></td></tr>");
-                            DB_Connector.closeDatabase();
                         }
                         String summe_string = Formatter.formatdouble(summe);
                         writer.append("<tr><td><table style=\"width:100%\"><td>Summe</td><td align=\"right\">"+summe_string+"</td></table></td></tr>");
